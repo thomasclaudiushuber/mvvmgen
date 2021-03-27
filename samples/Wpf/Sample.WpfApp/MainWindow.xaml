@@ -1,0 +1,21 @@
+﻿<Window x:Class="Sample.WpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Sample.WpfApp" 
+        xmlns:view="clr-namespace:Sample.WpfApp.View"
+        xmlns:viewModel="clr-namespace:Sample.WpfApp.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="550" Width="800"
+        >
+  <Window.Resources>
+    <DataTemplate DataType="{x:Type viewModel:EmployeeViewModel}">
+      <view:EmployeeView/>
+    </DataTemplate>
+  </Window.Resources>
+  
+  <ContentControl>
+    <viewModel:EmployeeViewModel/>
+  </ContentControl>
+</Window>
