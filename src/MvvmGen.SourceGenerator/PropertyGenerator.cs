@@ -1,23 +1,20 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MvvmGen.Generator
+namespace MvvmGen.SourceGenerator
 {
   internal class PropertyGenerator
   {
-    private readonly GeneratorExecutionContext _context;
     private readonly ViewModelClassToGenerate _classToGenerate;
     private readonly StringBuilder _stringBuilder;
     private readonly string _indent;
     private readonly IEnumerable<CommandInfo> _commandInfos;
 
-    public PropertyGenerator(GeneratorExecutionContext context, ViewModelClassToGenerate classToGenerate, StringBuilder stringBuilder, string v, IEnumerable<CommandInfo> commandInfos)
+    public PropertyGenerator(ViewModelClassToGenerate classToGenerate, StringBuilder stringBuilder, string v, IEnumerable<CommandInfo> commandInfos)
     {
-      _context = context;
       _classToGenerate = classToGenerate;
       _stringBuilder = stringBuilder;
       _indent = v;
@@ -32,31 +29,30 @@ namespace MvvmGen.Generator
 
     private void GeneratePropertiesForFields()
     {
-      foreach(var member in _classToGenerate.ClassDeclarationSyntax.Members)
+      foreach (var member in _classToGenerate.ClassSymbol.GetMembers())
       {
-        if(member is FieldDeclarationSyntax fieldDeclarationSyntax)
+        if (member is IFieldSymbol fieldSymbol)
         {
-         var attributeSyntax = fieldDeclarationSyntax.AttributeLists
-            .SelectMany(x => x.Attributes)
-           .Where(x => x.Name.ToString() == nameof(PropertyAttribute)
-             || x.Name.ToString() == nameof(PropertyAttribute).Replace("Attribute", ""))
-           .FirstOrDefault();
+          var attributeData = fieldSymbol.GetAttributes()
+            .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyAttribute");
 
-          if (attributeSyntax is not null)
+          if (attributeData is not null)
           {
-            var propertyType = fieldDeclarationSyntax.Declaration.Type.ToString();
-            
-            bool propertyNameSpecifiedInAttribute = false;
-            // TODO: Find out if property name was specified with attribute
-            
+            var propertyType = fieldSymbol.Type.ToString();
 
-            string? propertyName=null;
-            var fieldName = fieldDeclarationSyntax.Declaration.Variables.First().Identifier.ToString();
+            var typedConstant = attributeData.ConstructorArguments.FirstOrDefault();
 
-            if (propertyName is null)
+            string? propertyName = null;
+            var fieldName = fieldSymbol.Name;
+
+            if (typedConstant.Value is not null)
+            {
+              propertyName = typedConstant.Value.ToString();
+            }
+            else
             {
               propertyName = fieldName;
-              if(propertyName.StartsWith("_"))
+              if (propertyName.StartsWith("_"))
               {
                 propertyName = propertyName.Substring(1);
               }
@@ -66,14 +62,13 @@ namespace MvvmGen.Generator
               }
 
               var firstCharacter = propertyName.Substring(0, 1).ToUpper();
-              
-              propertyName = propertyName.Length>1 
+
+              propertyName = propertyName.Length > 1
                 ? firstCharacter + propertyName.Substring(1)
                 : firstCharacter;
-
             }
 
-            if(propertyName is not null)
+            if (propertyName is not null)
             {
               GenerateProperty(propertyType, propertyName, fieldName);
             }
@@ -84,29 +79,26 @@ namespace MvvmGen.Generator
 
     private void GeneratePropertiesForModelProperties()
     {
-      if (_classToGenerate.ModelTypeExpressionSyntax is not null)
+
+      if (_classToGenerate.ModelTypedConstant?.Value is not null)
       {
-        TypeSyntax typeSyntax = _classToGenerate.ModelTypeExpressionSyntax.Type;
-        var semanticModel = _context.Compilation.GetSemanticModel(_classToGenerate.ClassDeclarationSyntax.SyntaxTree);
-        var symbolInfo = semanticModel.GetSymbolInfo(typeSyntax);
+        var model = _classToGenerate.ModelTypedConstant.Value.Value as INamedTypeSymbol;
+
+        if (model is null) return;
 
         _stringBuilder.Append(_indent);
-        _stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
+        _stringBuilder.AppendLine($"public {model} Model {{ get; set; }}");
         _stringBuilder.AppendLine();
-        var namedTypeSymbol = symbolInfo.Symbol as INamedTypeSymbol;
-        var members = namedTypeSymbol?.GetMembers();
-        if (members is not null)
+        var members = model.GetMembers();
+        foreach (var member in members)
         {
-          foreach (var member in members)
+          if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
           {
-            if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
+            var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
+            if (propertySymbol is not null)
             {
-              var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
-              if (propertySymbol is not null)
-              {
-                GenerateProperty(propertySymbol.Type.ToString(),
-                  propertySymbol.Name,$"Model.{propertySymbol.Name}");
-              }
+              GenerateProperty(propertySymbol.Type.ToString(),
+                propertySymbol.Name, $"Model.{propertySymbol.Name}");
             }
           }
         }
@@ -127,7 +119,7 @@ namespace MvvmGen.Generator
       _stringBuilder.AppendLine(_indent + $"    if ({backingFieldName} != value)");
       _stringBuilder.AppendLine(_indent + $"    {{");
       _stringBuilder.AppendLine(_indent + $"      {backingFieldName} = value;");
-      _stringBuilder.AppendLine(_indent + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(\"{propertyName}\"));"); 
+      _stringBuilder.AppendLine(_indent + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(\"{propertyName}\"));");
       foreach (var commandToInvalidate in commandsToInvalidate)
       {
         _stringBuilder.AppendLine(_indent + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");

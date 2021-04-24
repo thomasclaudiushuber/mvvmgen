@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace MvvmGen.Core
+namespace MvvmGen.Commands
 {
   public class DelegateCommand : ICommand
   {

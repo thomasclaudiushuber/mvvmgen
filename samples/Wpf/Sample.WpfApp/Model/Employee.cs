@@ -1,4 +1,4 @@
-﻿namespace Sample.Model
+﻿namespace Sample.WpfApp.Model
 {
   public class Employee
   {

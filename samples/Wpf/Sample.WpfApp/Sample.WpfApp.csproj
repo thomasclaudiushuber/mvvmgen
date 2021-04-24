@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\MvvmGen\MvvmGen.csproj" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\Sample.Model\Sample.Model.csproj" />
+    <ProjectReference Include="..\..\..\src\MvvmGen.SourceGenerator\MvvmGen.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\..\src\MvvmGen\MvvmGen.csproj" />
   </ItemGroup>
+
 </Project>

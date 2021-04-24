@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen", "MvvmGen\MvvmGen.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.Tests", "MvvmGen.Tests\MvvmGen.Tests.csproj", "{BFBEA259-75D1-47FC-BF9F-DB316F488B0E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerator", "MvvmGen.SourceGenerator\MvvmGen.SourceGenerator.csproj", "{32C616AD-791A-4AA2-8E95-EC89D435DB0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BFBEA259-75D1-47FC-BF9F-DB316F488B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFBEA259-75D1-47FC-BF9F-DB316F488B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFBEA259-75D1-47FC-BF9F-DB316F488B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32C616AD-791A-4AA2-8E95-EC89D435DB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32C616AD-791A-4AA2-8E95-EC89D435DB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32C616AD-791A-4AA2-8E95-EC89D435DB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32C616AD-791A-4AA2-8E95-EC89D435DB0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

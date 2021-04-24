@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MvvmGen.SourceGenerator\MvvmGen.SourceGenerator.csproj" />
     <ProjectReference Include="..\MvvmGen\MvvmGen.csproj" />
   </ItemGroup>
 

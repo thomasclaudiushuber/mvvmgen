@@ -3,13 +3,13 @@
 namespace MvvmGen
 {
   [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-  public class InvalidateAttribute : Attribute
+  public class CommandInvalidateAttribute : Attribute
   {
-    public InvalidateAttribute(string propertyName)
+    public CommandInvalidateAttribute(string propertyName)
     {
       PropertyName = propertyName;
     }
 
-    public string PropertyName { get; }
+    public string PropertyName { get; set; }
   }
 }

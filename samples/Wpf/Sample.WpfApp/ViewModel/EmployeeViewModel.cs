@@ -1,5 +1,5 @@
-﻿using Sample.Model;
-using MvvmGen;
+﻿using MvvmGen;
+using Sample.WpfApp.Model;
 
 namespace Sample.WpfApp.ViewModel
 {
@@ -26,8 +26,8 @@ namespace Sample.WpfApp.ViewModel
 
     }
 
-    [Invalidate(nameof(UpdateComment))]
-    [Invalidate(nameof(FirstName))]
+    [CommandInvalidate(nameof(UpdateComment))]
+    [CommandInvalidate(nameof(FirstName))]
     public bool CanSave()
     {
       return !string.IsNullOrEmpty(FirstName)

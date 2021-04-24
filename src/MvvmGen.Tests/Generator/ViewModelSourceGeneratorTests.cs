@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Collections.Generic;
+using MvvmGen.SourceGenerator;
+using System.ComponentModel;
 using System.Reflection;
 using Xunit;
 
@@ -35,28 +36,62 @@ namespace MvvmGen.Generator
     private static Compilation CreateCompilation(string source)
             => CSharpCompilation.Create("compilation",
                 new[] { CSharpSyntaxTree.ParseText(source) },
-                new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
+                new[] { 
+                  MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location),     
+                  MetadataReference.CreateFromFile(typeof(INotifyPropertyChanged).GetTypeInfo().Assembly.Location),
+                  MetadataReference.CreateFromFile(typeof(ViewModelAttribute).GetTypeInfo().Assembly.Location)},
                 new CSharpCompilationOptions(OutputKind.ConsoleApplication));
 
     [Fact]
-    public void GenerateWithoutINotifyPropertyChangedOnInput()
+    public void GenerateWithFullQualifiedAttributeName()
     {
       ShouldGenerateExpectedCode(
 @"namespace MyCode
 {   
-    [ViewModel]
-    public partial class EmployeeViewModel
-    {
-    }
+  [MvvmGen.ViewModel]
+  public partial class EmployeeViewModel
+  {
+  }
 }",
 @"using System.ComponentModel;
-using MvvmGen.Core;
+using MvvmGen.Commands;
 
 namespace MyCode
 {
   public partial class EmployeeViewModel : INotifyPropertyChanged
   {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public void Initialize()
+    {
+    }
+  }
+}
+");
+    }
+
+
+    [Fact]
+    public void GenerateINotifyPropertyChanged()
+    {
+      ShouldGenerateExpectedCode(
+@"using MvvmGen;
+
+namespace MyCode
+{   
+  [ViewModel]
+  public partial class EmployeeViewModel
+  {
+  }
+}",
+@"using System.ComponentModel;
+using MvvmGen.Commands;
+
+namespace MyCode
+{
+  public partial class EmployeeViewModel : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void Initialize()
     {
@@ -67,29 +102,132 @@ namespace MyCode
     }
 
     [Fact]
-    public void GenerateWithCommandProperty()
+    public void GenerateINotifyPropertyChangedNotIfDefinedOnViewModel()
     {
       ShouldGenerateExpectedCode(
-@"namespace MyCode
+@"using System.ComponentModel;
+using MvvmGen;
+
+namespace MyCode
 {   
-    [ViewModel]
-    public partial class EmployeeViewModel
-    {
-        [Command]public void SaveAll() { }
-    }
+  [ViewModel]
+  public partial class EmployeeViewModel : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler? PropertyChanged;
+  }
 }",
 @"using System.ComponentModel;
-using MvvmGen.Core;
+using MvvmGen.Commands;
+
+namespace MyCode
+{
+  public partial class EmployeeViewModel
+  {
+    public void Initialize()
+    {
+    }
+  }
+}
+");
+    }
+
+    [Fact]
+    public void GenerateINotifyPropertyChangedNotIfDefinedOnViewModelBaseClass()
+    {
+      ShouldGenerateExpectedCode(
+@"using System.ComponentModel;
+using MvvmGen;
+
+namespace MyCode
+{   
+  public class ViewModelBase : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler? PropertyChanged;
+  }
+
+  [ViewModel]
+  public partial class EmployeeViewModel : ViewModelBase
+  {
+  }
+}",
+@"using System.ComponentModel;
+using MvvmGen.Commands;
+
+namespace MyCode
+{
+  public partial class EmployeeViewModel
+  {
+    public void Initialize()
+    {
+    }
+  }
+}
+");
+    }
+
+    [Fact]
+    public void GenerateCommandProperty()
+    {
+      ShouldGenerateExpectedCode(
+@"using MvvmGen;
+
+namespace MyCode
+{   
+  [ViewModel]
+  public partial class EmployeeViewModel
+  {
+    [Command]public void SaveAll() { }
+  }
+}",
+@"using System.ComponentModel;
+using MvvmGen.Commands;
 
 namespace MyCode
 {
   public partial class EmployeeViewModel : INotifyPropertyChanged
   {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void Initialize()
     {
       SaveAllCommand = new(SaveAll);
+    }
+
+    public DelegateCommand SaveAllCommand { get; private set; }
+  }
+}
+");
+    }
+
+    [Fact]
+    public void GenerateCommandPropertyWithCanExecuteMethod()
+    {
+      ShouldGenerateExpectedCode(
+@"using MvvmGen;
+
+namespace MyCode
+{   
+  [ViewModel]
+  public partial class EmployeeViewModel
+  {
+    [Command(nameof(CanSaveAll))]
+    public void SaveAll() { }
+
+    public bool CanSaveAll() => true;
+  }
+}",
+@"using System.ComponentModel;
+using MvvmGen.Commands;
+
+namespace MyCode
+{
+  public partial class EmployeeViewModel : INotifyPropertyChanged
+  {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public void Initialize()
+    {
+      SaveAllCommand = new(SaveAll, CanSaveAll);
     }
 
     public DelegateCommand SaveAllCommand { get; private set; }

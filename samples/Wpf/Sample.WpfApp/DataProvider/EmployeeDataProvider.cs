@@ -1,4 +1,4 @@
-﻿using Sample.Model;
+﻿using Sample.WpfApp.Model;
 using System.Collections.Generic;
 
 namespace Sample.WpfApp.DataProvider

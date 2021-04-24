@@ -3,11 +3,11 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Linq;
+using System.Diagnostics;
 
-namespace MvvmGen.Generator
+namespace MvvmGen.SourceGenerator
 {
   [Generator]
   public class ViewModelSourceGenerator : ISourceGenerator
@@ -21,9 +21,6 @@ namespace MvvmGen.Generator
 
       foreach (var classToGenerate in receiver.ClassesToGenerate)
       {
-        NamespaceDeclarationSyntax? namespaceDeclarationSyntax =
-          classToGenerate.ClassDeclarationSyntax.Parent as NamespaceDeclarationSyntax;
-
         int indentLevel = 0;
         int indentSpaces = 2;
         string indent()
@@ -31,32 +28,38 @@ namespace MvvmGen.Generator
           return new string(' ', indentLevel * indentSpaces);
         }
 
+        var classSymbol = classToGenerate.ClassSymbol;
+        var namespaceSymbol = classSymbol.ContainingNamespace;
+
         var stringBuilder = new StringBuilder();
 
         // Add using directives
         stringBuilder.AppendLine("using System.ComponentModel;");
-        stringBuilder.AppendLine("using MvvmGen.Core;");
+        stringBuilder.AppendLine("using MvvmGen.Commands;");
         stringBuilder.AppendLine();
         // TODO: Add also all using directives from source file, so that all types will be found
 
         // Add namespace declaration
-        if (namespaceDeclarationSyntax is null)
+        if (namespaceSymbol is null)
         {
           return;
           // TODO: Show an error here. ViewModel class must be top-level within a namespace
         }
 
-        stringBuilder.AppendLine($"namespace {namespaceDeclarationSyntax.Name}");
+        stringBuilder.AppendLine($"namespace {namespaceSymbol}");
         stringBuilder.AppendLine("{");
         indentLevel++;
 
         var generateINotifyPropertyChanged = false;
-        INamedTypeSymbol notifySymbol = context.Compilation.GetTypeByMetadataName("System.ComponentModel.INotifyPropertyChanged");
-        generateINotifyPropertyChanged = !classToGenerate.ClassSymbol.Interfaces.Any(x => x == notifySymbol);
+        INamedTypeSymbol? notifySymbol = context.Compilation.GetTypeByMetadataName("System.ComponentModel.INotifyPropertyChanged");
+        if (notifySymbol is not null)
+        {
+          generateINotifyPropertyChanged = classSymbol.AllInterfaces.Contains(notifySymbol) == false;
+        }
 
         // Generate class declaration
         stringBuilder.Append(indent());
-        stringBuilder.AppendLine($"public partial class {classToGenerate.ClassDeclarationSyntax.Identifier}" +
+        stringBuilder.AppendLine($"public partial class {classSymbol.Name}" +
           (generateINotifyPropertyChanged ? " : INotifyPropertyChanged" : ""));
         stringBuilder.Append(indent());
         stringBuilder.AppendLine("{");
@@ -65,7 +68,7 @@ namespace MvvmGen.Generator
         // Generate INotifyPropertyChanged
         if (generateINotifyPropertyChanged)
         {
-          stringBuilder.AppendLine($"{indent()}public event PropertyChangedEventHandler PropertyChanged;");
+          stringBuilder.AppendLine($"{indent()}public event PropertyChangedEventHandler? PropertyChanged;");
           stringBuilder.AppendLine();
         }
 
@@ -74,7 +77,7 @@ namespace MvvmGen.Generator
         var commandInfos = commandGenerator.Generate();
 
         // Generate properties
-        var propertyGenerator = new PropertyGenerator(context, classToGenerate, stringBuilder, indent(), commandInfos);
+        var propertyGenerator = new PropertyGenerator(classToGenerate, stringBuilder, indent(), commandInfos);
         propertyGenerator.Generate();
 
         while (indentLevel > 0)
@@ -85,22 +88,16 @@ namespace MvvmGen.Generator
         }
 
         var sourceText = SourceText.From(stringBuilder.ToString(), Encoding.UTF8);
-        context.AddSource($"{namespaceDeclarationSyntax.Name}.{classToGenerate.ClassDeclarationSyntax.Identifier}.generated.cs", sourceText);
+        context.AddSource($"{namespaceSymbol}.{classSymbol.Name}.generated.cs", sourceText);
       }
-
-      Debug.WriteLine("Execute");
     }
-
-
 
     public void Initialize(GeneratorInitializationContext context)
     {
-      //if (!Debugger.IsAttached)
+      //if(!Debugger.IsAttached)
       //{
       //  Debugger.Launch();
       //}
-
-      Debug.WriteLine("Initialize");
 
       context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
     }
@@ -118,18 +115,15 @@ namespace MvvmGen.Generator
       if (context.Node is ClassDeclarationSyntax
         { AttributeLists: { Count: > 0 } } classDeclarationSyntax)
       {
-        var viewModelGeneratorAttribute = classDeclarationSyntax.AttributeLists
-          .SelectMany(x => x.Attributes)
-          .Where(x => x.Name.ToString() == nameof(ViewModelAttribute)
-            || x.Name.ToString() == nameof(ViewModelAttribute).Replace("Attribute", ""))
-          .FirstOrDefault();
+        var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
+        var viewModelAttributeData = classSymbol?.GetAttributes()
+          .SingleOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelAttribute");
 
-        if (viewModelGeneratorAttribute is not null)
+        if (classSymbol is not null && viewModelAttributeData is not null)
         {
-
           ClassesToGenerate.Add(new ViewModelClassToGenerate(classDeclarationSyntax,
-            viewModelGeneratorAttribute,
-            context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax)));
+            classSymbol,
+            viewModelAttributeData));
         }
       }
     }
@@ -139,21 +133,17 @@ namespace MvvmGen.Generator
   {
     public ViewModelClassToGenerate(
       ClassDeclarationSyntax classDeclarationSyntax,
-      AttributeSyntax viewModelGeneratorAttribute,
-      INamedTypeSymbol? classSymbol)
+      INamedTypeSymbol classSymbol,
+      AttributeData viewModelAttributeData)
     {
-      ClassDeclarationSyntax = classDeclarationSyntax;
-      ViewModelGeneratorAttributeSyntax = viewModelGeneratorAttribute;
       ClassSymbol = classSymbol;
+      ViewModelAttributeData = viewModelAttributeData;
     }
 
-    public ClassDeclarationSyntax ClassDeclarationSyntax { get; }
+    public INamedTypeSymbol ClassSymbol { get; }
+    
+    public AttributeData ViewModelAttributeData { get; }
 
-    public AttributeSyntax ViewModelGeneratorAttributeSyntax { get; }
-    public INamedTypeSymbol? ClassSymbol { get; }
-
-    public TypeOfExpressionSyntax? ModelTypeExpressionSyntax
-      => (TypeOfExpressionSyntax?)
-      ViewModelGeneratorAttributeSyntax.ArgumentList?.Arguments.FirstOrDefault()?.Expression;
+    public TypedConstant? ModelTypedConstant => (TypedConstant?) ViewModelAttributeData.ConstructorArguments.FirstOrDefault();
   }
 }

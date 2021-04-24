@@ -1,12 +1,12 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MvvmGen.Generator
+namespace MvvmGen.SourceGenerator
 {
-  public class CommandInfo
+  internal class CommandInfo
   {
     public CommandInfo(string executeMethod)
     {
@@ -17,7 +17,8 @@ namespace MvvmGen.Generator
     public string PropertyName => $"{ExecuteMethod}Command";
     public string[]? CanExecuteAffectingProperties { get; set; }
   }
-  public class CommandGenerator
+
+  internal class CommandGenerator
   {
     private readonly ViewModelClassToGenerate _classToGenerate;
     private readonly StringBuilder _stringBuilder;
@@ -36,62 +37,62 @@ namespace MvvmGen.Generator
     {
       var commandsToGenerate = new List<CommandInfo>();
       var propertyInvalidations = new Dictionary<string, List<string>>();
-      foreach (var memberDeclarationSyntax in _classToGenerate.ClassDeclarationSyntax.Members)
+      foreach (var memberSymbol in _classToGenerate.ClassSymbol.GetMembers())
       {
-        if (memberDeclarationSyntax is MethodDeclarationSyntax methodDeclarationSyntax)
+        if (memberSymbol is IMethodSymbol methodSymbol)
         {
-          var generateCommandAttribute = methodDeclarationSyntax.AttributeLists
-       .SelectMany(x => x.Attributes)
-       .Where(x => x.Name.ToString() == nameof(CommandAttribute)
-         || x.Name.ToString() == nameof(CommandAttribute).Replace("Attribute", ""))
-       .FirstOrDefault();
+          var commandAttributeData = methodSymbol.GetAttributes()
+            .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.CommandAttribute");
 
-          var invalidateOnPropertyChangeAttributes = methodDeclarationSyntax.AttributeLists
-     .SelectMany(x => x.Attributes)
-     .Where(x => x.Name.ToString() == nameof(InvalidateAttribute)
-       || x.Name.ToString() == nameof(InvalidateAttribute).Replace("Attribute", ""))
-     .ToList();
+            var invalidateAttributeDatas = methodSymbol.GetAttributes()
+            .Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.CommandInvalidateAttribute")
+            .ToList();
 
-          if (generateCommandAttribute is not null)
+          if (commandAttributeData is not null)
           {
-            var canExecuteAttributeArgumentSyntax = generateCommandAttribute.ArgumentList?
-              .Arguments.FirstOrDefault();
+            // NOTE: typedConstant can't handle nameof keyword. AttributeSyntax on the other side can do it
 
-            string? canExecuteMethod = null;
-            if (canExecuteAttributeArgumentSyntax is not null)
+            //var typedConstant = commandAttributeData.ConstructorArguments.FirstOrDefault();
+
+            //string? canExecuteMethod = null;
+            //if (typedConstant.Value is not null)
+            //{
+            //  canExecuteMethod = typedConstant.Value.ToString();
+            //}
+
+            var commandAttributeSyntax = ((AttributeSyntax?)commandAttributeData.ApplicationSyntaxReference?.GetSyntax());
+            var canExecuteMethod = commandAttributeSyntax?.ArgumentList?.Arguments.FirstOrDefault()?.ToString();
+
+            if (canExecuteMethod is not null)
             {
-              canExecuteMethod = canExecuteAttributeArgumentSyntax.Expression.ToString();
-              if (canExecuteMethod is not null)
-              {
-                canExecuteMethod = canExecuteMethod
-                  // Extract name from nameof expression
-                  .Replace("nameof(", "")
-                  .Replace(")", "")
-                  // Extract name from string literal
-                  .Replace("\"", "");
-              }
+              canExecuteMethod = canExecuteMethod
+                // Extract name from nameof expression
+                .Replace("nameof(", "")
+                .Replace(")", "")
+                // Extract name from string literal
+                .Replace("\"", "");
             }
-
             commandsToGenerate.Add(
-              new CommandInfo(methodDeclarationSyntax.Identifier.ToString())
-              {
-                CanExecuteMethod = canExecuteMethod
-              });
+               new CommandInfo(methodSymbol.Name)
+               {
+                 CanExecuteMethod = canExecuteMethod
+               });
           }
 
-          if (invalidateOnPropertyChangeAttributes.Any())
+          if (invalidateAttributeDatas.Any())
           {
-            foreach (var attr in invalidateOnPropertyChangeAttributes)
+            foreach (var attr in invalidateAttributeDatas)
             {
-              var methodIdentifier = methodDeclarationSyntax.Identifier.ToString();
+              var methodIdentifier = methodSymbol.Name;
               if (!propertyInvalidations.ContainsKey(methodIdentifier))
               {
                 propertyInvalidations.Add(methodIdentifier, new List<string>());
               }
 
-              var propertyName = attr.ArgumentList?.Arguments.First().ToString();
+              var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
+              var propertyName = attributeSyntax?.ArgumentList?.Arguments.First().ToString();
 
-              if (propertyName != null)
+              if (propertyName is not null)
               {
                 propertyName = propertyName
                 // Extract name from nameof expression
@@ -105,6 +106,21 @@ namespace MvvmGen.Generator
                   propertyInvalidations[methodIdentifier].Add(propertyName);
                 }
               }
+
+              // NOTE: The following code couldn't handle the nameof expression and returned an empty string for that expression.
+              //       Seems the TypedConstant of the SemanticModel has issues here, as it is resolved later, and AttributeSyntax can handle it.
+
+              //var propertyNameTypedConstant = attr.ConstructorArguments.FirstOrDefault();
+
+              //if (propertyNameTypedConstant.Value is not null)
+              //{
+              //  var propertyName = propertyNameTypedConstant.Value.ToString();
+
+              //  if (!propertyInvalidations[methodIdentifier].Contains(propertyName))
+              //  {
+              //    propertyInvalidations[methodIdentifier].Add(propertyName);
+              //  }
+              //}
             }
           }
         }
