@@ -1,7 +1,7 @@
-﻿using MvvmGen.Model;
-using MvvmGen;
+﻿using MvvmGen;
+using Sample.Model;
 
-namespace MvvmGen.WpfApp.ViewModel
+namespace Sample.WpfApp.ViewModel
 {
   [ViewModelGenerator(typeof(Organization))]
   public partial class OrganizationViewModel

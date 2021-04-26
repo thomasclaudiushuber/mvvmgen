@@ -1,7 +1,7 @@
-﻿using MvvmGen.WpfApp.ViewModel;
+﻿using Sample.WpfApp.ViewModel;
 using System.Windows;
 
-namespace MvvmGen.WpfApp
+namespace Sample.WpfApp
 {
   public partial class MainWindow : Window
   {

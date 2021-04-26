@@ -1,4 +1,4 @@
-﻿namespace MvvmGen.Model
+﻿namespace Sample.Model
 {
   public class Organization
   {

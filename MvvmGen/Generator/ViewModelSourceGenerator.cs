@@ -13,7 +13,7 @@ namespace MvvmGen.Generator
   {
     public void Execute(GeneratorExecutionContext context)
     {
-      if (!(context.SyntaxContextReceiver is SyntaxReceiver receiver))
+      if (context.SyntaxContextReceiver is not SyntaxReceiver receiver)
       {
         return;
       }
@@ -64,10 +64,10 @@ namespace MvvmGen.Generator
 
     public void Initialize(GeneratorInitializationContext context)
     {
-      if (!Debugger.IsAttached)
-      {
-        Debugger.Launch();
-      }
+      //if (!Debugger.IsAttached)
+      //{
+      //  Debugger.Launch();
+      //}
 
       Debug.WriteLine("Initialize");
 
