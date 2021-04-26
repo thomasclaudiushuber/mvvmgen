@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MvvmGen.Model\MvvmGen.Model.csproj" />
+    <ProjectReference Include="..\MvvmGen\MvvmGen.csproj"
+                      OutputItemType="Analyzer"/>
+  </ItemGroup>
+
+</Project>
