@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -12,22 +13,50 @@ namespace MvvmGen.Generator
   {
     public void Execute(GeneratorExecutionContext context)
     {
-      if(!(context.SyntaxContextReceiver is SyntaxReceiver receiver))
+      if (!(context.SyntaxContextReceiver is SyntaxReceiver receiver))
       {
         return;
       }
 
-      foreach (var classDeclararationSyntax in receiver.ClassesToGenerate)
+      foreach (var classDeclarationSyntax in receiver.ClassesToGenerate)
       {
-        var sourceText = SourceText.From($@"
-namespace MvvmGen.WpfApp.ViewModel{{
-public partial class {classDeclararationSyntax.Identifier}
-{{
-  public string SayHello => ""Hello from generated property"";
-}}
-}}
-",Encoding.UTF8);
-        context.AddSource($"{classDeclararationSyntax.Identifier}.generated.cs", sourceText);
+        NamespaceDeclarationSyntax? namespaceDeclarationSyntax =
+          classDeclarationSyntax.Parent as NamespaceDeclarationSyntax;
+
+        int indentLevel = 0;
+        int indentSpaces = 2;
+        string indent()
+        {
+          return new string(' ', indentLevel * indentSpaces);
+        }
+
+        var stringBuilder = new StringBuilder();
+
+        if (namespaceDeclarationSyntax is not null)
+        {
+          stringBuilder.AppendLine($"namespace {namespaceDeclarationSyntax.Name}");
+          stringBuilder.AppendLine("{");
+          indentLevel++;
+        }
+
+        stringBuilder.Append(indent());
+        stringBuilder.AppendLine($"public partial class {classDeclarationSyntax.Identifier}");
+        stringBuilder.Append(indent());
+        stringBuilder.AppendLine("{");
+        indentLevel++;
+
+        stringBuilder.Append(indent());
+        stringBuilder.AppendLine($@"public string SayHello => ""Hello from generated property"";");
+
+        while (indentLevel > 0)
+        {
+          indentLevel--;
+          stringBuilder.Append(indent());
+          stringBuilder.AppendLine("}");
+        }
+
+        var sourceText = SourceText.From(stringBuilder.ToString(), Encoding.UTF8);
+        context.AddSource($"{classDeclarationSyntax.Identifier}.generated.cs", sourceText);
       }
 
       Debug.WriteLine("Execute");
@@ -35,10 +64,10 @@ public partial class {classDeclararationSyntax.Identifier}
 
     public void Initialize(GeneratorInitializationContext context)
     {
-    //  if (!Debugger.IsAttached)
-    //  {
-    //    Debugger.Launch();
-    //  }
+      if (!Debugger.IsAttached)
+      {
+        Debugger.Launch();
+      }
 
       Debug.WriteLine("Initialize");
 
