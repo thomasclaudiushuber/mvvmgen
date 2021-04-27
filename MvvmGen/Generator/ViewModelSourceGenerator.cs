@@ -1,10 +1,12 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 
 namespace MvvmGen.Generator
 {
@@ -18,10 +20,10 @@ namespace MvvmGen.Generator
         return;
       }
 
-      foreach (var classDeclarationSyntax in receiver.ClassesToGenerate)
+      foreach (var classToGenerate in receiver.ClassesToGenerate)
       {
         NamespaceDeclarationSyntax? namespaceDeclarationSyntax =
-          classDeclarationSyntax.Parent as NamespaceDeclarationSyntax;
+          classToGenerate.ClassDeclarationSyntax.Parent as NamespaceDeclarationSyntax;
 
         int indentLevel = 0;
         int indentSpaces = 2;
@@ -39,11 +41,34 @@ namespace MvvmGen.Generator
           indentLevel++;
         }
 
+        // Generate class declaration
         stringBuilder.Append(indent());
-        stringBuilder.AppendLine($"public partial class {classDeclarationSyntax.Identifier}");
+        stringBuilder.AppendLine($"public partial class {classToGenerate.ClassDeclarationSyntax.Identifier}");
         stringBuilder.Append(indent());
         stringBuilder.AppendLine("{");
         indentLevel++;
+
+        // TODO: Generate Commands
+        foreach (var memberDeclarationSyntax in classToGenerate.ClassDeclarationSyntax.Members)
+        {
+          if (memberDeclarationSyntax is MethodDeclarationSyntax methodDeclarationSyntax)
+          {
+            if(methodDeclarationSyntax.Modifiers.Any(x=>x.ToString()=="public")
+              && methodDeclarationSyntax.ReturnType.ToString()=="void")
+            {
+              stringBuilder.Append(indent());
+              stringBuilder.AppendLine($"public System.Windows.Input.ICommand {methodDeclarationSyntax.Identifier}Command {{get;}}");
+            }
+          }
+        }
+
+        // TODO: Generate Wrapper Properties
+        TypeSyntax typeSyntax = classToGenerate.ModelTypeExpressionSyntax.Type;
+        var semanticModel = context.Compilation.GetSemanticModel(classToGenerate.ClassDeclarationSyntax.SyntaxTree);
+        var symbolInfo=  semanticModel.GetSymbolInfo(typeSyntax);
+
+        stringBuilder.Append(indent());
+        stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
 
         stringBuilder.Append(indent());
         stringBuilder.AppendLine($@"public string SayHello => ""Hello from generated property"";");
@@ -56,7 +81,7 @@ namespace MvvmGen.Generator
         }
 
         var sourceText = SourceText.From(stringBuilder.ToString(), Encoding.UTF8);
-        context.AddSource($"{classDeclarationSyntax.Identifier}.generated.cs", sourceText);
+        context.AddSource($"{classToGenerate.ClassDeclarationSyntax.Identifier}.generated.cs", sourceText);
       }
 
       Debug.WriteLine("Execute");
@@ -64,10 +89,10 @@ namespace MvvmGen.Generator
 
     public void Initialize(GeneratorInitializationContext context)
     {
-      //if (!Debugger.IsAttached)
-      //{
-      //  Debugger.Launch();
-      //}
+      if (!Debugger.IsAttached)
+      {
+        Debugger.Launch();
+      }
 
       Debug.WriteLine("Initialize");
 
@@ -77,7 +102,7 @@ namespace MvvmGen.Generator
 
   class SyntaxReceiver : ISyntaxContextReceiver
   {
-    public List<ClassDeclarationSyntax> ClassesToGenerate { get; } = new();
+    public List<ViewModelClassToGenerate> ClassesToGenerate { get; } = new();
 
     /// <summary>
     /// Called for every syntax node in the compilation, we can inspect the nodes and save any information useful for generation
@@ -87,8 +112,35 @@ namespace MvvmGen.Generator
       if (context.Node is ClassDeclarationSyntax
         { AttributeLists: { Count: > 0 } } classDeclarationSyntax)
       {
-        ClassesToGenerate.Add(classDeclarationSyntax);
+        var viewModelGeneratorAttribute = classDeclarationSyntax.AttributeLists
+          .SelectMany(x => x.Attributes)
+          .Where(x => x.Name.ToString() == nameof(ViewModelGeneratorAttribute)
+            || x.Name.ToString() == nameof(ViewModelGeneratorAttribute).Replace("Attribute", ""))
+          .FirstOrDefault();
+
+        if (viewModelGeneratorAttribute is not null)
+        {
+          ClassesToGenerate.Add(new ViewModelClassToGenerate(classDeclarationSyntax,
+            viewModelGeneratorAttribute));
+        }
       }
     }
+  }
+
+  public class ViewModelClassToGenerate
+  {
+    public ViewModelClassToGenerate(
+      ClassDeclarationSyntax classDeclarationSyntax,
+      AttributeSyntax viewModelGeneratorAttribute)
+    {
+      ClassDeclarationSyntax = classDeclarationSyntax;
+      ViewModelGeneratorAttributeSyntax = viewModelGeneratorAttribute;
+    }
+
+    public ClassDeclarationSyntax ClassDeclarationSyntax { get; }
+
+    public AttributeSyntax ViewModelGeneratorAttributeSyntax { get; }
+
+    public TypeOfExpressionSyntax ModelTypeExpressionSyntax => (TypeOfExpressionSyntax)ViewModelGeneratorAttributeSyntax.ArgumentList.Arguments[0].Expression;
   }
 }

@@ -1,5 +1,6 @@
 ﻿using Sample.Model;
 using MvvmGen;
+using System;
 
 namespace Sample.WpfApp.ViewModel
 {
@@ -9,6 +10,16 @@ namespace Sample.WpfApp.ViewModel
     public EmployeeViewModel()
     {
       
+    }
+
+    public void Save()
+    {
+      
+    }
+
+    public bool CanSave()
+    {
+      return true;
     }
   }
 }

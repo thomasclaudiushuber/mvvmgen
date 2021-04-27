@@ -7,9 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\MvvmGen\MvvmGen.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Sample.Model\Sample.Model.csproj" />
   </ItemGroup>
-
 </Project>
