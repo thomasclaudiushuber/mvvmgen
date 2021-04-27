@@ -34,6 +34,10 @@ namespace MvvmGen.Generator
 
         var stringBuilder = new StringBuilder();
 
+        // Add using directives
+        stringBuilder.AppendLine("using MvvmGen.Core;");
+
+        // Add namespace declaration
         if (namespaceDeclarationSyntax is not null)
         {
           stringBuilder.AppendLine($"namespace {namespaceDeclarationSyntax.Name}");
@@ -53,11 +57,11 @@ namespace MvvmGen.Generator
         {
           if (memberDeclarationSyntax is MethodDeclarationSyntax methodDeclarationSyntax)
           {
-            if(methodDeclarationSyntax.Modifiers.Any(x=>x.ToString()=="public")
-              && methodDeclarationSyntax.ReturnType.ToString()=="void")
+            if (methodDeclarationSyntax.Modifiers.Any(x => x.ToString() == "public")
+              && methodDeclarationSyntax.ReturnType.ToString() == "void")
             {
               stringBuilder.Append(indent());
-              stringBuilder.AppendLine($"public System.Windows.Input.ICommand {methodDeclarationSyntax.Identifier}Command {{get;}}");
+              stringBuilder.AppendLine($"public DelegateCommand {methodDeclarationSyntax.Identifier}Command {{ get; }}");
             }
           }
         }
@@ -65,10 +69,31 @@ namespace MvvmGen.Generator
         // TODO: Generate Wrapper Properties
         TypeSyntax typeSyntax = classToGenerate.ModelTypeExpressionSyntax.Type;
         var semanticModel = context.Compilation.GetSemanticModel(classToGenerate.ClassDeclarationSyntax.SyntaxTree);
-        var symbolInfo=  semanticModel.GetSymbolInfo(typeSyntax);
+        var symbolInfo = semanticModel.GetSymbolInfo(typeSyntax);
 
         stringBuilder.Append(indent());
         stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
+        var namedTypeSymbol = symbolInfo.Symbol as INamedTypeSymbol;
+        var members = namedTypeSymbol.GetMembers();
+        foreach (var member in members)
+        {
+          if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
+          {
+            var propertySymbol = (IPropertySymbol)methodSymbol.AssociatedSymbol;
+            stringBuilder.AppendLine(indent() + $"public {propertySymbol.Type} {propertySymbol.Name}");
+            stringBuilder.AppendLine(indent() + $"{{");
+            stringBuilder.AppendLine(indent() + $"  get => Model.{propertySymbol.Name};");
+            stringBuilder.AppendLine(indent() + $"  set");
+            stringBuilder.AppendLine(indent() + $"  {{");
+            stringBuilder.AppendLine(indent() + $"    if(Model.{propertySymbol.Name} != value)");
+            stringBuilder.AppendLine(indent() + $"    {{");
+            stringBuilder.AppendLine(indent() + $"      Model.{propertySymbol.Name} = value;");
+            //stringBuilder.AppendLine(indent() + $"      RaisePropertyChanged();");
+            stringBuilder.AppendLine(indent() + $"    }}");
+            stringBuilder.AppendLine(indent() + $"  }}");
+            stringBuilder.AppendLine(indent() + $"}}");
+          }
+        }
 
         stringBuilder.Append(indent());
         stringBuilder.AppendLine($@"public string SayHello => ""Hello from generated property"";");
@@ -89,10 +114,10 @@ namespace MvvmGen.Generator
 
     public void Initialize(GeneratorInitializationContext context)
     {
-      if (!Debugger.IsAttached)
-      {
-        Debugger.Launch();
-      }
+      //if (!Debugger.IsAttached)
+      //{
+      //  Debugger.Launch();
+      //}
 
       Debug.WriteLine("Initialize");
 
