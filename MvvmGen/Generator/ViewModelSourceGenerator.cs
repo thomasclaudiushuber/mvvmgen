@@ -95,9 +95,6 @@ namespace MvvmGen.Generator
           }
         }
 
-        stringBuilder.Append(indent());
-        stringBuilder.AppendLine($@"public string SayHello => ""Hello from generated property"";");
-
         while (indentLevel > 0)
         {
           indentLevel--;
