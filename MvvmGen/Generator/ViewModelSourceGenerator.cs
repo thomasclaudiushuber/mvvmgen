@@ -79,19 +79,22 @@ namespace MvvmGen.Generator
         {
           if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
           {
-            var propertySymbol = (IPropertySymbol)methodSymbol.AssociatedSymbol;
-            stringBuilder.AppendLine(indent() + $"public {propertySymbol.Type} {propertySymbol.Name}");
-            stringBuilder.AppendLine(indent() + $"{{");
-            stringBuilder.AppendLine(indent() + $"  get => Model.{propertySymbol.Name};");
-            stringBuilder.AppendLine(indent() + $"  set");
-            stringBuilder.AppendLine(indent() + $"  {{");
-            stringBuilder.AppendLine(indent() + $"    if(Model.{propertySymbol.Name} != value)");
-            stringBuilder.AppendLine(indent() + $"    {{");
-            stringBuilder.AppendLine(indent() + $"      Model.{propertySymbol.Name} = value;");
-            //stringBuilder.AppendLine(indent() + $"      RaisePropertyChanged();");
-            stringBuilder.AppendLine(indent() + $"    }}");
-            stringBuilder.AppendLine(indent() + $"  }}");
-            stringBuilder.AppendLine(indent() + $"}}");
+            var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
+            if (propertySymbol is not null)
+            {
+              stringBuilder.AppendLine(indent() + $"public {propertySymbol.Type} {propertySymbol.Name}");
+              stringBuilder.AppendLine(indent() + $"{{");
+              stringBuilder.AppendLine(indent() + $"  get => Model.{propertySymbol.Name};");
+              stringBuilder.AppendLine(indent() + $"  set");
+              stringBuilder.AppendLine(indent() + $"  {{");
+              stringBuilder.AppendLine(indent() + $"    if(Model.{propertySymbol.Name} != value)");
+              stringBuilder.AppendLine(indent() + $"    {{");
+              stringBuilder.AppendLine(indent() + $"      Model.{propertySymbol.Name} = value;");
+              //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));");
+              stringBuilder.AppendLine(indent() + $"    }}");
+              stringBuilder.AppendLine(indent() + $"  }}");
+              stringBuilder.AppendLine(indent() + $"}}");
+            }
           }
         }
 
