@@ -20,9 +20,11 @@ namespace Sample.WpfApp.ViewModel
     }
 
     [InvalidateOnPropertyChange(nameof(FirstName))]
+    [InvalidateOnPropertyChange(nameof(LastName))]
     public bool CanSave()
     {
-      return !string.IsNullOrEmpty(FirstName);
+      return string.IsNullOrEmpty(FirstName)
+        && string.IsNullOrEmpty(LastName);
     }
   }
 }

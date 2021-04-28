@@ -2,7 +2,7 @@
 
 namespace MvvmGen
 {
-  [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+  [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
   public class InvalidateOnPropertyChangeAttribute : Attribute
   {
     public InvalidateOnPropertyChangeAttribute(string propertyName)
