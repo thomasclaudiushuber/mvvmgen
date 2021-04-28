@@ -6,12 +6,18 @@
         xmlns:local="clr-namespace:Sample.WpfApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <TextBlock Text="Hello" Margin="10 10 10 0"/>
-    <TextBox Grid.Row="1" Text="{Binding SayHello,Mode=OneWay}" IsReadOnly="True" Margin="10"/>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200"/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+
+    
+    
+    
   </Grid>
 </Window>

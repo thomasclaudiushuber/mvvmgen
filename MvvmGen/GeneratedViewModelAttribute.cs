@@ -3,13 +3,15 @@
 namespace MvvmGen
 {
   [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-  public class ViewModelGeneratorAttribute : Attribute
+  public class ViewModelAttribute : Attribute
   {
-    public ViewModelGeneratorAttribute(Type modelType)
+    public ViewModelAttribute() { }
+
+    public ViewModelAttribute(Type modelType)
     {
       ModelType = modelType;
     }
 
-    public Type ModelType { get; }
+    public Type? ModelType { get; set; }
   }
 }

@@ -5,9 +5,24 @@ using MvvmGen.Core;
 
 namespace Sample.WpfApp.ViewModel
 {
-  [ViewModelGenerator(typeof(Employee))]
+  [ViewModel(ModelType = typeof(Employee))]
   public partial class EmployeeViewModel
   {
-    public void Save() { }
+    public EmployeeViewModel()
+    {
+      InitializeCommands();
+    }
+
+    [Command(CanExecuteMethod = nameof(CanSave))]
+    public void Save()
+    {
+
+    }
+
+    [InvalidateOnPropertyChange(nameof(FirstName))]
+    public bool CanSave()
+    {
+      return !string.IsNullOrEmpty(FirstName);
+    }
   }
 }

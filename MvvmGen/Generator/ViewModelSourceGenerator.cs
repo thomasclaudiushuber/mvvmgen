@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -52,48 +51,54 @@ namespace MvvmGen.Generator
         stringBuilder.AppendLine("{");
         indentLevel++;
 
-        // TODO: Generate Commands
-        foreach (var memberDeclarationSyntax in classToGenerate.ClassDeclarationSyntax.Members)
-        {
-          if (memberDeclarationSyntax is MethodDeclarationSyntax methodDeclarationSyntax)
-          {
-            if (methodDeclarationSyntax.Modifiers.Any(x => x.ToString() == "public")
-              && methodDeclarationSyntax.ReturnType.ToString() == "void")
-            {
-              stringBuilder.Append(indent());
-              stringBuilder.AppendLine($"public DelegateCommand {methodDeclarationSyntax.Identifier}Command {{ get; }}");
-            }
-          }
-        }
+        var commandGenerator = new CommandGenerator();
+        var commandInfos = commandGenerator.Generate(classToGenerate, stringBuilder, indent());
 
         // TODO: Generate Wrapper Properties
-        TypeSyntax typeSyntax = classToGenerate.ModelTypeExpressionSyntax.Type;
-        var semanticModel = context.Compilation.GetSemanticModel(classToGenerate.ClassDeclarationSyntax.SyntaxTree);
-        var symbolInfo = semanticModel.GetSymbolInfo(typeSyntax);
-
-        stringBuilder.Append(indent());
-        stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
-        var namedTypeSymbol = symbolInfo.Symbol as INamedTypeSymbol;
-        var members = namedTypeSymbol.GetMembers();
-        foreach (var member in members)
+        if (classToGenerate.ModelTypeExpressionSyntax is not null)
         {
-          if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
+          TypeSyntax typeSyntax = classToGenerate.ModelTypeExpressionSyntax.Type;
+          var semanticModel = context.Compilation.GetSemanticModel(classToGenerate.ClassDeclarationSyntax.SyntaxTree);
+          var symbolInfo = semanticModel.GetSymbolInfo(typeSyntax);
+
+          stringBuilder.Append(indent());
+          stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
+          var namedTypeSymbol = symbolInfo.Symbol as INamedTypeSymbol;
+          var members = namedTypeSymbol?.GetMembers();
+          if (members is not null)
           {
-            var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
-            if (propertySymbol is not null)
+            foreach (var member in members)
             {
-              stringBuilder.AppendLine(indent() + $"public {propertySymbol.Type} {propertySymbol.Name}");
-              stringBuilder.AppendLine(indent() + $"{{");
-              stringBuilder.AppendLine(indent() + $"  get => Model.{propertySymbol.Name};");
-              stringBuilder.AppendLine(indent() + $"  set");
-              stringBuilder.AppendLine(indent() + $"  {{");
-              stringBuilder.AppendLine(indent() + $"    if(Model.{propertySymbol.Name} != value)");
-              stringBuilder.AppendLine(indent() + $"    {{");
-              stringBuilder.AppendLine(indent() + $"      Model.{propertySymbol.Name} = value;");
-              //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));");
-              stringBuilder.AppendLine(indent() + $"    }}");
-              stringBuilder.AppendLine(indent() + $"  }}");
-              stringBuilder.AppendLine(indent() + $"}}");
+              if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
+              {
+                var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
+                if (propertySymbol is not null)
+                {
+                  var commandsToInvalidate =
+                    commandInfos.Where(x => x.CanExecuteAffectingProperties is not null 
+                    && x.CanExecuteAffectingProperties.Contains(propertySymbol.Name))
+                    .ToList();
+
+                  stringBuilder.AppendLine(indent() + $"public {propertySymbol.Type} {propertySymbol.Name}");
+                  stringBuilder.AppendLine(indent() + $"{{");
+                  stringBuilder.AppendLine(indent() + $"  get => Model.{propertySymbol.Name};");
+                  stringBuilder.AppendLine(indent() + $"  set");
+                  stringBuilder.AppendLine(indent() + $"  {{");
+                  stringBuilder.AppendLine(indent() + $"    if(Model.{propertySymbol.Name} != value)");
+                  stringBuilder.AppendLine(indent() + $"    {{");
+                  stringBuilder.AppendLine(indent() + $"      Model.{propertySymbol.Name} = value;");
+                  //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));"); 
+                  foreach (var commandToInvalidate in commandsToInvalidate)
+                  {
+                    stringBuilder.AppendLine(indent() + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
+                  }
+
+
+                  stringBuilder.AppendLine(indent() + $"    }}");
+                  stringBuilder.AppendLine(indent() + $"  }}");
+                  stringBuilder.AppendLine(indent() + $"}}");
+                }
+              }
             }
           }
         }
@@ -139,8 +144,8 @@ namespace MvvmGen.Generator
       {
         var viewModelGeneratorAttribute = classDeclarationSyntax.AttributeLists
           .SelectMany(x => x.Attributes)
-          .Where(x => x.Name.ToString() == nameof(ViewModelGeneratorAttribute)
-            || x.Name.ToString() == nameof(ViewModelGeneratorAttribute).Replace("Attribute", ""))
+          .Where(x => x.Name.ToString() == nameof(ViewModelAttribute)
+            || x.Name.ToString() == nameof(ViewModelAttribute).Replace("Attribute", ""))
           .FirstOrDefault();
 
         if (viewModelGeneratorAttribute is not null)
@@ -166,6 +171,8 @@ namespace MvvmGen.Generator
 
     public AttributeSyntax ViewModelGeneratorAttributeSyntax { get; }
 
-    public TypeOfExpressionSyntax ModelTypeExpressionSyntax => (TypeOfExpressionSyntax)ViewModelGeneratorAttributeSyntax.ArgumentList.Arguments[0].Expression;
+    public TypeOfExpressionSyntax? ModelTypeExpressionSyntax 
+      => (TypeOfExpressionSyntax?)
+      ViewModelGeneratorAttributeSyntax.ArgumentList?.Arguments.FirstOrDefault()?.Expression;
   }
 }
