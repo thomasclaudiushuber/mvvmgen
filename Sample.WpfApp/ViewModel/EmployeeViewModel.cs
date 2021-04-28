@@ -1,7 +1,5 @@
 ﻿using Sample.Model;
 using MvvmGen;
-using System;
-using MvvmGen.Core;
 
 namespace Sample.WpfApp.ViewModel
 {
@@ -13,18 +11,17 @@ namespace Sample.WpfApp.ViewModel
       InitializeCommands();
     }
 
-    [Command(CanExecuteMethod = nameof(CanSave))]
+    [Command(CanExecuteMethod =nameof(CanSave))]
     public void Save()
     {
 
     }
 
-    [InvalidateOnPropertyChange(nameof(FirstName))]
-    [InvalidateOnPropertyChange(nameof(LastName))]
+    [Invalidate(nameof(FirstName))]
+    [Invalidate(nameof(LastName))]
     public bool CanSave()
     {
-      return string.IsNullOrEmpty(FirstName)
-        && string.IsNullOrEmpty(LastName);
+      return !string.IsNullOrEmpty(FirstName);
     }
   }
 }

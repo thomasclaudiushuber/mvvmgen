@@ -36,8 +36,8 @@ namespace MvvmGen.Generator
 
           var invalidateOnPropertyChangeAttributes = methodDeclarationSyntax.AttributeLists
      .SelectMany(x => x.Attributes)
-     .Where(x => x.Name.ToString() == nameof(InvalidateOnPropertyChangeAttribute)
-       || x.Name.ToString() == nameof(InvalidateOnPropertyChangeAttribute).Replace("Attribute", ""))
+     .Where(x => x.Name.ToString() == nameof(InvalidateAttribute)
+       || x.Name.ToString() == nameof(InvalidateAttribute).Replace("Attribute", ""))
      .ToList();
 
           if (generateCommandAttribute is not null)
@@ -124,8 +124,6 @@ namespace MvvmGen.Generator
         AddPropertyNames(commandInfo.ExecuteMethod, canExecuteAffectingProperties);
         commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
       }
-
-      stringBuilder.AppendLine();
       stringBuilder.AppendLine($"{indention}public void InitializeCommands()");
       stringBuilder.AppendLine($"{indention}{{");
       foreach (var commandInfo in commandsToGenerate)

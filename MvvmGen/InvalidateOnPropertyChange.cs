@@ -3,9 +3,9 @@
 namespace MvvmGen
 {
   [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-  public class InvalidateOnPropertyChangeAttribute : Attribute
+  public class InvalidateAttribute : Attribute
   {
-    public InvalidateOnPropertyChangeAttribute(string propertyName)
+    public InvalidateAttribute(string propertyName)
     {
       PropertyName = propertyName;
     }
