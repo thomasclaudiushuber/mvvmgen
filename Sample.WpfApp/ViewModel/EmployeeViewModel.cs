@@ -3,7 +3,7 @@ using MvvmGen;
 
 namespace Sample.WpfApp.ViewModel
 {
-  [ViewModel(ModelType = typeof(Employee))]
+  [ViewModel(typeof(Employee))]
   public partial class EmployeeViewModel
   {
     public EmployeeViewModel()
@@ -11,7 +11,7 @@ namespace Sample.WpfApp.ViewModel
       InitializeCommands();
     }
 
-    [Command(CanExecuteMethod =nameof(CanSave))]
+    [Command(nameof(CanSave))]
     public void Save()
     {
 

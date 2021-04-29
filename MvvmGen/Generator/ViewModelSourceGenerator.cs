@@ -147,7 +147,8 @@ namespace MvvmGen.Generator
           .Where(x => x.Name.ToString() == nameof(ViewModelAttribute)
             || x.Name.ToString() == nameof(ViewModelAttribute).Replace("Attribute", ""))
           .FirstOrDefault();
-
+        //var symbolInfo = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
+        
         if (viewModelGeneratorAttribute is not null)
         {
           ClassesToGenerate.Add(new ViewModelClassToGenerate(classDeclarationSyntax,

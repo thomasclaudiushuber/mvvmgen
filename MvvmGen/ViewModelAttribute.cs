@@ -12,6 +12,6 @@ namespace MvvmGen
       ModelType = modelType;
     }
 
-    public Type? ModelType { get; set; }
+    public Type? ModelType { get; private set; }
   }
 }
