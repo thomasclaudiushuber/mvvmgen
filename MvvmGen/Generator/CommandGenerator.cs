@@ -19,12 +19,24 @@ namespace MvvmGen.Generator
   }
   public class CommandGenerator
   {
-    internal IEnumerable<CommandInfo> Generate(ViewModelClassToGenerate classToGenerate,
-      StringBuilder stringBuilder, string indention)
+    private ViewModelClassToGenerate _classToGenerate;
+    private StringBuilder _stringBuilder;
+    private string _indent;
+
+    public CommandGenerator(ViewModelClassToGenerate classToGenerate,
+      StringBuilder stringBuilder, 
+      string indent)
+    {
+      _classToGenerate = classToGenerate;
+      _stringBuilder = stringBuilder;
+      _indent = indent;
+    }
+
+    internal IEnumerable<CommandInfo> Generate()
     {
       var commandsToGenerate = new List<CommandInfo>();
       var propertyInvalidations = new Dictionary<string, List<string>>();
-      foreach (var memberDeclarationSyntax in classToGenerate.ClassDeclarationSyntax.Members)
+      foreach (var memberDeclarationSyntax in _classToGenerate.ClassDeclarationSyntax.Members)
       {
         if (memberDeclarationSyntax is MethodDeclarationSyntax methodDeclarationSyntax)
         {
@@ -124,22 +136,22 @@ namespace MvvmGen.Generator
         AddPropertyNames(commandInfo.ExecuteMethod, canExecuteAffectingProperties);
         commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
       }
-      stringBuilder.AppendLine($"{indention}public void InitializeCommands()");
-      stringBuilder.AppendLine($"{indention}{{");
+      _stringBuilder.AppendLine($"{_indent}public void InitializeCommands()");
+      _stringBuilder.AppendLine($"{_indent}{{");
       foreach (var commandInfo in commandsToGenerate)
       {
-        stringBuilder.Append($"{indention}  {commandInfo.PropertyName} = new({commandInfo.ExecuteMethod}");
+        _stringBuilder.Append($"{_indent}  {commandInfo.PropertyName} = new({commandInfo.ExecuteMethod}");
         if (commandInfo.CanExecuteMethod is not null)
         {
-          stringBuilder.Append($", {commandInfo.CanExecuteMethod}");
+          _stringBuilder.Append($", {commandInfo.CanExecuteMethod}");
         }
-        stringBuilder.AppendLine(");");
+        _stringBuilder.AppendLine(");");
       }
-      stringBuilder.AppendLine($"{indention}}}");
+      _stringBuilder.AppendLine($"{_indent}}}");
       foreach (var commandInfo in commandsToGenerate)
       {
-        stringBuilder.AppendLine();
-        stringBuilder.AppendLine($"{indention}public DelegateCommand {commandInfo.PropertyName} {{ get; private set; }}");
+        _stringBuilder.AppendLine();
+        _stringBuilder.AppendLine($"{_indent}public DelegateCommand {commandInfo.PropertyName} {{ get; private set; }}");
       }
 
       return commandsToGenerate;

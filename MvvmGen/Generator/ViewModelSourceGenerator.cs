@@ -51,42 +51,13 @@ namespace MvvmGen.Generator
         stringBuilder.AppendLine("{");
         indentLevel++;
 
-        var commandGenerator = new CommandGenerator();
-        var commandInfos = commandGenerator.Generate(classToGenerate, stringBuilder, indent());
+        // Generate commands
+        var commandGenerator = new CommandGenerator(classToGenerate, stringBuilder, indent());
+        var commandInfos = commandGenerator.Generate();
 
-        // Generate Wrapper Properties
-        if (classToGenerate.ModelTypeExpressionSyntax is not null)
-        {
-          TypeSyntax typeSyntax = classToGenerate.ModelTypeExpressionSyntax.Type;
-          var semanticModel = context.Compilation.GetSemanticModel(classToGenerate.ClassDeclarationSyntax.SyntaxTree);
-          var symbolInfo = semanticModel.GetSymbolInfo(typeSyntax);
-
-          stringBuilder.Append(indent());
-          stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
-          var namedTypeSymbol = symbolInfo.Symbol as INamedTypeSymbol;
-          var members = namedTypeSymbol?.GetMembers();
-          if (members is not null)
-          {
-            foreach (var member in members)
-            {
-              if (member is IMethodSymbol { MethodKind: MethodKind.PropertySet } methodSymbol)
-              {
-                var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
-                if (propertySymbol is not null)
-                {
-                  var commandsToInvalidate =
-                    commandInfos.Where(x => x.CanExecuteAffectingProperties is not null
-                    && x.CanExecuteAffectingProperties.Contains(propertySymbol.Name))
-                    .ToList();
-                  var indention = indent();
-                  CreateProperty(stringBuilder, indention, propertySymbol.Type.ToString(),
-                    propertySymbol.Name,
-                    commandsToInvalidate); ;
-                }
-              }
-            }
-          }
-        }
+        // Generate properties
+        var propertyGenerator = new PropertyGenerator(context, classToGenerate, stringBuilder, indent(), commandInfos);
+        propertyGenerator.Generate();
 
         while (indentLevel > 0)
         {
@@ -102,34 +73,14 @@ namespace MvvmGen.Generator
       Debug.WriteLine("Execute");
     }
 
-    private static void CreateProperty(StringBuilder stringBuilder,
-      string indention,string propertyType, string propertyName, List<CommandInfo> commandsToInvalidate)
-    {
-      stringBuilder.AppendLine(indention + $"public {propertyType} {propertyName}");
-      stringBuilder.AppendLine(indention + $"{{");
-      stringBuilder.AppendLine(indention + $"  get => Model.{propertyName};");
-      stringBuilder.AppendLine(indention + $"  set");
-      stringBuilder.AppendLine(indention + $"  {{");
-      stringBuilder.AppendLine(indention + $"    if(Model.{propertyName} != value)");
-      stringBuilder.AppendLine(indention + $"    {{");
-      stringBuilder.AppendLine(indention + $"      Model.{propertyName} = value;");
-      //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));"); 
-      foreach (var commandToInvalidate in commandsToInvalidate)
-      {
-        stringBuilder.AppendLine(indention + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
-      }
-
-      stringBuilder.AppendLine(indention + $"    }}");
-      stringBuilder.AppendLine(indention + $"  }}");
-      stringBuilder.AppendLine(indention + $"}}");
-    }
+   
 
     public void Initialize(GeneratorInitializationContext context)
     {
-      //if (!Debugger.IsAttached)
-      //{
-      //  Debugger.Launch();
-      //}
+      if (!Debugger.IsAttached)
+      {
+        Debugger.Launch();
+      }
 
       Debug.WriteLine("Initialize");
 

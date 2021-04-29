@@ -23,7 +23,8 @@ namespace Sample.WpfApp.ViewModel
 
     }
 
-
+    [Property]
+    private NavigationEmployeeItem? _selectedEmployee;
 
     public ObservableCollection<NavigationEmployeeItem> Employees { get; } = new();
     public ObservableCollection<NavigationOrganizationItem> Organizations { get; } = new();
