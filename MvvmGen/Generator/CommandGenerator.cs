@@ -19,9 +19,9 @@ namespace MvvmGen.Generator
   }
   public class CommandGenerator
   {
-    private ViewModelClassToGenerate _classToGenerate;
-    private StringBuilder _stringBuilder;
-    private string _indent;
+    private readonly ViewModelClassToGenerate _classToGenerate;
+    private readonly StringBuilder _stringBuilder;
+    private readonly string _indent;
 
     public CommandGenerator(ViewModelClassToGenerate classToGenerate,
       StringBuilder stringBuilder, 

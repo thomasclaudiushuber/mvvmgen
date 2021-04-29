@@ -9,11 +9,11 @@ namespace MvvmGen.Generator
 {
   internal class PropertyGenerator
   {
-    private GeneratorExecutionContext _context;
-    private ViewModelClassToGenerate _classToGenerate;
-    private StringBuilder _stringBuilder;
-    private string _indent;
-    private IEnumerable<CommandInfo> _commandInfos;
+    private readonly GeneratorExecutionContext _context;
+    private readonly ViewModelClassToGenerate _classToGenerate;
+    private readonly StringBuilder _stringBuilder;
+    private readonly string _indent;
+    private readonly IEnumerable<CommandInfo> _commandInfos;
 
     public PropertyGenerator(GeneratorExecutionContext context, ViewModelClassToGenerate classToGenerate, StringBuilder stringBuilder, string v, IEnumerable<CommandInfo> commandInfos)
     {
