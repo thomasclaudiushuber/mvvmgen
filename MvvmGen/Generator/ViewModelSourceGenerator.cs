@@ -54,7 +54,7 @@ namespace MvvmGen.Generator
         var commandGenerator = new CommandGenerator();
         var commandInfos = commandGenerator.Generate(classToGenerate, stringBuilder, indent());
 
-        // TODO: Generate Wrapper Properties
+        // Generate Wrapper Properties
         if (classToGenerate.ModelTypeExpressionSyntax is not null)
         {
           TypeSyntax typeSyntax = classToGenerate.ModelTypeExpressionSyntax.Type;
@@ -75,28 +75,13 @@ namespace MvvmGen.Generator
                 if (propertySymbol is not null)
                 {
                   var commandsToInvalidate =
-                    commandInfos.Where(x => x.CanExecuteAffectingProperties is not null 
+                    commandInfos.Where(x => x.CanExecuteAffectingProperties is not null
                     && x.CanExecuteAffectingProperties.Contains(propertySymbol.Name))
                     .ToList();
-
-                  stringBuilder.AppendLine(indent() + $"public {propertySymbol.Type} {propertySymbol.Name}");
-                  stringBuilder.AppendLine(indent() + $"{{");
-                  stringBuilder.AppendLine(indent() + $"  get => Model.{propertySymbol.Name};");
-                  stringBuilder.AppendLine(indent() + $"  set");
-                  stringBuilder.AppendLine(indent() + $"  {{");
-                  stringBuilder.AppendLine(indent() + $"    if(Model.{propertySymbol.Name} != value)");
-                  stringBuilder.AppendLine(indent() + $"    {{");
-                  stringBuilder.AppendLine(indent() + $"      Model.{propertySymbol.Name} = value;");
-                  //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));"); 
-                  foreach (var commandToInvalidate in commandsToInvalidate)
-                  {
-                    stringBuilder.AppendLine(indent() + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
-                  }
-
-
-                  stringBuilder.AppendLine(indent() + $"    }}");
-                  stringBuilder.AppendLine(indent() + $"  }}");
-                  stringBuilder.AppendLine(indent() + $"}}");
+                  var indention = indent();
+                  CreateProperty(stringBuilder, indention, propertySymbol.Type.ToString(),
+                    propertySymbol.Name,
+                    commandsToInvalidate); ;
                 }
               }
             }
@@ -115,6 +100,28 @@ namespace MvvmGen.Generator
       }
 
       Debug.WriteLine("Execute");
+    }
+
+    private static void CreateProperty(StringBuilder stringBuilder,
+      string indention,string propertyType, string propertyName, List<CommandInfo> commandsToInvalidate)
+    {
+      stringBuilder.AppendLine(indention + $"public {propertyType} {propertyName}");
+      stringBuilder.AppendLine(indention + $"{{");
+      stringBuilder.AppendLine(indention + $"  get => Model.{propertyName};");
+      stringBuilder.AppendLine(indention + $"  set");
+      stringBuilder.AppendLine(indention + $"  {{");
+      stringBuilder.AppendLine(indention + $"    if(Model.{propertyName} != value)");
+      stringBuilder.AppendLine(indention + $"    {{");
+      stringBuilder.AppendLine(indention + $"      Model.{propertyName} = value;");
+      //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));"); 
+      foreach (var commandToInvalidate in commandsToInvalidate)
+      {
+        stringBuilder.AppendLine(indention + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
+      }
+
+      stringBuilder.AppendLine(indention + $"    }}");
+      stringBuilder.AppendLine(indention + $"  }}");
+      stringBuilder.AppendLine(indention + $"}}");
     }
 
     public void Initialize(GeneratorInitializationContext context)
@@ -147,7 +154,6 @@ namespace MvvmGen.Generator
           .Where(x => x.Name.ToString() == nameof(ViewModelAttribute)
             || x.Name.ToString() == nameof(ViewModelAttribute).Replace("Attribute", ""))
           .FirstOrDefault();
-        //var symbolInfo = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
         
         if (viewModelGeneratorAttribute is not null)
         {
