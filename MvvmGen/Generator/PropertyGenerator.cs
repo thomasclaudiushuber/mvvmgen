@@ -32,7 +32,53 @@ namespace MvvmGen.Generator
 
     private void GeneratePropertiesForFields()
     {
-      
+      foreach(var member in _classToGenerate.ClassDeclarationSyntax.Members)
+      {
+        if(member is FieldDeclarationSyntax fieldDeclarationSyntax)
+        {
+         var attributeSyntax = fieldDeclarationSyntax.AttributeLists
+            .SelectMany(x => x.Attributes)
+           .Where(x => x.Name.ToString() == nameof(PropertyAttribute)
+             || x.Name.ToString() == nameof(PropertyAttribute).Replace("Attribute", ""))
+           .FirstOrDefault();
+
+          if (attributeSyntax is not null)
+          {
+            var propertyType = fieldDeclarationSyntax.Declaration.Type.ToString();
+            
+            bool propertyNameSpecifiedInAttribute = false;
+            // TODO: Find out if property name was specified with attribute
+
+            string? propertyName=null;
+            var fieldName = fieldDeclarationSyntax.Declaration.Variables.First().Identifier.ToString();
+
+            if (propertyName is null)
+            {
+              propertyName = fieldName;
+              if(propertyName.StartsWith("_"))
+              {
+                propertyName = propertyName.Substring(1);
+              }
+              else if (propertyName.StartsWith("m_"))
+              {
+                propertyName = propertyName.Substring(2);
+              }
+
+              var firstCharacter = propertyName.Substring(0, 1).ToUpper();
+              
+              propertyName = propertyName.Length>1 
+                ? firstCharacter + propertyName.Substring(1)
+                : firstCharacter;
+
+            }
+
+            if(propertyName is not null)
+            {
+              GenerateProperty(propertyType, propertyName, fieldName);
+            }
+          }
+        }
+      }
     }
 
     private void GeneratePropertiesForModelProperties()
@@ -45,6 +91,7 @@ namespace MvvmGen.Generator
 
         _stringBuilder.Append(_indent);
         _stringBuilder.AppendLine($"public {symbolInfo.Symbol} Model {{ get; set; }}");
+        _stringBuilder.AppendLine();
         var namedTypeSymbol = symbolInfo.Symbol as INamedTypeSymbol;
         var members = namedTypeSymbol?.GetMembers();
         if (members is not null)
@@ -56,14 +103,8 @@ namespace MvvmGen.Generator
               var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
               if (propertySymbol is not null)
               {
-                var commandsToInvalidate =
-                  _commandInfos.Where(x => x.CanExecuteAffectingProperties is not null
-                  && x.CanExecuteAffectingProperties.Contains(propertySymbol.Name))
-                  .ToList();
-                var indention = _indent;
-                GenerateProperty(_stringBuilder, indention, propertySymbol.Type.ToString(),
-                  propertySymbol.Name,
-                  commandsToInvalidate); ;
+                GenerateProperty(propertySymbol.Type.ToString(),
+                  propertySymbol.Name,$"Model.{propertySymbol.Name}");
               }
             }
           }
@@ -71,26 +112,29 @@ namespace MvvmGen.Generator
       }
     }
 
-    private static void GenerateProperty(StringBuilder stringBuilder,
-     string indention, string propertyType, string propertyName, List<CommandInfo> commandsToInvalidate)
+    private void GenerateProperty(string propertyType, string propertyName, string backingFieldName)
     {
-      stringBuilder.AppendLine(indention + $"public {propertyType} {propertyName}");
-      stringBuilder.AppendLine(indention + $"{{");
-      stringBuilder.AppendLine(indention + $"  get => Model.{propertyName};");
-      stringBuilder.AppendLine(indention + $"  set");
-      stringBuilder.AppendLine(indention + $"  {{");
-      stringBuilder.AppendLine(indention + $"    if(Model.{propertyName} != value)");
-      stringBuilder.AppendLine(indention + $"    {{");
-      stringBuilder.AppendLine(indention + $"      Model.{propertyName} = value;");
+      var commandsToInvalidate =
+         _commandInfos.Where(x => x.CanExecuteAffectingProperties is not null
+         && x.CanExecuteAffectingProperties.Contains(propertyName))
+         .ToList();
+      _stringBuilder.AppendLine(_indent + $"public {propertyType} {propertyName}");
+      _stringBuilder.AppendLine(_indent + $"{{");
+      _stringBuilder.AppendLine(_indent + $"  get => {backingFieldName};");
+      _stringBuilder.AppendLine(_indent + $"  set");
+      _stringBuilder.AppendLine(_indent + $"  {{");
+      _stringBuilder.AppendLine(_indent + $"    if ({backingFieldName} != value)");
+      _stringBuilder.AppendLine(_indent + $"    {{");
+      _stringBuilder.AppendLine(_indent + $"      {backingFieldName} = value;");
       //stringBuilder.AppendLine(indent() + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs({propertySymbol.Name}));"); 
       foreach (var commandToInvalidate in commandsToInvalidate)
       {
-        stringBuilder.AppendLine(indention + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
+        _stringBuilder.AppendLine(_indent + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
       }
 
-      stringBuilder.AppendLine(indention + $"    }}");
-      stringBuilder.AppendLine(indention + $"  }}");
-      stringBuilder.AppendLine(indention + $"}}");
+      _stringBuilder.AppendLine(_indent + $"    }}");
+      _stringBuilder.AppendLine(_indent + $"  }}");
+      _stringBuilder.AppendLine(_indent + $"}}");
     }
   }
 }

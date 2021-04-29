@@ -35,14 +35,18 @@ namespace MvvmGen.Generator
 
         // Add using directives
         stringBuilder.AppendLine("using MvvmGen.Core;");
+        // TODO: Add also all using directives from source file, so that all types are found
 
         // Add namespace declaration
-        if (namespaceDeclarationSyntax is not null)
+        if (namespaceDeclarationSyntax is null)
         {
-          stringBuilder.AppendLine($"namespace {namespaceDeclarationSyntax.Name}");
-          stringBuilder.AppendLine("{");
-          indentLevel++;
+          return;
+          // TODO: Show an error here. ViewModel class must be top-level within a namespace
         }
+
+        stringBuilder.AppendLine($"namespace {namespaceDeclarationSyntax.Name}");
+        stringBuilder.AppendLine("{");
+        indentLevel++;
 
         // Generate class declaration
         stringBuilder.Append(indent());
@@ -67,7 +71,8 @@ namespace MvvmGen.Generator
         }
 
         var sourceText = SourceText.From(stringBuilder.ToString(), Encoding.UTF8);
-        context.AddSource($"{classToGenerate.ClassDeclarationSyntax.Identifier}.generated.cs", sourceText);
+        var filePath = classToGenerate.ClassDeclarationSyntax.SyntaxTree.FilePath;
+        context.AddSource($"{namespaceDeclarationSyntax.Name}.{classToGenerate.ClassDeclarationSyntax.Identifier}.generated.cs", sourceText);
       }
 
       Debug.WriteLine("Execute");
@@ -77,10 +82,10 @@ namespace MvvmGen.Generator
 
     public void Initialize(GeneratorInitializationContext context)
     {
-      if (!Debugger.IsAttached)
-      {
-        Debugger.Launch();
-      }
+      //if (!Debugger.IsAttached)
+      //{
+      //  Debugger.Launch();
+      //}
 
       Debug.WriteLine("Initialize");
 

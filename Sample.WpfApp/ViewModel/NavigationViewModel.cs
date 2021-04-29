@@ -20,7 +20,7 @@ namespace Sample.WpfApp.ViewModel
 
     public void Refresh()
     {
-
+      
     }
 
     [Property]

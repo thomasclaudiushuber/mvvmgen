@@ -6,6 +6,9 @@ namespace Sample.WpfApp.ViewModel
   [ViewModel(typeof(Employee))]
   public partial class EmployeeViewModel
   {
+    [Property]
+    private string? _updateComment;
+
     public EmployeeViewModel()
     {
       InitializeCommands();
@@ -17,6 +20,7 @@ namespace Sample.WpfApp.ViewModel
 
     }
 
+    [Invalidate(nameof(UpdateComment))]
     [Invalidate(nameof(FirstName))]
     [Invalidate(nameof(LastName))]
     public bool CanSave()
