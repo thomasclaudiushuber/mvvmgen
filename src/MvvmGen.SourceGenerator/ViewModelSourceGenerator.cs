@@ -36,6 +36,7 @@ namespace MvvmGen.SourceGenerator
         // Add using directives
         stringBuilder.AppendLine("using System.ComponentModel;");
         stringBuilder.AppendLine("using MvvmGen.Commands;");
+        stringBuilder.AppendLine("using MvvmGen.ViewModels;");
         stringBuilder.AppendLine();
         // TODO: Add also all using directives from source file, so that all types will be found
 
@@ -50,27 +51,16 @@ namespace MvvmGen.SourceGenerator
         stringBuilder.AppendLine("{");
         indentLevel++;
 
-        var generateINotifyPropertyChanged = false;
-        INamedTypeSymbol? notifySymbol = context.Compilation.GetTypeByMetadataName("System.ComponentModel.INotifyPropertyChanged");
-        if (notifySymbol is not null)
-        {
-          generateINotifyPropertyChanged = classSymbol.AllInterfaces.Contains(notifySymbol) == false;
-        }
+        var objectSymbol = context.Compilation.GetTypeByMetadataName("System.Object");
+        var inheritFromViewModelBase = classSymbol.BaseType.Equals(objectSymbol);
 
         // Generate class declaration
         stringBuilder.Append(indent());
         stringBuilder.AppendLine($"public partial class {classSymbol.Name}" +
-          (generateINotifyPropertyChanged ? " : INotifyPropertyChanged" : ""));
+          (inheritFromViewModelBase? " : ViewModelBase" : ""));
         stringBuilder.Append(indent());
         stringBuilder.AppendLine("{");
         indentLevel++;
-
-        // Generate INotifyPropertyChanged
-        if (generateINotifyPropertyChanged)
-        {
-          stringBuilder.AppendLine($"{indent()}public event PropertyChangedEventHandler? PropertyChanged;");
-          stringBuilder.AppendLine();
-        }
 
         // Generate commands
         var commandGenerator = new CommandGenerator(classToGenerate, stringBuilder, indent());

@@ -119,7 +119,7 @@ namespace MvvmGen.SourceGenerator
       _stringBuilder.AppendLine(_indent + $"    if ({backingFieldName} != value)");
       _stringBuilder.AppendLine(_indent + $"    {{");
       _stringBuilder.AppendLine(_indent + $"      {backingFieldName} = value;");
-      _stringBuilder.AppendLine(_indent + $"      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(\"{propertyName}\"));");
+      _stringBuilder.AppendLine(_indent + $"      OnPropertyChanged(\"{propertyName}\");");
       foreach (var commandToInvalidate in commandsToInvalidate)
       {
         _stringBuilder.AppendLine(_indent + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");

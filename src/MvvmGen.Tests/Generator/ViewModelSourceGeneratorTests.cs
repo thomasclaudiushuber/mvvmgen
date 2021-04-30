@@ -55,13 +55,12 @@ namespace MvvmGen.Generator
 }",
 @"using System.ComponentModel;
 using MvvmGen.Commands;
+using MvvmGen.ViewModels;
 
 namespace MyCode
 {
-  public partial class EmployeeViewModel : INotifyPropertyChanged
+  public partial class EmployeeViewModel : ViewModelBase
   {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public void Initialize()
     {
     }
@@ -72,7 +71,7 @@ namespace MyCode
 
 
     [Fact]
-    public void GenerateINotifyPropertyChanged()
+    public void GenerateViewModelBase()
     {
       ShouldGenerateExpectedCode(
 @"using MvvmGen;
@@ -86,72 +85,42 @@ namespace MyCode
 }",
 @"using System.ComponentModel;
 using MvvmGen.Commands;
+using MvvmGen.ViewModels;
 
 namespace MyCode
 {
-  public partial class EmployeeViewModel : INotifyPropertyChanged
-  {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public void Initialize()
-    {
-    }
-  }
-}
-");
-    }
-
-    [Fact]
-    public void GenerateINotifyPropertyChangedNotIfDefinedOnViewModel()
-    {
-      ShouldGenerateExpectedCode(
-@"using System.ComponentModel;
-using MvvmGen;
-
-namespace MyCode
-{   
-  [ViewModel]
-  public partial class EmployeeViewModel : INotifyPropertyChanged
-  {
-    public event PropertyChangedEventHandler? PropertyChanged;
-  }
-}",
-@"using System.ComponentModel;
-using MvvmGen.Commands;
-
-namespace MyCode
-{
-  public partial class EmployeeViewModel
-  {
-    public void Initialize()
-    {
-    }
-  }
-}
-");
-    }
-
-    [Fact]
-    public void GenerateINotifyPropertyChangedNotIfDefinedOnViewModelBaseClass()
-    {
-      ShouldGenerateExpectedCode(
-@"using System.ComponentModel;
-using MvvmGen;
-
-namespace MyCode
-{   
-  public class ViewModelBase : INotifyPropertyChanged
-  {
-    public event PropertyChangedEventHandler? PropertyChanged;
-  }
-
-  [ViewModel]
   public partial class EmployeeViewModel : ViewModelBase
   {
+    public void Initialize()
+    {
+    }
+  }
+}
+");
+    }
+
+    [Fact]
+    public void GenerateViewModelBaseNotIfClassInheritsFromOtherClass()
+    {
+     ShouldGenerateExpectedCode(
+@"using System.ComponentModel;
+using MvvmGen;
+
+namespace MyCode
+{   
+  public class CustomViewModelBase
+  {
+    protected void OnPropertyChanged(string propertyName) { }
+  }
+
+  [ViewModel]
+  public partial class EmployeeViewModel : CustomViewModelBase
+  {
   }
 }",
 @"using System.ComponentModel;
 using MvvmGen.Commands;
+using MvvmGen.ViewModels;
 
 namespace MyCode
 {
@@ -181,13 +150,12 @@ namespace MyCode
 }",
 @"using System.ComponentModel;
 using MvvmGen.Commands;
+using MvvmGen.ViewModels;
 
 namespace MyCode
 {
-  public partial class EmployeeViewModel : INotifyPropertyChanged
+  public partial class EmployeeViewModel : ViewModelBase
   {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public void Initialize()
     {
       SaveAllCommand = new(SaveAll);
@@ -218,13 +186,12 @@ namespace MyCode
 }",
 @"using System.ComponentModel;
 using MvvmGen.Commands;
+using MvvmGen.ViewModels;
 
 namespace MyCode
 {
-  public partial class EmployeeViewModel : INotifyPropertyChanged
+  public partial class EmployeeViewModel : ViewModelBase
   {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public void Initialize()
     {
       SaveAllCommand = new(SaveAll, CanSaveAll);
