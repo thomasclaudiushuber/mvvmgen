@@ -1,4 +1,4 @@
-name: MvvmGen
+name: MvvmGen Build
 
 on:
   push:
