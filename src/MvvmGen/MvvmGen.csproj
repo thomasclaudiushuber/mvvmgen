@@ -4,14 +4,17 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+  
+  <PropertyGroup>
     <Title>MvvmGen</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui xaml generator</PackageTags>
-    <Version>0.5.2</Version>
+    <Version>0.5.3</Version>
     <Authors>Thomas Claudius Huber</Authors>
     <Product>MvvmGen</Product>
-    <Description>MvvmGen is a lightweight, next generation MVVM library for XAML applications. It is built with C# source generators and it helps you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, and MAUI apps, as it generates all the boilerplate for you.</Description>
+    <Description>MvvmGen is a lightweight, next generation MVVM library for XAML applications. It is built with C# source generators and it helps you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Xamarin.Forms and .NET MAUI apps, as it generates all the boilerplate for you.</Description>
     <Copyright>Copyright 2021 Thomas Claudius Huber</Copyright>
     <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen/</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

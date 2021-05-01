@@ -1,3 +1,5 @@
+[![MvvmGen Build](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/mvvmgen_build.yml/badge.svg)](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/mvvmgen_build.yml)
+
 # ⚡ MvvmGen 
 ## The Next Generation MVVM library – Say Goodbye to the Boilerplate
 Hey there, welcome to the **MvvmGen** repository. MvvmGen is a next generation MVVM library that helps you to apply the popular Model-View-ViewModel-pattern (MVVM) in your XAML applications that you build with WPF, WinUI, Xamarin, or .NET MAUI.
