@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.WpfApp", "samples\Wpf\Sample.WpfApp\Sample.WpfApp.csproj", "{D41BD2E5-3635-431B-B1CC-DB8F5F384B5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.Tests", "src\MvvmGen.Tests\MvvmGen.Tests.csproj", "{035B9F55-A59E-439F-B9A5-E61949063903}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerator.Tests", "src\MvvmGen.SourceGenerator.Tests\MvvmGen.SourceGenerator.Tests.csproj", "{035B9F55-A59E-439F-B9A5-E61949063903}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen", "src\MvvmGen\MvvmGen.csproj", "{4A1EB658-81D3-40DA-A53F-66EA9A471FC4}"
 EndProject

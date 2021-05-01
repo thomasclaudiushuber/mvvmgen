@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
-    <AssemblyName>MvvmGen.SourceGenerator.0.5.4</AssemblyName>
+    <AssemblyName>MvvmGen.SourceGenerator.0.5.5</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
