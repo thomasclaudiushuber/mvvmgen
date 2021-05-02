@@ -18,10 +18,15 @@
     <RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Language>en-US</Language>
+    <PackageIcon>packageIcon.png</PackageIcon>
   </PropertyGroup>
   
   <ItemGroup>
     <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="packageIcon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
