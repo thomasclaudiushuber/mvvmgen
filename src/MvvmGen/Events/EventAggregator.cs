@@ -1,46 +1,42 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace MvvmGen.Events
 {
   public class EventAggregator : IEventAggregator
   {
-    private readonly Dictionary<Type, List<Delegate>> _handlersByEventType;
+    private readonly ConcurrentDictionary<Type, List<Delegate>> _handlersByEventType = new();
 
-    public EventAggregator()
+    public void Publish<TEvent>(TEvent eventToPublish)
     {
-      _handlersByEventType = new Dictionary<Type, List<Delegate>>();
-    }
-
-    public void Publish<T>(T eventArgs)
-    {
-      if (_handlersByEventType.ContainsKey(typeof(T)))
+      if (_handlersByEventType.ContainsKey(typeof(TEvent)))
       {
-        foreach (var handler in _handlersByEventType[typeof(T)])
+        foreach (var handler in _handlersByEventType[typeof(TEvent)])
         {
-          handler.DynamicInvoke(this, eventArgs);
+          handler.DynamicInvoke(eventToPublish);
         }
       }
     }
 
-    public void Subscribe<T>(EventHandler<T> eventHandler)
+    public void Subscribe<TEvent>(Action<TEvent> eventHandler)
     {
-      if (!_handlersByEventType.ContainsKey(typeof(T)))
+      if (!_handlersByEventType.ContainsKey(typeof(TEvent)))
       {
-        _handlersByEventType[typeof(T)] = new List<Delegate>();
+        _handlersByEventType[typeof(TEvent)] = new List<Delegate>();
       }
-      if (!_handlersByEventType[typeof(T)].Contains(eventHandler))
+      if (!_handlersByEventType[typeof(TEvent)].Contains(eventHandler))
       {
-        _handlersByEventType[typeof(T)].Add(eventHandler);
+        _handlersByEventType[typeof(TEvent)].Add(eventHandler);
       }
     }
 
-    public void Unsubscribe<T>(EventHandler<T> eventHandler)
+    public void Unsubscribe<TEvent>(Action<TEvent> eventHandler)
     {
-      if (_handlersByEventType.ContainsKey(typeof(T))
-        && _handlersByEventType[typeof(T)].Contains(eventHandler))
+      if (_handlersByEventType.ContainsKey(typeof(TEvent))
+        && _handlersByEventType[typeof(TEvent)].Contains(eventHandler))
       {
-        _handlersByEventType[typeof(T)].Remove(eventHandler);
+        _handlersByEventType[typeof(TEvent)].Remove(eventHandler);
       }
     }
   }

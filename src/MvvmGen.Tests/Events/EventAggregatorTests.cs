@@ -11,7 +11,7 @@ namespace MvvmGen.Events
       var eventAggregator = new EventAggregator();
 
       int? receivedValue = null;
-      EventHandler<int> myHandler = (s, e) => receivedValue = e;
+      Action<int> myHandler = x => receivedValue = x;
       eventAggregator.Subscribe<int>(myHandler);
       eventAggregator.Publish<int>(5);
 
@@ -25,7 +25,7 @@ namespace MvvmGen.Events
       var eventAggregator = new EventAggregator();
 
       int numberOfCalls = 0;
-      EventHandler<int> myHandler = (s, e) => numberOfCalls++;
+      Action<int> myHandler = _ => numberOfCalls++;
       eventAggregator.Subscribe<int>(myHandler);
       eventAggregator.Subscribe<int>(myHandler);
       eventAggregator.Subscribe<int>(myHandler);
@@ -42,9 +42,9 @@ namespace MvvmGen.Events
       int? receivedValue1 = null;
       int? receivedValue2 = null;
       bool shouldBeFalse = false;
-      EventHandler<int> myHandler1 = (s, e) => receivedValue1 = e;
-      EventHandler<int> myHandler2 = (s, e) => receivedValue2 = e;
-      EventHandler<double> myHandler3 = (s, e) => shouldBeFalse = true;
+      Action<int> myHandler1 = x => receivedValue1 = x;
+      Action<int> myHandler2 = x => receivedValue2 = x;
+      Action<double> myHandler3 = _=> shouldBeFalse = true;
       eventAggregator.Subscribe<int>(myHandler1);
       eventAggregator.Subscribe<int>(myHandler2);
       eventAggregator.Subscribe<double>(myHandler3);
@@ -64,8 +64,8 @@ namespace MvvmGen.Events
 
       int? receivedValue1 = null;
       int? receivedValue2 = null;
-      EventHandler<int> myHandler1 = (s, e) => receivedValue1 = e;
-      EventHandler<int> myHandler2 = (s, e) => receivedValue2 = e;
+      Action<int> myHandler1 = x => receivedValue1 = x;
+      Action<int> myHandler2 = x => receivedValue2 = x;
       eventAggregator.Subscribe<int>(myHandler1);
       eventAggregator.Subscribe<int>(myHandler2);
       eventAggregator.Unsubscribe<int>(myHandler1);
@@ -80,7 +80,7 @@ namespace MvvmGen.Events
     public void ShouldNotThrownWhenUnsubscribingUnregisteredHandler()
     {
       var eventAggregator = new EventAggregator();
-      EventHandler<int> myHandler1 = (s, e) => { };
+      Action<int> myHandler1 =_ => { };
       eventAggregator.Unsubscribe<int>(myHandler1);
     }
 
