@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>0.5.6</Version>
+    <Version>0.5.7</Version>
     <AssemblyVersion>$(Version).0</AssemblyVersion>
     <AssemblyFileVersion>$(Version).0</AssemblyFileVersion>
     <Authors>Thomas Claudius Huber</Authors>
