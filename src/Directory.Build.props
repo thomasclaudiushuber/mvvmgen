@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.5.7</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <AssemblyFileVersion>$(Version).0</AssemblyFileVersion>
+    <Authors>Thomas Claudius Huber</Authors>
+    <AssemblyCompany>Thomas Claudius Huber</AssemblyCompany>
+    <Copyright>Copyright 2021 Thomas Claudius Huber</Copyright>
+  </PropertyGroup>
+</Project>

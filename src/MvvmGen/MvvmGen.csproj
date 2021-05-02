@@ -11,11 +11,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui xaml generator</PackageTags>
-    <Version>0.5.5</Version>
-    <Authors>Thomas Claudius Huber</Authors>
     <Product>MvvmGen</Product>
     <Description>MvvmGen is a lightweight, next generation MVVM library for XAML applications. It is built with C# source generators and it helps you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Xamarin.Forms and .NET MAUI apps, as it generates all the boilerplate for you.</Description>
-    <Copyright>Copyright 2021 Thomas Claudius Huber</Copyright>
     <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen/</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>
@@ -35,7 +32,7 @@
          Including the pacakge version in the assembly name of the source generator helps to solve this issue.
          Read more in this issue here: https://github.com/dotnet/roslyn/issues/48083
      -->
-    <None Include="..\MvvmGen.SourceGenerator\bin\$(Configuration)\netstandard2.0\$(AssemblyName).SourceGenerator.$(Version).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="..\MvvmGen.SourceGenerator\bin\$(Configuration)\netstandard2.0\$(AssemblyName).SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
