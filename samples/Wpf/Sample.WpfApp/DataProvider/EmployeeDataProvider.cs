@@ -14,9 +14,9 @@ namespace Sample.WpfApp.DataProvider
     {
       return new List<Employee>
       {
-        new Employee{FirstName="Julia",LastName="Developer"},
-        new Employee{FirstName="Anna",LastName="Programmer"},
-        new Employee{FirstName="Thomas",LastName="Huber"},
+        new Employee{Id= 1, FirstName="Julia",LastName="Developer"},
+        new Employee{Id= 2, FirstName="Anna",LastName="Programmer"},
+        new Employee{Id= 3, FirstName="Thomas",LastName="Huber"},
       };
     }
   }

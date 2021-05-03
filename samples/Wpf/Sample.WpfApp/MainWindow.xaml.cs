@@ -8,7 +8,7 @@ namespace Sample.WpfApp
     public MainWindow()
     {
       InitializeComponent();
-      DataContext = new EmployeeViewModel();
+      DataContext = new MainViewModel();
     }
   }
 }
