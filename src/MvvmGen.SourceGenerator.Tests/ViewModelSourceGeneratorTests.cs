@@ -60,7 +60,7 @@ using MvvmGen.Commands;
 using MvvmGen.ViewModels;";
 
     [Fact]
-    public void GenerateWithFullQualifiedAttributeName()
+    public void GenerateViewModelWithFullQualifiedAttributeName()
     {
       ShouldGenerateExpectedCode(
 @"namespace MyCode
@@ -84,7 +84,6 @@ namespace MyCode
 }}
 ");
     }
-
 
     [Fact]
     public void GenerateViewModelBase()
@@ -192,10 +191,10 @@ namespace MyCode
 ");
     }
 
-    [InlineData("PropertyName=\"AmazingFirstName\"","AmazingFirstName")]
+    [InlineData("PropertyName=\"AmazingFirstName\"", "AmazingFirstName")]
     [InlineData("\"IncredibleFirstName\"", "IncredibleFirstName")]
     [Theory]
-    public void GeneratePropertyWithName(string attributeArgument,string expectedPropertyName)
+    public void GeneratePropertyWithName(string attributeArgument, string expectedPropertyName)
     {
       ShouldGenerateExpectedCode(
 $@"using MvvmGen;
@@ -374,5 +373,5 @@ namespace MyCode
 }}
 ");
     }
-    }
+  }
 }

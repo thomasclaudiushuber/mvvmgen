@@ -105,6 +105,7 @@ namespace MvvmGen.SourceGenerator
           return;
         }
 
+        _stringBuilder.AppendLine();
         _stringBuilder.Append(_indent);
         _stringBuilder.AppendLine($"public {model} Model {{ get; set; }}");
         _stringBuilder.AppendLine();
