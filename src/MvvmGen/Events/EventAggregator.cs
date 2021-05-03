@@ -1,42 +1,79 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MvvmGen.Events
 {
   public class EventAggregator : IEventAggregator
   {
-    private readonly ConcurrentDictionary<Type, List<Delegate>> _handlersByEventType = new();
+    internal Dictionary<Type, List<WeakReference>> _eventSubscribers = new();
 
     public void Publish<TEvent>(TEvent eventToPublish)
     {
-      if (_handlersByEventType.ContainsKey(typeof(TEvent)))
+      if (eventToPublish is null)
       {
-        foreach (var handler in _handlersByEventType[typeof(TEvent)])
+        throw new ArgumentNullException(nameof(eventToPublish));
+      }
+      if (!_eventSubscribers.ContainsKey(typeof(TEvent)))
+      {
+        return;
+      }
+
+      var subscribersToRemove = new List<WeakReference>();
+
+      foreach (var subscriber in _eventSubscribers[typeof(TEvent)])
+      {
+        if (subscriber.IsAlive)
         {
-          handler.DynamicInvoke(eventToPublish);
+          subscriber.Target.GetType()
+            .GetMethod(nameof(IEventSubscriber<object>.OnEvent), new[] { typeof(TEvent) })
+            .Invoke(subscriber.Target, new object[] { eventToPublish });
+        }
+        else
+        {
+          subscribersToRemove.Add(subscriber);
         }
       }
-    }
 
-    public void Subscribe<TEvent>(Action<TEvent> eventHandler)
-    {
-      if (!_handlersByEventType.ContainsKey(typeof(TEvent)))
+      foreach (var subscriber in subscribersToRemove)
       {
-        _handlersByEventType[typeof(TEvent)] = new List<Delegate>();
-      }
-      if (!_handlersByEventType[typeof(TEvent)].Contains(eventHandler))
-      {
-        _handlersByEventType[typeof(TEvent)].Add(eventHandler);
+        _eventSubscribers[typeof(TEvent)].Remove(subscriber);
       }
     }
 
-    public void Unsubscribe<TEvent>(Action<TEvent> eventHandler)
+    public void RegisterSubscriber<TSubscriber>(TSubscriber subscriber)
     {
-      if (_handlersByEventType.ContainsKey(typeof(TEvent))
-        && _handlersByEventType[typeof(TEvent)].Contains(eventHandler))
+      if (subscriber is null)
       {
-        _handlersByEventType[typeof(TEvent)].Remove(eventHandler);
+        throw new ArgumentNullException(nameof(subscriber));
+      }
+
+      var subscriberInterfaces = typeof(TSubscriber).GetInterfaces()
+        .Where(t => t.IsGenericType && t.FullName.StartsWith("MvvmGen.Events.IEventSubscriber")).ToList();
+
+      if (subscriberInterfaces.Any())
+      {
+        var weakReference = new WeakReference(subscriber);
+
+        var eventTypes = subscriberInterfaces.SelectMany(x => x.GenericTypeArguments).Distinct();
+
+        foreach (var eventType in eventTypes)
+        {
+          if (!_eventSubscribers.ContainsKey(eventType))
+          {
+            _eventSubscribers.Add(eventType, new());
+          }
+          if (!_eventSubscribers[eventType].Any(x => x.IsAlive && x.Target.Equals(subscriber)))
+          {
+            _eventSubscribers[eventType].Add(weakReference);
+          }
+        }
       }
     }
   }

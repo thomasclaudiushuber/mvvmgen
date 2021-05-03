@@ -1,4 +1,10 @@
-﻿using System.ComponentModel;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace MvvmGen.ViewModels

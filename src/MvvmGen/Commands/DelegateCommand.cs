@@ -1,6 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using System;
 using System.Windows.Input;
 
 namespace MvvmGen.Commands

@@ -1,4 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using MvvmGen.SourceGenerator.Extensions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +15,15 @@ namespace MvvmGen.SourceGenerator
 {
   internal class CommandInfo
   {
-    public CommandInfo(string executeMethod)
+    public CommandInfo(string executeMethod, string commandName)
     {
       ExecuteMethod = executeMethod;
+      CommandName = commandName;
     }
+
     public string ExecuteMethod { get; }
+    public string CommandName { get; }
     public string? CanExecuteMethod { get; set; }
-    public string PropertyName => $"{ExecuteMethod}Command";
     public string[]? CanExecuteAffectingProperties { get; set; }
   }
 
@@ -44,9 +53,9 @@ namespace MvvmGen.SourceGenerator
           var commandAttributeData = methodSymbol.GetAttributes()
             .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.CommandAttribute");
 
-            var invalidateAttributeDatas = methodSymbol.GetAttributes()
-            .Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.CommandInvalidateAttribute")
-            .ToList();
+          var invalidateAttributeDatas = methodSymbol.GetAttributes()
+          .Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.CommandInvalidateAttribute")
+          .ToList();
 
           if (commandAttributeData is not null)
           {
@@ -61,19 +70,29 @@ namespace MvvmGen.SourceGenerator
             //}
 
             var commandAttributeSyntax = ((AttributeSyntax?)commandAttributeData.ApplicationSyntaxReference?.GetSyntax());
-            var canExecuteMethod = commandAttributeSyntax?.ArgumentList?.Arguments.FirstOrDefault()?.ToString();
+            var commandName = $"{methodSymbol.Name}Command";
+            string? canExecuteMethod = null;
 
-            if (canExecuteMethod is not null)
+            if (commandAttributeSyntax?.ArgumentList?.Arguments is not null)
             {
-              canExecuteMethod = canExecuteMethod
-                // Extract name from nameof expression
-                .Replace("nameof(", "")
-                .Replace(")", "")
-                // Extract name from string literal
-                .Replace("\"", "");
+              foreach (var argument in commandAttributeSyntax.ArgumentList.Arguments)
+              {
+                if (argument is AttributeArgumentSyntax attributeArgumentSyntax)
+                {
+                  if (argument.NameEquals?.Name.Identifier.Text is null
+                    || argument.NameEquals?.Name.Identifier.Text == "CanExecuteMethod")
+                  {
+                    canExecuteMethod = argument.GetStringValueFromAttributeArgument();
+                  }
+                  else if (argument.NameEquals?.Name.Identifier.Text == "CommandName")
+                  {
+                    commandName = argument.GetStringValueFromAttributeArgument() ;
+                  }
+                }
+              }
             }
             commandsToGenerate.Add(
-               new CommandInfo(methodSymbol.Name)
+               new CommandInfo(methodSymbol.Name, commandName)
                {
                  CanExecuteMethod = canExecuteMethod
                });
@@ -149,7 +168,7 @@ namespace MvvmGen.SourceGenerator
       {
         var canExecuteAffectingProperties = new List<string>();
         AddPropertyNames(commandInfo.CanExecuteMethod, canExecuteAffectingProperties);
-        AddPropertyNames(commandInfo.ExecuteMethod, canExecuteAffectingProperties);
+        AddPropertyNames(commandInfo.CommandName, canExecuteAffectingProperties);
         commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
       }
 
@@ -157,7 +176,7 @@ namespace MvvmGen.SourceGenerator
       _stringBuilder.AppendLine($"{_indent}{{");
       foreach (var commandInfo in commandsToGenerate)
       {
-        _stringBuilder.Append($"{_indent}  {commandInfo.PropertyName} = new({commandInfo.ExecuteMethod}");
+        _stringBuilder.Append($"{_indent}  {commandInfo.CommandName} = new({commandInfo.ExecuteMethod}");
         if (commandInfo.CanExecuteMethod is not null)
         {
           _stringBuilder.Append($", {commandInfo.CanExecuteMethod}");
@@ -168,7 +187,7 @@ namespace MvvmGen.SourceGenerator
       foreach (var commandInfo in commandsToGenerate)
       {
         _stringBuilder.AppendLine();
-        _stringBuilder.AppendLine($"{_indent}public DelegateCommand {commandInfo.PropertyName} {{ get; private set; }}");
+        _stringBuilder.AppendLine($"{_indent}public DelegateCommand {commandInfo.CommandName} {{ get; private set; }}");
       }
 
       return commandsToGenerate;

@@ -1,4 +1,10 @@
-﻿using System;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using System;
 
 namespace MvvmGen
 {
@@ -12,6 +18,8 @@ namespace MvvmGen
       CanExecuteMethod = canExecuteMethod;
     }
 
-    public string? CanExecuteMethod { get; private set; }
+    public string? CanExecuteMethod { get; set; }
+
+    public string? CommandName { get; set; }
   }
 }

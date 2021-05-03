@@ -1,11 +1,16 @@
-﻿using Microsoft.CodeAnalysis;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using System.Reflection;
 
 namespace MvvmGen.SourceGenerator
 {
@@ -21,8 +26,8 @@ namespace MvvmGen.SourceGenerator
 
       foreach (var classToGenerate in receiver.ClassesToGenerate)
       {
-        int indentLevel = 0;
-        int indentSpaces = 2;
+        var indentLevel = 0;
+        var indentSpaces = 2;
         string indent()
         {
           return new string(' ', indentLevel * indentSpaces);
@@ -61,11 +66,12 @@ namespace MvvmGen.SourceGenerator
         indentLevel++;
 
         var objectSymbol = context.Compilation.GetTypeByMetadataName("System.Object");
-        var inheritFromViewModelBase = classSymbol.BaseType.Equals(objectSymbol);
+        var inheritFromViewModelBase = classSymbol.BaseType is not null 
+          && classSymbol.BaseType.Equals(objectSymbol, SymbolEqualityComparer.Default);
 
         // Generate class declaration
         stringBuilder.Append(indent());
-        stringBuilder.AppendLine($"public partial class {classSymbol.Name}" +
+        stringBuilder.AppendLine($"partial class {classSymbol.Name}" +
           (inheritFromViewModelBase ? " : ViewModelBase" : ""));
         stringBuilder.Append(indent());
         stringBuilder.AppendLine("{");
@@ -102,7 +108,7 @@ namespace MvvmGen.SourceGenerator
     }
   }
 
-  class SyntaxReceiver : ISyntaxContextReceiver
+  internal class SyntaxReceiver : ISyntaxContextReceiver
   {
     public List<ViewModelClassToGenerate> ClassesToGenerate { get; } = new();
 
@@ -120,7 +126,7 @@ namespace MvvmGen.SourceGenerator
 
         if (classSymbol is not null && viewModelAttributeData is not null)
         {
-          ClassesToGenerate.Add(new ViewModelClassToGenerate(classDeclarationSyntax,
+          ClassesToGenerate.Add(new ViewModelClassToGenerate(
             classSymbol,
             viewModelAttributeData));
         }
@@ -131,7 +137,6 @@ namespace MvvmGen.SourceGenerator
   public class ViewModelClassToGenerate
   {
     public ViewModelClassToGenerate(
-      ClassDeclarationSyntax classDeclarationSyntax,
       INamedTypeSymbol classSymbol,
       AttributeData viewModelAttributeData)
     {

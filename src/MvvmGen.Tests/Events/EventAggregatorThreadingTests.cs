@@ -4,20 +4,9 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System;
-
-namespace MvvmGen
+namespace MvvmGen.Events
 {
-  [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-  public class ViewModelAttribute : Attribute
+  class EventAggregatorThreadingTests
   {
-    public ViewModelAttribute() { }
-
-    public ViewModelAttribute(Type modelType)
-    {
-      ModelType = modelType;
-    }
-
-    public Type? ModelType { get; set; }
   }
 }

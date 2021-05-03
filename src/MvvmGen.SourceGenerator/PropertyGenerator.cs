@@ -1,4 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MvvmGen.SourceGenerator.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,16 +48,27 @@ namespace MvvmGen.SourceGenerator
           {
             var propertyType = fieldSymbol.Type.ToString();
 
-            var typedConstant = attributeData.ConstructorArguments.FirstOrDefault();
+            var propertyAttributeSyntax = ((AttributeSyntax?)attributeData.ApplicationSyntaxReference?.GetSyntax());
 
             string? propertyName = null;
             var fieldName = fieldSymbol.Name;
 
-            if (typedConstant.Value is not null)
+            if (propertyAttributeSyntax?.ArgumentList?.Arguments is not null)
             {
-              propertyName = typedConstant.Value.ToString();
+              foreach (var argument in propertyAttributeSyntax.ArgumentList.Arguments)
+              {
+                if (argument is AttributeArgumentSyntax attributeArgumentSyntax)
+                {
+                  if (argument.NameEquals?.Name.Identifier.Text is null
+                    || argument.NameEquals?.Name.Identifier.Text == "PropertyName")
+                  {
+                    propertyName= argument.GetStringValueFromAttributeArgument();
+                  }
+                }
+              }
             }
-            else
+
+            if (propertyName is null)
             {
               propertyName = fieldName;
               if (propertyName.StartsWith("_"))
@@ -79,12 +98,12 @@ namespace MvvmGen.SourceGenerator
 
     private void GeneratePropertiesForModelProperties()
     {
-
       if (_classToGenerate.ModelTypedConstant?.Value is not null)
       {
-        var model = _classToGenerate.ModelTypedConstant.Value.Value as INamedTypeSymbol;
-
-        if (model is null) return;
+        if (_classToGenerate.ModelTypedConstant.Value.Value is not INamedTypeSymbol model)
+        {
+          return;
+        }
 
         _stringBuilder.Append(_indent);
         _stringBuilder.AppendLine($"public {model} Model {{ get; set; }}");
@@ -122,7 +141,7 @@ namespace MvvmGen.SourceGenerator
       _stringBuilder.AppendLine(_indent + $"      OnPropertyChanged(\"{propertyName}\");");
       foreach (var commandToInvalidate in commandsToInvalidate)
       {
-        _stringBuilder.AppendLine(_indent + $"      {commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
+        _stringBuilder.AppendLine(_indent + $"      {commandToInvalidate.CommandName}.RaiseCanExecuteChanged();");
       }
 
       _stringBuilder.AppendLine(_indent + $"    }}");

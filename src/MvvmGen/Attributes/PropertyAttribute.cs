@@ -1,4 +1,10 @@
-﻿using System;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
+
+using System;
 
 namespace MvvmGen
 {
@@ -12,6 +18,9 @@ namespace MvvmGen
       PropertyName = propertyName;
     }
 
-    public string? PropertyName { get; }
+    /// <summary>
+    /// Gets or sets the name of the generated property
+    /// </summary>
+    public string? PropertyName { get; set; }
   }
 }

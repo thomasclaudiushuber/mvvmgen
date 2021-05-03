@@ -1,11 +1,14 @@
-﻿using System;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See the LICENSE file in project root
+// ***********************************************************************
 
 namespace MvvmGen.Events
 {
   public interface IEventAggregator
   {
     void Publish<TEvent>(TEvent eventToPublish);
-    void Subscribe<TEvent>(Action<TEvent> eventHandler);
-    void Unsubscribe<TEvent>(Action<TEvent> eventHandler);
+    void RegisterSubscriber<TSubscriber>(TSubscriber subscriber);
   }
 }
