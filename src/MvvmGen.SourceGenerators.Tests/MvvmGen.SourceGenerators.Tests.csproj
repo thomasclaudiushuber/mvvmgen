@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>MvvmGen</RootNamespace>
+    <RootNamespace>MvvmGen.SourceGenerators</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MvvmGen.SourceGenerator\MvvmGen.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+    <ProjectReference Include="..\MvvmGen.SourceGenerators\MvvmGen.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
     <ProjectReference Include="..\MvvmGen\MvvmGen.csproj" />
   </ItemGroup>
 

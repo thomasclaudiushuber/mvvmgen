@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen", "MvvmGen\MvvmGen.csproj", "{C965D364-4B45-46E7-AE83-A74B0A44A856}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerator.Tests", "MvvmGen.SourceGenerator.Tests\MvvmGen.SourceGenerator.Tests.csproj", "{BFBEA259-75D1-47FC-BF9F-DB316F488B0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerators.Tests", "MvvmGen.SourceGenerators.Tests\MvvmGen.SourceGenerators.Tests.csproj", "{BFBEA259-75D1-47FC-BF9F-DB316F488B0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerator", "MvvmGen.SourceGenerator\MvvmGen.SourceGenerator.csproj", "{32C616AD-791A-4AA2-8E95-EC89D435DB0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerators", "MvvmGen.SourceGenerators\MvvmGen.SourceGenerators.csproj", "{32C616AD-791A-4AA2-8E95-EC89D435DB0B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54EDE978-ADFD-4A7D-81E4-3CF518D5BDA1}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
+		..\.editorconfig = ..\.editorconfig
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject

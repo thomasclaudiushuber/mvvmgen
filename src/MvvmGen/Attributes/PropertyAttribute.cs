@@ -8,19 +8,23 @@ using System;
 
 namespace MvvmGen
 {
-  [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-  public class PropertyAttribute : Attribute
-  {
-    public PropertyAttribute() { }
-
-    public PropertyAttribute(string propertyName)
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class PropertyAttribute : Attribute
     {
-      PropertyName = propertyName;
-    }
+        public PropertyAttribute() { }
 
-    /// <summary>
-    /// Gets or sets the name of the generated property
-    /// </summary>
-    public string? PropertyName { get; set; }
-  }
+        public PropertyAttribute(string propertyName)
+        {
+            PropertyName = propertyName;
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the generated property
+        /// </summary>
+        public string? PropertyName { get; set; }
+
+        public Type PublishEventOnChange { get; set; }
+
+        public string PublishEventConstructorArgs { get; set; }
+    }
 }

@@ -33,7 +33,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="..\MvvmGen.SourceGenerator\bin\$(Configuration)\netstandard2.0\$(AssemblyName).SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\$(AssemblyName).SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>

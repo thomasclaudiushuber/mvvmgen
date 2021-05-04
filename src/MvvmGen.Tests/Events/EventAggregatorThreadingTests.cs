@@ -6,7 +6,7 @@
 
 namespace MvvmGen.Events
 {
-  class EventAggregatorThreadingTests
-  {
-  }
+    class EventAggregatorThreadingTests
+    {
+    }
 }

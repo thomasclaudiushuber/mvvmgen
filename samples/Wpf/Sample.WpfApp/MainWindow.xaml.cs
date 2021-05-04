@@ -3,12 +3,12 @@ using System.Windows;
 
 namespace Sample.WpfApp
 {
-  public partial class MainWindow : Window
-  {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-      InitializeComponent();
-      DataContext = new MainViewModel();
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = new MainViewModel();
+        }
     }
-  }
 }

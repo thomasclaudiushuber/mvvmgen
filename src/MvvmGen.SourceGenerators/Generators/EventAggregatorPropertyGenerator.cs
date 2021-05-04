@@ -4,20 +4,17 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System;
+using System.Text;
 
-namespace MvvmGen
+namespace MvvmGen.SourceGenerators
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ViewModelAttribute : Attribute
+    internal static class EventAggregatorPropertyGenerator
     {
-        public ViewModelAttribute() { }
-
-        public ViewModelAttribute(Type modelType)
+        internal static void Generate(StringBuilder stringBuilder, string indent, bool isEventSubscriber)
         {
-            ModelType = modelType;
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine($"{indent}protected IEventAggregator EventAggregator {{ get; set; }}");
         }
-
-        public Type? ModelType { get; set; }
     }
+
 }

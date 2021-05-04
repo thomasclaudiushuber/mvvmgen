@@ -6,9 +6,9 @@
 
 namespace MvvmGen.Events
 {
-  public interface IEventAggregator
-  {
-    void Publish<TEvent>(TEvent eventToPublish);
-    void RegisterSubscriber<TSubscriber>(TSubscriber subscriber);
-  }
+    public interface IEventAggregator
+    {
+        void Publish<TEvent>(TEvent eventToPublish);
+        void RegisterSubscriber<TSubscriber>(TSubscriber subscriber);
+    }
 }

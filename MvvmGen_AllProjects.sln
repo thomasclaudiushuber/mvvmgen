@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.WpfApp", "samples\Wpf\Sample.WpfApp\Sample.WpfApp.csproj", "{D41BD2E5-3635-431B-B1CC-DB8F5F384B5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerator.Tests", "src\MvvmGen.SourceGenerator.Tests\MvvmGen.SourceGenerator.Tests.csproj", "{035B9F55-A59E-439F-B9A5-E61949063903}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerators.Tests", "src\MvvmGen.SourceGenerators.Tests\MvvmGen.SourceGenerators.Tests.csproj", "{035B9F55-A59E-439F-B9A5-E61949063903}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen", "src\MvvmGen\MvvmGen.csproj", "{4A1EB658-81D3-40DA-A53F-66EA9A471FC4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wpf", "Wpf", "{D8B6A1DB-A634-4078-B269-FFC9662E749D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerator", "src\MvvmGen.SourceGenerator\MvvmGen.SourceGenerator.csproj", "{3698A397-B848-4D4A-95B5-EC2386BD50EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmGen.SourceGenerators", "src\MvvmGen.SourceGenerators\MvvmGen.SourceGenerators.csproj", "{3698A397-B848-4D4A-95B5-EC2386BD50EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C820C036-404F-4EAF-93BC-734D2661D01D}"
 	ProjectSection(SolutionItems) = preProject

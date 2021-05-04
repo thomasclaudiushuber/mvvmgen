@@ -4,22 +4,19 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System;
-
-namespace MvvmGen
+namespace MvvmGen.SourceGenerators.Model
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class CommandAttribute : Attribute
+    internal class CommandToGenerate
     {
-        public CommandAttribute() { }
-
-        public CommandAttribute(string canExecuteMethod)
+        public CommandToGenerate(string executeMethod, string commandName)
         {
-            CanExecuteMethod = canExecuteMethod;
+            ExecuteMethod = executeMethod;
+            CommandName = commandName;
         }
 
+        public string ExecuteMethod { get; }
+        public string CommandName { get; }
         public string? CanExecuteMethod { get; set; }
-
-        public string? CommandName { get; set; }
+        public string[]? CanExecuteAffectingProperties { get; set; }
     }
 }

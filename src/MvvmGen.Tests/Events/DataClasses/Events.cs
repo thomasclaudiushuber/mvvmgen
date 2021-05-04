@@ -6,6 +6,6 @@
 
 namespace MvvmGen.Events
 {
-  public record CustomerAddedEvent(int CustomerId);
-  public record CustomerDeletedEvent(int CustomerId);
+    public record CustomerAddedEvent(int CustomerId);
+    public record CustomerDeletedEvent(int CustomerId);
 }

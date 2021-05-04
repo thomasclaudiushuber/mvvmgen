@@ -1,12 +1,17 @@
-﻿# Rules in this file were initially inferred by Visual Studio IntelliCode from the D:\Repos\mvvmgen\src codebase based on best match to current usage at 5/3/2021
-# You can modify the rules from these initially generated values to suit your own policies
-# You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
-[*.cs]
+﻿
+# top-most EditorConfig file
+root = true
 
 #Core editorconfig formatting - indentation
 
 #use soft tabs (spaces) for indentation
 indent_style = space
+
+# Code files
+[*.cs]
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
 
 #Formatting - new line options
 
