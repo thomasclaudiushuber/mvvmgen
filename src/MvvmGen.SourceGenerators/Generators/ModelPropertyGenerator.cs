@@ -10,12 +10,12 @@ namespace MvvmGen.SourceGenerators.Generators
 {
     internal static class ModelPropertyGenerator
     {
-        internal static void Generate(string? wrappedModelType, StringBuilder stringBuilder, string indent)
+        internal static void Generate(ViewModelBuilder vmBuilder, string? wrappedModelType)
         {
             if (wrappedModelType is { Length: >0 })
             {
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"{indent}public {wrappedModelType} Model {{ get; set; }}");
+                vmBuilder.AppendLineBeforeMember();
+                vmBuilder.AppendLine($"public {wrappedModelType} Model {{ get; set; }}");
             }
         }
     }

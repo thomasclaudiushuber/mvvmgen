@@ -23,7 +23,33 @@ namespace MvvmGen.SourceGenerators.Model
         public string BackingField { get; }
         public bool IsReadOnly { get; }
         public IEnumerable<CommandToGenerate>? CommandsToInvalidate { get; set; }
-        public string? EventToPublish { get; internal set; }
-        public string? EventToPublishConstructorArgs { get; internal set; }
+        public IEnumerable<EventToPublish>? EventsToPublish { get; set; }
+        public IEnumerable<MethodToCall>? MethodsToCall { get; set; }
+    }
+
+    internal class EventToPublish
+    {
+        public EventToPublish(string eventType)
+        {
+            EventType = eventType;
+        }
+
+        public string EventType { get; }
+
+        public string? EventConstructorArgs { get; set; }
+
+        public string? EventAggregatorMemberName { get; set; } = "EventAggregator";
+    }
+
+    internal class MethodToCall
+    {
+        public MethodToCall(string methodName)
+        {
+            MethodName = methodName;
+        }
+
+        public string MethodName { get; }
+
+        public string? MethodArgs { get; set; }
     }
 }

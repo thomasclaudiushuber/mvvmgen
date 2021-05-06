@@ -46,35 +46,25 @@ namespace MvvmGen.SourceGenerators.Inspectors
 
         private static void FindPropertiesToGenerate(IFieldSymbol fieldSymbol, List<PropertyToGenerate> propertiesToGenerate)
         {
-            var attributeData = fieldSymbol.GetAttributes()
-              .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyAttribute");
+            var attributeDatas = fieldSymbol.GetAttributes();
+            var propertyAttributeData = attributeDatas.FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyAttribute");
 
-            if (attributeData is not null)
+            if (propertyAttributeData is not null)
             {
                 var propertyType = fieldSymbol.Type.ToString();
 
                 string? propertyName = null;
                 var fieldName = fieldSymbol.Name;
-                string? eventToPublish = null;
-                string? eventToPublishConstructorArgs = null;
-                foreach (var arg in attributeData.ConstructorArguments)
+                foreach (var arg in propertyAttributeData.ConstructorArguments)
                 {
                     propertyName = arg.Value?.ToString();
                 }
 
-                foreach (var arg in attributeData.NamedArguments)
+                foreach (var arg in propertyAttributeData.NamedArguments)
                 {
                     if (arg.Key == "PropertyName")
                     {
                         propertyName = arg.Value.Value?.ToString();
-                    }
-                    else if (arg.Key == "PublishEventOnChange")
-                    {
-                        eventToPublish = arg.Value.Value?.ToString();
-                    }
-                    else if (arg.Key == "PublishEventConstructorArgs")
-                    {
-                        eventToPublishConstructorArgs = arg.Value.Value?.ToString();
                     }
                 }
 
@@ -99,10 +89,53 @@ namespace MvvmGen.SourceGenerators.Inspectors
 
                 if (propertyName is not null)
                 {
+                    var eventsToPublish = new List<EventToPublish>();
+                    var methodsToCall = new List<MethodToCall>();
+                    var onChangePublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.OnChangePublishEventAttribute").ToList();
+                    var onChangeCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.OnChangeCallMethodAttribute").ToList();
+                    foreach (var onChangePublishEventAttribute in onChangePublishEventAttributes)
+                    {
+                        var eventType = onChangePublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                        if (eventType is { Length: > 0 })
+                        {
+                            var eventToPublish = new EventToPublish(eventType);
+                            foreach (var arg in onChangePublishEventAttribute.NamedArguments)
+                            {
+                                if (arg.Key == "EventConstructorArgs")
+                                {
+                                    eventToPublish.EventConstructorArgs = arg.Value.Value?.ToString();
+                                }
+                                else if (arg.Key == "EventAggregatorMemberName")
+                                {
+                                    eventToPublish.EventAggregatorMemberName = arg.Value.Value?.ToString();
+                                }
+                            }
+                            eventsToPublish.Add(eventToPublish);
+                        }
+                    }
+
+                    foreach (var onChangeCallMethodAttribute in onChangeCallMethodAttributes)
+                    {
+                        string? methodName = onChangeCallMethodAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+
+                        if (methodName is { Length: > 0 })
+                        {
+                            var methodToCall = new MethodToCall(methodName);
+                            foreach (var arg in onChangeCallMethodAttribute.NamedArguments)
+                            {
+                                if (arg.Key == "MethodArgs")
+                                {
+                                    methodToCall.MethodArgs = arg.Value.Value?.ToString();
+                                }
+                            }
+                            methodsToCall.Add(methodToCall);
+                        }
+                    }
+
                     propertiesToGenerate.Add(new PropertyToGenerate(propertyName, propertyType, fieldName)
                     {
-                        EventToPublish = eventToPublish,
-                        EventToPublishConstructorArgs = eventToPublishConstructorArgs
+                        EventsToPublish = eventsToPublish,
+                        MethodsToCall = methodsToCall
                     });
                 }
             }
@@ -118,13 +151,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
             if (commandAttributeData is not null)
             {
                 var commandName = $"{methodSymbol.Name}Command";
-                string? canExecuteMethod = null;
-
-                // Note: foreach works to get the canExecuteConstructor parameter, but calling commandAttributeData.ConstructorArguments.FirstOrDefault does not work to get it. 
-                foreach (var arg in commandAttributeData.ConstructorArguments)
-                {
-                    canExecuteMethod = arg.Value?.ToString();
-                }
+                string? canExecuteMethod = commandAttributeData.ConstructorArguments.FirstOrDefault().Value?.ToString();
 
                 foreach (var arg in commandAttributeData.NamedArguments)
                 {
@@ -158,12 +185,13 @@ namespace MvvmGen.SourceGenerators.Inspectors
                     string? propertyName = null;
 
                     // NOTE: The following does not work, as the CommandInvalidateAttribute usually relies on a generated property.
-                    //       That generated property is not available as a symbol, as it didn't get compiled yet. And it can't get compiled,
-                    //       as the RaiseCanExecuteChanged method of the command might has to be called in the property setter.
+                    //       That generated property is not available as a symbol, as it didn't get compiled yet. And the property can't get compiled yet,
+                    //       as the RaiseCanExecuteChanged method of the command might has to be called in the property setter, so that needs to be generated in.
                     //       So, the AttributeData class in the commented foreach loop below will return an empty string for the constructor argument
                     //       of an attribute like [CommandInvalidate(nameof(FirstName))], as the FirstName property didn't get generated yet.
                     //       Solution for this is to use the AttributeSyntax as shown on the next two code lines.
-                    //       The attribute syntax contains the pure code as text, including the nameof(FirstName) expression.
+                    //       The attribute syntax contains the pure code as text, including the nameof(FirstName) expression. 
+                    //       So let's grab the property name there.
                     // 
                     //foreach (var arg in attr.ConstructorArguments)
                     //{

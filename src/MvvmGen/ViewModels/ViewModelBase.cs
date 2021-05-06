@@ -6,20 +6,12 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using MvvmGen.Events;
 
 namespace MvvmGen.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
-        public ViewModelBase()
-        {
-            OnInitialize();
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnInitialize() { }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {

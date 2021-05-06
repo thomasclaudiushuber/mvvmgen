@@ -1,36 +1,25 @@
-﻿using MvvmGen;
+﻿using System;
+using MvvmGen;
 using MvvmGen.Events;
+using Sample.WpfApp.DataProvider;
 using Sample.WpfApp.Events;
 using Sample.WpfApp.Model;
 
 namespace Sample.WpfApp.ViewModel
 {
+    [Inject(typeof(IEmployeeDataProvider))]
+    [Inject(typeof(IEventAggregator))]
+    [GenerateViewModelFactory]
     [ViewModel(typeof(Employee))]
     public partial class EmployeeViewModel
     {
         [Property]
         private string? _updateComment;
-        private readonly IEventAggregator _eventAggregator;
-
-        public EmployeeViewModel(IEventAggregator eventAggregator)
-        {
-            _eventAggregator = eventAggregator;
-        }
-
-        public EmployeeViewModel()
-        {
-            Model = new Employee
-            {
-                FirstName = "Thomas Claudius",
-                LastName = "Huber",
-                IsDeveloper = true
-            };
-        }
 
         [Command(CanExecuteMethod = nameof(CanSave))]
         public void Save()
         {
-            _eventAggregator.Publish(new EmployeeSavedEvent(Model.Id, Model.FirstName));
+            EventAggregator.Publish(new EmployeeSavedEvent(Model.Id, Model.FirstName));
         }
 
         [CommandInvalidate(nameof(UpdateComment))]
@@ -39,6 +28,11 @@ namespace Sample.WpfApp.ViewModel
         {
             return !string.IsNullOrEmpty(FirstName)
               && !string.IsNullOrEmpty(UpdateComment);
+        }
+
+        internal void Load(int employeeId)
+        {
+            Model = EmployeeDataProvider.GetById(employeeId);
         }
     }
 }

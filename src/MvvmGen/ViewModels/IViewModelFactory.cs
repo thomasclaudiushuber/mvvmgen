@@ -4,8 +4,10 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-namespace Sample.WpfApp.Events
+namespace MvvmGen.ViewModels
 {
-    public record EmployeeSavedEvent(int EmployeeId, string FirstName);
-    public record EmployeeSelectedEvent(int EmployeeId);
+    public interface IViewModelFactory<out T> where T : ViewModelBase
+    {
+        T Create();
+    }
 }

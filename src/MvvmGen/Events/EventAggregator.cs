@@ -64,7 +64,6 @@ namespace MvvmGen.Events
 
                 if (subscriberInterfaces.Any())
                 {
-
                     var weakReference = new WeakReference(subscriber);
 
                     var eventTypes = subscriberInterfaces.SelectMany(x => x.GenericTypeArguments).Distinct();

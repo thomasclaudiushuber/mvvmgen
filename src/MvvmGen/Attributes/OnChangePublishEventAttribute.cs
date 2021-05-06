@@ -8,18 +8,18 @@ using System;
 
 namespace MvvmGen
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ViewModelAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class OnChangePublishEventAttribute : Attribute
     {
-        public ViewModelAttribute() { }
-
-        public ViewModelAttribute(Type modelType)
+        public OnChangePublishEventAttribute(Type eventType)
         {
-            ModelType = modelType;
+            EventType = eventType;
         }
 
-        public Type? ModelType { get; set; }
+        public Type EventType { get; }
 
-        public bool GenerateConstructor { get; set; } = true;
+        public string? EventConstructorArgs { get; set; }
+
+        public string? EventAggregatorMemberName { get; set; }
     }
 }

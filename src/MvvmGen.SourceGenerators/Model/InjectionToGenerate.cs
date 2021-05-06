@@ -4,23 +4,18 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System;
-
-namespace MvvmGen
+namespace MvvmGen.SourceGenerators.Model
 {
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class PropertyAttribute : Attribute
+    internal class InjectionToGenerate
     {
-        public PropertyAttribute() { }
-
-        public PropertyAttribute(string propertyName)
+        public InjectionToGenerate(string type, string propertyName)
         {
+            Type = type;
             PropertyName = propertyName;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the generated property
-        /// </summary>
-        public string? PropertyName { get; set; }
+        public string Type { get; }
+        public string PropertyName { get; }
+        public string PropertyAccessModifier { get; set; } = "protected";
     }
 }
+

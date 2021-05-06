@@ -4,63 +4,77 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using MvvmGen.SourceGenerators.Model;
 
 namespace MvvmGen.SourceGenerators
 {
     internal static class PropertyGenerator
     {
-        internal static void Generate(IEnumerable<PropertyToGenerate>? propertiesToGenerate, StringBuilder stringBuilder, string indent)
+        internal static void Generate(ViewModelBuilder vmBuilder, IEnumerable<PropertyToGenerate>? propertiesToGenerate)
         {
             if (propertiesToGenerate is not null)
             {
                 foreach (var propertyToGenerate in propertiesToGenerate)
                 {
-                    GenerateProperty(propertyToGenerate, stringBuilder, indent);
+                    GenerateProperty(vmBuilder, propertyToGenerate);
                 }
             }
         }
 
-        private static void GenerateProperty(PropertyToGenerate p, StringBuilder stringBuilder, string indent)
+        private static void GenerateProperty(ViewModelBuilder vmBuilder, PropertyToGenerate p)
         {
-            stringBuilder.AppendLine();
-            stringBuilder.Append(indent + $"public {p.PropertyType} {p.PropertyName}");
+            vmBuilder.AppendLineBeforeMember();
+            vmBuilder.Append($"public {p.PropertyType} {p.PropertyName}");
 
             if (p.IsReadOnly)
             {
-                stringBuilder.AppendLine($" => {p.BackingField};");
+                vmBuilder.AppendLine($" => {p.BackingField};");
                 return;
             }
             else
             {
-                stringBuilder.AppendLine();
+                vmBuilder.AppendLine();
             }
 
-            stringBuilder.AppendLine(indent + $"{{");
-            stringBuilder.AppendLine(indent + $"    get => {p.BackingField};");
-            stringBuilder.AppendLine(indent + $"    set");
-            stringBuilder.AppendLine(indent + $"    {{");
-            stringBuilder.AppendLine(indent + $"        if ({p.BackingField} != value)");
-            stringBuilder.AppendLine(indent + $"        {{");
-            stringBuilder.AppendLine(indent + $"            {p.BackingField} = value;");
-            stringBuilder.AppendLine(indent + $"            OnPropertyChanged(\"{p.PropertyName}\");");
+            vmBuilder.AppendLine("{");
+            vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine($"get => {p.BackingField};");
+            vmBuilder.AppendLine("set");
+            vmBuilder.AppendLine("{");
+            vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine($"if ({p.BackingField} != value)");
+            vmBuilder.AppendLine("{");
+            vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine($"{p.BackingField} = value;");
+            vmBuilder.AppendLine($"OnPropertyChanged(\"{p.PropertyName}\");");
             if (p.CommandsToInvalidate is not null)
             {
                 foreach (var commandToInvalidate in p.CommandsToInvalidate)
                 {
-                    stringBuilder.AppendLine(indent + $"            {commandToInvalidate.CommandName}.RaiseCanExecuteChanged();");
+                    vmBuilder.AppendLine($"{commandToInvalidate.CommandName}.RaiseCanExecuteChanged();");
                 }
             }
-            if (p.EventToPublish is { Length: > 0 })
+            if (p.EventsToPublish is not null)
             {
-                stringBuilder.AppendLine(indent + $"            EventAggregator.Publish(new {p.EventToPublish}({p.EventToPublishConstructorArgs}));");
+                foreach (var eventToPublish in p.EventsToPublish)
+                {
+                    vmBuilder.AppendLine($"{eventToPublish.EventAggregatorMemberName}.Publish(new {eventToPublish.EventType}({eventToPublish.EventConstructorArgs}));");
+                }
             }
-            stringBuilder.AppendLine(indent + $"        }}");
-            stringBuilder.AppendLine(indent + $"    }}");
-            stringBuilder.AppendLine(indent + $"}}");
+            if (p.MethodsToCall is not null)
+            {
+                foreach (var methodToCall in p.MethodsToCall)
+                {
+                    vmBuilder.AppendLine($"{methodToCall.MethodName}({methodToCall.MethodArgs});");
+                }
+            }
+            vmBuilder.DecreaseIndent();
+            vmBuilder.AppendLine("}");
+            vmBuilder.DecreaseIndent();
+            vmBuilder.AppendLine("}");
+            vmBuilder.DecreaseIndent();
+            vmBuilder.AppendLine("}");
         }
     }
 }

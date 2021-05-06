@@ -6,20 +6,21 @@
 
 using System.Collections.Generic;
 using System.Text;
+using MvvmGen.SourceGenerators.Inspectors;
 using MvvmGen.SourceGenerators.Model;
 
 namespace MvvmGen.SourceGenerators
 {
-    internal static class CommandPropertyGenerator
+    internal static class InjectionPropertyGenerator
     {
-        internal static void Generate(ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
+        internal static void Generate(ViewModelBuilder vmBuilder,IEnumerable<InjectionToGenerate>? injectionsToGenerate)
         {
-            if (commandsToGenerate is not null)
+            if (injectionsToGenerate is not null)
             {
-                foreach (var comandToGenerate in commandsToGenerate)
+                foreach (var injectionToGenerate in injectionsToGenerate)
                 {
                     vmBuilder.AppendLineBeforeMember();
-                    vmBuilder.AppendLine($"public DelegateCommand {comandToGenerate.CommandName} {{ get; private set; }}");
+                    vmBuilder.AppendLine($"{injectionToGenerate.PropertyAccessModifier} {injectionToGenerate.Type} {injectionToGenerate.PropertyName} {{ get; private set; }}");
                 }
             }
         }

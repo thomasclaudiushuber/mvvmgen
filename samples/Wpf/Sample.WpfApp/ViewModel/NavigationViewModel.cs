@@ -8,16 +8,27 @@ using System.Linq;
 
 namespace Sample.WpfApp.ViewModel
 {
+    [Inject(typeof(IEmployeeDataProvider))]
+    [Inject(typeof(IEventAggregator))]
     [ViewModel]
-    partial class NavigationViewModel : IEventSubscriber<EmployeeSavedEvent>
+    public partial class NavigationViewModel : IEventSubscriber<EmployeeSavedEvent>
     {
-        [Property(PublishEventOnChange = typeof(EmployeeSelectedEvent), PublishEventConstructorArgs = "_selectedItem.Id")]
+        [OnChangePublishEvent(typeof(EmployeeSelectedEvent), EventConstructorArgs = "_selectedItem.Id")]
+        [Property]
         private NavigationItemViewModel? _selectedItem;
 
-        public NavigationViewModel(IEventAggregator eventAggregator,
-          IEmployeeDataProvider dataProvider)
+        partial void OnInitialize()
         {
-            EventAggregator = eventAggregator; 
+            EventAggregator.RegisterSubscriber(this);
+        }
+
+        public void Load()
+        {
+            Items.Clear();
+            foreach (var employee in EmployeeDataProvider.GetAll())
+            {
+                Items.Add(new NavigationItemViewModel { Id = employee.Id, FirstName = employee.FirstName });
+            }
         }
 
         public void OnEvent(EmployeeSavedEvent eventData)
@@ -37,7 +48,7 @@ namespace Sample.WpfApp.ViewModel
     }
 
     [ViewModel]
-    partial class NavigationItemViewModel
+    public partial class NavigationItemViewModel
     {
         [Property] int _id;
         [Property] string _firstName;

@@ -4,17 +4,13 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System.Text;
-
-namespace MvvmGen.SourceGenerators
+namespace MvvmGen.SourceGenerators.Extensions
 {
-    internal static class EventAggregatorPropertyGenerator
+    public static class StringExtensions
     {
-        internal static void Generate(StringBuilder stringBuilder, string indent, bool isEventSubscriber)
+        public static string PascalCaseToCamelCase(this string str)
         {
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"{indent}protected IEventAggregator EventAggregator {{ get; set; }}");
+            return str.Substring(0, 1).ToLower() + str.Substring(1);
         }
     }
-
 }

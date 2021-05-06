@@ -7,15 +7,35 @@
         xmlns:view="clr-namespace:Sample.WpfApp.View"
         xmlns:viewModel="clr-namespace:Sample.WpfApp.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="800"
+        Title="MainWindow" Height="550" Width="800" FontSize="25"
         >
   <Window.Resources>
     <DataTemplate DataType="{x:Type viewModel:EmployeeViewModel}">
       <view:EmployeeView/>
     </DataTemplate>
   </Window.Resources>
-  
-  <ContentControl>
-    <viewModel:EmployeeViewModel/>
-  </ContentControl>
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200"/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+
+    <view:NavigationView DataContext="{Binding NavigationViewModel}"/>
+
+    <TabControl Grid.Column="1" ItemsSource="{Binding EmployeeViewModels}"
+                SelectedItem="{Binding SelectedEmployee,Mode=TwoWay}">
+      <TabControl.ItemTemplate>
+        <DataTemplate>
+          <TextBlock
+                    Text="{Binding FirstName}" />
+        </DataTemplate>
+      </TabControl.ItemTemplate>
+      <TabControl.ContentTemplate>
+        <DataTemplate>
+          <ContentControl Content="{Binding}" />
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+  </Grid>
 </Window>

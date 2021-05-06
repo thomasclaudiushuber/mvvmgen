@@ -43,7 +43,15 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : ViewModelBase
     {{
-        protected override void OnInitialize()
+        public EmployeeViewModel()
+        {{
+            this.InitializeCommands();
+            this.OnInitialize();
+        }}
+
+        partial void OnInitialize();
+
+        private void InitializeCommands()
         {{
             SaveCommand = new(Save, CanSave);
         }}

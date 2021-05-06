@@ -4,8 +4,12 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-namespace Sample.WpfApp.Events
+using System;
+
+namespace MvvmGen
 {
-    public record EmployeeSavedEvent(int EmployeeId, string FirstName);
-    public record EmployeeSelectedEvent(int EmployeeId);
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class CreateViewModelFactoryAttribute : Attribute
+    {
+    }
 }

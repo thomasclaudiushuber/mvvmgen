@@ -8,18 +8,16 @@ using System;
 
 namespace MvvmGen
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class ViewModelAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class OnChangeCallMethodAttribute : Attribute
     {
-        public ViewModelAttribute() { }
-
-        public ViewModelAttribute(Type modelType)
+        public OnChangeCallMethodAttribute(string methodName)
         {
-            ModelType = modelType;
+            MethodName = methodName;
         }
 
-        public Type? ModelType { get; set; }
+        public string MethodName { get; }
 
-        public bool GenerateConstructor { get; set; } = true;
+        public string? MethodArgs { get; set; }
     }
 }

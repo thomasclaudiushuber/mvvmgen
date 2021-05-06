@@ -27,6 +27,9 @@ namespace MvvmGen.SourceGenerators.Model
 
         public bool IsEventSubscriber { get; internal set; }
 
-        public bool IsEventAggregatorPropertyRequired => PropertiesToGenerate is not null && PropertiesToGenerate.Any(x => x.EventToPublish is not null);
+        public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; internal set; }
+
+        public bool GenerateConstructor { get; internal set; }
+        public bool GenerateViewModelFactory { get; internal set; }
     }
 }
