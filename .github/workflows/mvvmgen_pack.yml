@@ -22,8 +22,8 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Create release build of MvvmGen.SourceGenerator
-      working-directory: src/MvvmGen.SourceGenerator
+    - name: Create release build of MvvmGen.SourceGenerators
+      working-directory: src/MvvmGen.SourceGenerators
       run: dotnet build -c Release
     - name: Create release build of MvvmGen
       working-directory: src/MvvmGen
