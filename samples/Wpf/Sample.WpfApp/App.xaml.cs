@@ -35,7 +35,7 @@ namespace Sample.WpfApp
             ServiceProvider = serviceCollection.BuildServiceProvider(true);
 
             var mainWindow = ServiceProvider.GetService<MainWindow>();
-            mainWindow.Show();            
+            mainWindow?.Show();            
         }
     }
 }

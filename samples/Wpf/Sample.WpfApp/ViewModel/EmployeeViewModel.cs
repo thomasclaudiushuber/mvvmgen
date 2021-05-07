@@ -20,7 +20,7 @@ namespace Sample.WpfApp.ViewModel
         [Command(CanExecuteMethod = nameof(CanSave))]
         public void Save()
         {
-            EventAggregator.Publish(new EmployeeSavedEvent(Model.Id, Model.FirstName));
+            EventAggregator.Publish(new EmployeeSavedEvent(Model.Id, Model.FirstName!));
         }
 
         [CommandInvalidate(nameof(UpdateComment))]
