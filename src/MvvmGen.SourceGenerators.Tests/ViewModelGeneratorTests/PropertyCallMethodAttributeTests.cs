@@ -8,11 +8,11 @@ using Xunit;
 
 namespace MvvmGen.SourceGenerators
 {
-    public class OnChangeCallMethodAttributeTests : ViewModelGeneratorTestsBase
+    public class PropertyCallMethodAttributeTests : ViewModelGeneratorTestsBase
     {
-        [InlineData("MyMethod();","", "[OnChangeCallMethod(nameof(MyMethod))]")]
-        [InlineData("MyMethod();","", "[OnChangeCallMethod(\"MyMethod\")]")]
-        [InlineData("MyMethod(_selectedItem);","string item", "[OnChangeCallMethod(nameof(MyMethod),MethodArgs=\"_selectedItem\")]")]
+        [InlineData("MyMethod();","", "[PropertyCallMethod(nameof(MyMethod))]")]
+        [InlineData("MyMethod();","", "[PropertyCallMethod(\"MyMethod\")]")]
+        [InlineData("MyMethod(_selectedItem);","string item", "[PropertyCallMethod(nameof(MyMethod),MethodArgs=\"_selectedItem\")]")]
         [Theory]
         public void GenerateMethodCallInProperty(string expectedMethodCall, string methodParameters, string onChangeCallMethodAttribute)
         {

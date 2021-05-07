@@ -72,7 +72,10 @@ namespace MvvmGen.SourceGenerators
 
                 if (viewModelToGenerate.GenerateConstructor)
                 {
-                    ConstructorGenerator.Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol.Name, viewModelToGenerate.InjectionsToGenerate, viewModelToGenerate.CommandsToGenerate?.Any() == true);
+                    ConstructorGenerator.Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol.Name, 
+                        viewModelToGenerate.InjectionsToGenerate, 
+                        viewModelToGenerate.CommandsToGenerate?.Any() == true,
+                        viewModelToGenerate.IsEventSubscriber);
                 }
 
                 CommandInitializeMethodGenerator.Generate(vmBuilder, viewModelToGenerate.CommandsToGenerate);
@@ -217,7 +220,7 @@ namespace MvvmGen.SourceGenerators
                         }
                     }
 
-                    var viewModelFactoryAttribute = viewModelClassSymbol?.GetAttributes().FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.GenerateViewModelFactoryAttribute");
+                    var viewModelFactoryAttribute = viewModelClassSymbol?.GetAttributes().FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateFactoryAttribute");
                     if (viewModelFactoryAttribute is not null) {
                         viewModelToGenerate.GenerateViewModelFactory = true;
                         if(viewModelToGenerate.GenerateConstructor)

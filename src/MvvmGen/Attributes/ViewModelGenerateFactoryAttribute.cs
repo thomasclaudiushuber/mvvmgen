@@ -9,7 +9,7 @@ using System;
 namespace MvvmGen
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class GenerateViewModelFactoryAttribute : Attribute
+    public class ViewModelGenerateFactoryAttribute : Attribute
     {
     }
 }

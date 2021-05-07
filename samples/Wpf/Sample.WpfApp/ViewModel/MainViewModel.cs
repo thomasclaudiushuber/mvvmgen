@@ -14,11 +14,6 @@ namespace Sample.WpfApp.ViewModel
     [ViewModel]
     public partial class MainViewModel : IEventSubscriber<EmployeeSelectedEvent>
     {
-        partial void OnInitialize()
-        {
-            EventAggregator.RegisterSubscriber(this);
-        }
-
         public void OnEvent(EmployeeSelectedEvent eventData)
         {
             var employeeViewModel = EmployeeViewModels.SingleOrDefault(x => x.Id == eventData.EmployeeId);

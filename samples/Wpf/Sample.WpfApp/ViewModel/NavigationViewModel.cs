@@ -13,14 +13,9 @@ namespace Sample.WpfApp.ViewModel
     [ViewModel]
     public partial class NavigationViewModel : IEventSubscriber<EmployeeSavedEvent>
     {
-        [OnChangePublishEvent(typeof(EmployeeSelectedEvent), EventConstructorArgs = "_selectedItem.Id")]
+        [PropertyPublishEvent(typeof(EmployeeSelectedEvent), EventConstructorArgs = "_selectedItem.Id")]
         [Property]
         private NavigationItemViewModel? _selectedItem;
-
-        partial void OnInitialize()
-        {
-            EventAggregator.RegisterSubscriber(this);
-        }
 
         public void Load()
         {

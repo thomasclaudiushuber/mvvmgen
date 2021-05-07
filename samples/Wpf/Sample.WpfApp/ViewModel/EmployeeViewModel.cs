@@ -9,7 +9,7 @@ namespace Sample.WpfApp.ViewModel
 {
     [Inject(typeof(IEmployeeDataProvider))]
     [Inject(typeof(IEventAggregator))]
-    [GenerateViewModelFactory]
+    [ViewModelGenerateFactory]
     [ViewModel(typeof(Employee))]
     public partial class EmployeeViewModel
     {

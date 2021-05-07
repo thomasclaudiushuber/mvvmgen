@@ -91,8 +91,8 @@ namespace MvvmGen.SourceGenerators.Inspectors
                 {
                     var eventsToPublish = new List<EventToPublish>();
                     var methodsToCall = new List<MethodToCall>();
-                    var onChangePublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.OnChangePublishEventAttribute").ToList();
-                    var onChangeCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.OnChangeCallMethodAttribute").ToList();
+                    var onChangePublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
+                    var onChangeCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
                     foreach (var onChangePublishEventAttribute in onChangePublishEventAttributes)
                     {
                         var eventType = onChangePublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();

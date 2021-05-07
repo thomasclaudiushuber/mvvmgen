@@ -17,13 +17,29 @@ namespace MvvmGen.SourceGenerators.Generators
     {
         internal static void Generate(ViewModelBuilder vmBuilder, string viewModelClassName,
             IEnumerable<InjectionToGenerate>? injectionsToGenerate,
-            bool hasCommands)
+            bool hasCommands, bool isEventSubscriber)
         {
             vmBuilder.AppendLineBeforeMember();
             vmBuilder.Append($"public {viewModelClassName}(");
             injectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
 
             bool first = true;
+            string? eventAggregatorAccessForSubscription = null;
+            if (isEventSubscriber)
+            {
+                var eventAggregatorInjection = injectionsToGenerate.FirstOrDefault(x => x.Type == "MvvmGen.Events.IEventAggregator");
+                if (eventAggregatorInjection is not null)
+                {
+                    eventAggregatorAccessForSubscription = $"this.{eventAggregatorInjection.PropertyName}";
+                }
+                else
+                {
+                    eventAggregatorAccessForSubscription = "eventAggregator";
+                    first = false;
+                    vmBuilder.Append($"MvvmGen.Events.IEventAggregator {eventAggregatorAccessForSubscription}");
+                }
+            }
+
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
                 if (!first)
@@ -40,6 +56,11 @@ namespace MvvmGen.SourceGenerators.Generators
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
                 vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.PascalCaseToCamelCase()};");
+            }
+
+            if (isEventSubscriber)
+            {
+                vmBuilder.AppendLine($"{eventAggregatorAccessForSubscription}.RegisterSubscriber(this);");
             }
 
             if (hasCommands)

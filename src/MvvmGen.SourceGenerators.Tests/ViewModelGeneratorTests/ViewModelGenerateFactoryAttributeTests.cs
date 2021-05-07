@@ -8,7 +8,7 @@ using Xunit;
 
 namespace MvvmGen.SourceGenerators
 {
-    public class CreateViewModelFactoryAttributeTests : ViewModelGeneratorTestsBase
+    public class ViewModelGenerateFactoryAttributeTests : ViewModelGeneratorTestsBase
     {
         [InlineData("public", "public")]
         [InlineData("internal", "internal")]
@@ -24,7 +24,7 @@ namespace MyCode
   public interface IEmployeeDataProvider {{}}
 
   [Inject(typeof(IEmployeeDataProvider)))]
-  [GenerateViewModelFactory]
+  [ViewModelGenerateFactory]
   [ViewModel]
   {accessModifierViewModel} partial class EmployeeViewModel
   {{

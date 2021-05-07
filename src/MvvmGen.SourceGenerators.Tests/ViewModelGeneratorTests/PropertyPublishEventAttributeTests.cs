@@ -8,7 +8,7 @@ using Xunit;
 
 namespace MvvmGen.SourceGenerators
 {
-    public class OnChangePublishEventAttributeTests : ViewModelGeneratorTestsBase
+    public class PropertyPublishEventAttributeTests : ViewModelGeneratorTestsBase
     {
         [InlineData("int Id, string FirstName", "value.Id, value.FirstName")]
         [InlineData("int Id", "value.Id")]
@@ -45,7 +45,7 @@ namespace MyCode
   [ViewModel]
   public partial class EmployeeViewModel
   {{
-    [OnChangePublishEvent(typeof(SelectedEmployeeChangedEvent){attributeNamedArgument})]
+    [PropertyPublishEvent(typeof(SelectedEmployeeChangedEvent){attributeNamedArgument})]
     [Property] 
     private Employee _selectedItem;
   }}

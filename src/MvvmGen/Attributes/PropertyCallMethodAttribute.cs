@@ -9,17 +9,15 @@ using System;
 namespace MvvmGen
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class OnChangePublishEventAttribute : Attribute
+    public class PropertyCallMethodAttribute : Attribute
     {
-        public OnChangePublishEventAttribute(Type eventType)
+        public PropertyCallMethodAttribute(string methodName)
         {
-            EventType = eventType;
+            MethodName = methodName;
         }
 
-        public Type EventType { get; }
+        public string MethodName { get; }
 
-        public string? EventConstructorArgs { get; set; }
-
-        public string? EventAggregatorMemberName { get; set; }
+        public string? MethodArgs { get; set; }
     }
 }
