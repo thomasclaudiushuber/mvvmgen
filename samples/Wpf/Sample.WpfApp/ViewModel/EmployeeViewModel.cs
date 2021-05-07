@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using MvvmGen;
+﻿using MvvmGen;
 using MvvmGen.Events;
 using Sample.WpfApp.DataProvider;
 using Sample.WpfApp.Events;

@@ -221,13 +221,7 @@ namespace MvvmGen.SourceGenerators
                     }
 
                     var viewModelFactoryAttribute = viewModelClassSymbol.GetAttributes().FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateFactoryAttribute");
-                    if (viewModelFactoryAttribute is not null) {
-                        viewModelToGenerate.GenerateViewModelFactory = true;
-                        if(viewModelToGenerate.GenerateConstructor)
-                        {
-                        }
-
-                    }
+                    viewModelToGenerate.GenerateViewModelFactory = viewModelFactoryAttribute is not null;
 
                     var (commandsToGenerate, propertiesToGenerate) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
                     viewModelToGenerate.CommandsToGenerate = commandsToGenerate;
