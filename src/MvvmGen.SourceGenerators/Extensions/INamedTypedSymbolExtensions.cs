@@ -4,24 +4,29 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
+using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace MvvmGen.SourceGenerators.Extensions
 {
     public static class INamedTypedSymbolExtensions
     {
-        public static bool InheritsFromBaseType(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol baseType)
+        public static bool InheritsFromViewModelBase(this INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol? viewModelBaseSymbol)
         {
             var inherits = false;
-            var currentBaseType = namedTypeSymbol.BaseType;
-            while (currentBaseType is not null)
+            if (viewModelBaseSymbol is not null)
             {
-                if (currentBaseType.Equals(baseType, SymbolEqualityComparer.Default))
+                var currentBaseType = namedTypeSymbol.BaseType;
+                while (currentBaseType is not null)
                 {
-                    inherits = true;
-                    break;
+                    if (currentBaseType.Equals(viewModelBaseSymbol, SymbolEqualityComparer.Default)
+                        || currentBaseType.GetAttributes().Any(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelAttribute"))
+                    {
+                        inherits = true;
+                        break;
+                    }
+                    currentBaseType = currentBaseType.BaseType;
                 }
-                currentBaseType = currentBaseType.BaseType;
             }
             return inherits;
         }

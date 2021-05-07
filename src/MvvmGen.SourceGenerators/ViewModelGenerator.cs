@@ -63,15 +63,10 @@ namespace MvvmGen.SourceGenerators
                 vmBuilder.AppendLine("{");
                 vmBuilder.IncreaseIndent();
 
-
-                bool inheritFromViewModelBase = false;
-                if (viewModelBaseSymbol is not null)
-                {
-                    inheritFromViewModelBase = !classSymbol.InheritsFromBaseType(viewModelBaseSymbol);
-                }
+                var inheritFromViewModelBaseClass = !classSymbol.InheritsFromViewModelBase(viewModelBaseSymbol);
 
                 // Generate class declaration
-                vmBuilder.AppendLine($"partial class {classSymbol.Name}" + (inheritFromViewModelBase ? " : ViewModelBase" : ""));
+                vmBuilder.AppendLine($"partial class {classSymbol.Name}" + (inheritFromViewModelBaseClass ? " : ViewModelBase" : ""));
                 vmBuilder.AppendLine("{");
                 vmBuilder.IncreaseIndent();
 

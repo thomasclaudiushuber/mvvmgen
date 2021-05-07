@@ -14,7 +14,7 @@ namespace MvvmGen.SourceGenerators
 {
     public class ViewModelGeneratorTestsBase
     {
-        protected static void ShouldGenerateExpectedCode(string inputCode, string expectedGeneratedCode)
+        protected static void ShouldGenerateExpectedCode(string inputCode, params string[] expectedGeneratedCode)
         {
             var metadataReferences = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Select(a => MetadataReference.CreateFromFile(a.Location)).ToList();
             var inputCompilation = CreateCompilation(inputCode, metadataReferences.ToArray());
@@ -27,16 +27,19 @@ namespace MvvmGen.SourceGenerators
 
             var runResult = driver.GetRunResult();
 
-            Assert.Single(runResult.GeneratedTrees);
+            Assert.Equal(expectedGeneratedCode.Length, runResult.GeneratedTrees.Length);
             Assert.True(runResult.Diagnostics.IsEmpty);
 
             var generatorResult = runResult.Results[0];
             Assert.Equal(generator, generatorResult.Generator);
             Assert.True(generatorResult.Diagnostics.IsEmpty);
-            Assert.Single(generatorResult.GeneratedSources);
+            Assert.Equal(expectedGeneratedCode.Length, generatorResult.GeneratedSources.Length);
             Assert.Null(generatorResult.Exception);
 
-            Assert.Equal(expectedGeneratedCode, generatorResult.GeneratedSources[0].SourceText.ToString());
+            for (int i = 0; i < expectedGeneratedCode.Length; i++)
+            {
+                Assert.Equal(expectedGeneratedCode[i], generatorResult.GeneratedSources[i].SourceText.ToString());
+            }
         }
 
         protected static Compilation CreateCompilation(string source, MetadataReference[] metadataReferences)

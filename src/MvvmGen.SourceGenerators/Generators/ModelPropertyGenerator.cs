@@ -15,7 +15,7 @@ namespace MvvmGen.SourceGenerators.Generators
             if (wrappedModelType is { Length: >0 })
             {
                 vmBuilder.AppendLineBeforeMember();
-                vmBuilder.AppendLine($"public {wrappedModelType} Model {{ get; set; }}");
+                vmBuilder.AppendLine($"protected {wrappedModelType} Model {{ get; set; }}");
             }
         }
     }
