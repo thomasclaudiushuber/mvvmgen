@@ -41,7 +41,7 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SaveAllCommand = new(SaveAll);
+            SaveAllCommand = new(_ => SaveAll());
         }}
 
         public DelegateCommand SaveAllCommand {{ get; private set; }}
@@ -88,7 +88,7 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SaveAllCommand = new(SaveAll, CanSaveAll);
+            SaveAllCommand = new(_ => SaveAll(), _ => CanSaveAll());
         }}
 
         public DelegateCommand SaveAllCommand {{ get; private set; }}
@@ -135,7 +135,7 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SuperCommand = new(SaveAll, CanSaveAll);
+            SuperCommand = new(_ => SaveAll(), _ => CanSaveAll());
         }}
 
         public DelegateCommand SuperCommand {{ get; private set; }}

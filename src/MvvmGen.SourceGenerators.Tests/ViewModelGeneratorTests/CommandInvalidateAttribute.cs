@@ -53,7 +53,7 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SaveCommand = new(Save, CanSave);
+            SaveCommand = new(_ => Save(), _ => CanSave());
         }}
 
         public DelegateCommand SaveCommand {{ get; private set; }}

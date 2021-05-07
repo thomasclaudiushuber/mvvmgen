@@ -23,10 +23,10 @@ namespace MvvmGen.SourceGenerators
                 vmBuilder.IncreaseIndent();
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
-                    vmBuilder.Append($"{commandToGenerate.CommandName} = new({commandToGenerate.ExecuteMethod}");
+                    vmBuilder.Append($"{commandToGenerate.CommandName} = new(_ => {commandToGenerate.ExecuteMethod}()");
                     if (commandToGenerate.CanExecuteMethod is not null)
                     {
-                        vmBuilder.Append($", {commandToGenerate.CanExecuteMethod}");
+                        vmBuilder.Append($", _ => {commandToGenerate.CanExecuteMethod}()");
                     }
                     vmBuilder.AppendLine(");");
                 }
