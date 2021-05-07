@@ -21,11 +21,12 @@ namespace MvvmGen.SourceGenerators.Inspectors
             var commandsToGenerate = new List<CommandToGenerate>();
             var propertiesToGenerate = new List<PropertyToGenerate>();
             var propertyInvalidations = new Dictionary<string, List<string>>();
-            foreach (var memberSymbol in viewModelClassSymbol.GetMembers())
+            var viewModelMembers = viewModelClassSymbol.GetMembers();
+            foreach (var memberSymbol in viewModelMembers)
             {
                 if (memberSymbol is IMethodSymbol methodSymbol)
                 {
-                    FindCommandsToGenerate(commandsToGenerate, propertyInvalidations, methodSymbol);
+                    FindCommandsToGenerate(commandsToGenerate, propertyInvalidations, methodSymbol, viewModelMembers);
                 }
                 else if (memberSymbol is IFieldSymbol fieldSymbol)
                 {
@@ -36,8 +37,8 @@ namespace MvvmGen.SourceGenerators.Inspectors
             foreach (var commandInfo in commandsToGenerate)
             {
                 var canExecuteAffectingProperties = new List<string>();
-                AddPropertyNames(commandInfo.CanExecuteMethod, canExecuteAffectingProperties, propertyInvalidations);
-                AddPropertyNames(commandInfo.ExecuteMethod, canExecuteAffectingProperties, propertyInvalidations);
+                AddPropertyNames(commandInfo.CanExecuteMethod?.Name, canExecuteAffectingProperties, propertyInvalidations);
+                AddPropertyNames(commandInfo.ExecuteMethod.Name, canExecuteAffectingProperties, propertyInvalidations);
                 commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
             }
 
@@ -141,7 +142,11 @@ namespace MvvmGen.SourceGenerators.Inspectors
             }
         }
 
-        private static void FindCommandsToGenerate(List<CommandToGenerate> commandsToGenerate, Dictionary<string, List<string>> propertyInvalidations, IMethodSymbol methodSymbol)
+        private static void FindCommandsToGenerate(List<CommandToGenerate> commandsToGenerate,
+            Dictionary<string,
+                List<string>> propertyInvalidations,
+            IMethodSymbol methodSymbol,
+            System.Collections.Immutable.ImmutableArray<ISymbol> viewModelMembers)
         {
             var methodAttributes = methodSymbol.GetAttributes();
             var commandAttributeData = methodAttributes.FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.CommandAttribute");
@@ -150,14 +155,20 @@ namespace MvvmGen.SourceGenerators.Inspectors
 
             if (commandAttributeData is not null)
             {
+                var executeMethodInfo = new MethodInfo(methodSymbol.Name)
+                {
+                    HasParameter = methodSymbol.Parameters.Any(),
+                    IsAsync = methodSymbol.IsAsync
+                };
+
                 var commandName = $"{methodSymbol.Name}Command";
-                string? canExecuteMethod = commandAttributeData.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                string? canExecuteMethodName = commandAttributeData.ConstructorArguments.FirstOrDefault().Value?.ToString();
 
                 foreach (var arg in commandAttributeData.NamedArguments)
                 {
                     if (arg.Key == "CanExecuteMethod")
                     {
-                        canExecuteMethod = arg.Value.Value?.ToString();
+                        canExecuteMethodName = arg.Value.Value?.ToString();
                     }
                     else if (arg.Key == "CommandName")
                     {
@@ -165,11 +176,26 @@ namespace MvvmGen.SourceGenerators.Inspectors
                     }
                 }
 
+                MethodInfo? canExecuteMethodInfo = null;
+
+                if (canExecuteMethodName is not null)
+                {
+                    var canExecuteMethodSymbol = viewModelMembers.OfType<IMethodSymbol>().FirstOrDefault(x => x.Name == canExecuteMethodName);
+                    if(canExecuteMethodSymbol is not null)
+                    {
+                        canExecuteMethodInfo = new MethodInfo(canExecuteMethodSymbol.Name)
+                        {
+                            HasParameter = canExecuteMethodSymbol.Parameters.Any(),
+                            IsAsync = canExecuteMethodSymbol.IsAsync
+                        };
+                    }
+                }
+
                 commandsToGenerate.Add(
-                   new CommandToGenerate(methodSymbol.Name, commandName)
-                   {
-                       CanExecuteMethod = canExecuteMethod
-                   });
+               new CommandToGenerate(executeMethodInfo, commandName)
+               {
+                   CanExecuteMethod = canExecuteMethodInfo
+               });
             }
 
             if (invalidateAttributeDatas.Any())

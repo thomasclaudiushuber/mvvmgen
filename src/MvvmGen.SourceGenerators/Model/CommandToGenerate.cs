@@ -8,15 +8,26 @@ namespace MvvmGen.SourceGenerators.Model
 {
     internal class CommandToGenerate
     {
-        public CommandToGenerate(string executeMethod, string commandName)
+        public CommandToGenerate(MethodInfo executeMethod, string commandName)
         {
             ExecuteMethod = executeMethod;
             CommandName = commandName;
         }
 
-        public string ExecuteMethod { get; }
+        public MethodInfo ExecuteMethod { get; }
         public string CommandName { get; }
-        public string? CanExecuteMethod { get; set; }
+        public MethodInfo? CanExecuteMethod { get; set; }
         public string[]? CanExecuteAffectingProperties { get; set; }
+    }
+    internal struct MethodInfo
+    {
+        public MethodInfo(string name) : this()
+        {
+            Name = name;
+        }
+
+        public string Name { get; set; }
+        public bool IsAsync { get; set; }
+        public bool HasParameter { get; set; }
     }
 }

@@ -4,6 +4,7 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,16 +24,27 @@ namespace MvvmGen.SourceGenerators
                 vmBuilder.IncreaseIndent();
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
-                    vmBuilder.Append($"{commandToGenerate.CommandName} = new(_ => {commandToGenerate.ExecuteMethod}()");
-                    if (commandToGenerate.CanExecuteMethod is not null)
+                    vmBuilder.Append($"{commandToGenerate.CommandName} = new({GetMethodCall(commandToGenerate.ExecuteMethod)}");
+                    if (commandToGenerate.CanExecuteMethod.HasValue)
                     {
-                        vmBuilder.Append($", _ => {commandToGenerate.CanExecuteMethod}()");
+                        vmBuilder.Append($", {GetMethodCall(commandToGenerate.CanExecuteMethod.Value)}");
                     }
                     vmBuilder.AppendLine(");");
                 }
                 vmBuilder.DecreaseIndent();
                 vmBuilder.AppendLine("}");
             }
+        }
+
+        private static object GetMethodCall(MethodInfo methodInfo)
+        {
+            return methodInfo switch
+            {
+                { IsAsync: true, HasParameter: true } => $"async x => await {methodInfo.Name}(x)",
+                { IsAsync: true, HasParameter: false } => $"async _ => await {methodInfo.Name}()",
+                { IsAsync: false, HasParameter: true} => $"{methodInfo.Name}",
+                { IsAsync: false, HasParameter: false} => $"_ => {methodInfo.Name}()",
+            };
         }
     }
 }
