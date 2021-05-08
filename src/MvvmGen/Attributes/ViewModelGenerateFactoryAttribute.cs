@@ -8,6 +8,9 @@ using System;
 
 namespace MvvmGen
 {
+    /// <summary>
+    /// Specifies that an <see cref="MvvmGen.ViewModels.IViewModelFactory{T}"/> is generated. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ViewModelGenerateFactoryAttribute : Attribute
     {
