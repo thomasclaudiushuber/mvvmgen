@@ -65,8 +65,6 @@ namespace MyCode
 
         partial void OnInitialize();
 
-        protected MvvmGen.Events.IEventAggregator EventAggregator {{ get; private set; }}
-
         public MyCode.Employee SelectedItem
         {{
             get => _selectedItem;
@@ -80,6 +78,8 @@ namespace MyCode
                 }}
             }}
         }}
+
+        protected MvvmGen.Events.IEventAggregator EventAggregator {{ get; private set; }}
     }}
 }}
 ");

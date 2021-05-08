@@ -14,7 +14,7 @@ namespace MvvmGen.SourceGenerators
 {
     internal static class CommandInitializeMethodGenerator
     {
-        internal static void Generate(ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
+        internal static void GenerateCommandInitializeMethod(this ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
         {
             if (commandsToGenerate is not null && commandsToGenerate.Any())
             {

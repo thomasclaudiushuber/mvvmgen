@@ -16,7 +16,13 @@ namespace MvvmGen.SourceGenerators.Generators
 {
     internal static class ViewModelFactoryGenerator
     {
-        internal static void Generate(ViewModelBuilder vmBuilder, INamedTypeSymbol viewModelClassSymbol,
+        internal static void GenerateFactoryClass(this ViewModelBuilder vmBuilder, ViewModelToGenerate viewModelToGenerate)
+        {
+            Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol,
+                viewModelToGenerate.InjectionsToGenerate);
+        }
+
+        private static void Generate(ViewModelBuilder vmBuilder, INamedTypeSymbol viewModelClassSymbol,
                IEnumerable<InjectionToGenerate>? injectionsToGenerate)
         {
             injectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
@@ -25,7 +31,7 @@ namespace MvvmGen.SourceGenerators.Generators
             {
                 Accessibility.Public => "public",
                 Accessibility.Internal => "internal",
-                _=>""
+                _ => ""
             };
             vmBuilder.AppendLine();
             vmBuilder.AppendLine($"{accessModifier} interface I{viewModelClassName}Factory : IViewModelFactory<{viewModelClassName}> {{ }}");
@@ -57,11 +63,11 @@ namespace MvvmGen.SourceGenerators.Generators
             vmBuilder.DecreaseIndent();
             vmBuilder.AppendLine("}");
 
-            InjectionPropertyGenerator.Generate(vmBuilder, injectionsToGenerate);
+            InjectionPropertyGenerator.GenerateInjectionProperties(vmBuilder, injectionsToGenerate);
 
             vmBuilder.AppendLine();
             vmBuilder.Append($"public {viewModelClassName} Create() => new {viewModelClassName}(");
-             first = true;
+            first = true;
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
                 if (!first)
@@ -74,8 +80,6 @@ namespace MvvmGen.SourceGenerators.Generators
             vmBuilder.AppendLine(");");
             vmBuilder.DecreaseIndent();
             vmBuilder.AppendLine("}");
-
-
         }
     }
 }

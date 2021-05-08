@@ -4,19 +4,15 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
-using System.Text;
-
 namespace MvvmGen.SourceGenerators.Generators
 {
-    internal static class ModelPropertyGenerator
+    internal static class UsingDirectivesGenerator
     {
-        internal static void GenerateModelProperty(this ViewModelBuilder vmBuilder, string? wrappedModelType)
+        internal static void GenerateUsingDirectives(this ViewModelBuilder vmBuilder)
         {
-            if (wrappedModelType is { Length: >0 })
-            {
-                vmBuilder.AppendLineBeforeMember();
-                vmBuilder.AppendLine($"protected {wrappedModelType} Model {{ get; set; }}");
-            }
+            vmBuilder.AppendLine("using MvvmGen.Commands;");
+            vmBuilder.AppendLine("using MvvmGen.Events;");
+            vmBuilder.AppendLine("using MvvmGen.ViewModels;");
         }
     }
 }

@@ -355,8 +355,6 @@ namespace MyCode
 
         partial void OnInitialize();
 
-        protected MyCode.Employee Model {{ get; set; }}
-
         public string FirstName
         {{
             get => Model.FirstName;
@@ -382,6 +380,8 @@ namespace MyCode
                 }}
             }}
         }}
+
+        protected MyCode.Employee Model {{ get; set; }}
     }}
 }}
 ");
@@ -425,8 +425,6 @@ namespace MyCode
 
         partial void OnInitialize();
 
-        protected MyCode.Employee Model {{ get; set; }}
-
         public int Id => Model.Id;
 
         public bool IsDeveloper
@@ -441,6 +439,8 @@ namespace MyCode
                 }}
             }}
         }}
+
+        protected MyCode.Employee Model {{ get; set; }}
     }}
 }}
 ");

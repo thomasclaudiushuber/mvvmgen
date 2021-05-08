@@ -12,7 +12,7 @@ namespace MvvmGen.SourceGenerators
 {
     internal static class CommandPropertyGenerator
     {
-        internal static void Generate(ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
+        internal static void GenerateCommandProperties(this ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
         {
             if (commandsToGenerate is not null)
             {

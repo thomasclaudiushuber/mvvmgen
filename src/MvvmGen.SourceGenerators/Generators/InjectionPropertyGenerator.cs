@@ -13,7 +13,7 @@ namespace MvvmGen.SourceGenerators
 {
     internal static class InjectionPropertyGenerator
     {
-        internal static void Generate(ViewModelBuilder vmBuilder,IEnumerable<InjectionToGenerate>? injectionsToGenerate)
+        internal static void GenerateInjectionProperties(this ViewModelBuilder vmBuilder,IEnumerable<InjectionToGenerate>? injectionsToGenerate)
         {
             if (injectionsToGenerate is not null)
             {

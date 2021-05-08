@@ -11,7 +11,7 @@ namespace MvvmGen.SourceGenerators
 {
     internal static class PropertyGenerator
     {
-        internal static void Generate(ViewModelBuilder vmBuilder, IEnumerable<PropertyToGenerate>? propertiesToGenerate)
+        internal static void GenerateProperties(this ViewModelBuilder vmBuilder, IEnumerable<PropertyToGenerate>? propertiesToGenerate)
         {
             if (propertiesToGenerate is not null)
             {
