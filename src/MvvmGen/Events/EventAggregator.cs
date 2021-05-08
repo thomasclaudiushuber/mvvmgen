@@ -10,10 +10,14 @@ using System.Linq;
 
 namespace MvvmGen.Events
 {
+    /// <summary>
+    /// A class to communicate between loosely coupled objects
+    /// </summary>
     public class EventAggregator : IEventAggregator
     {
         internal Dictionary<Type, List<WeakReference>> _eventSubscribers = new();
 
+        /// <inheritdoc/>
         public void Publish<TEvent>(TEvent eventToPublish)
         {
             lock (_eventSubscribers)
@@ -50,6 +54,7 @@ namespace MvvmGen.Events
             }
         }
 
+        /// <inheritdoc/>
         public void RegisterSubscriber<TSubscriber>(TSubscriber subscriber)
         {
             lock (_eventSubscribers)
