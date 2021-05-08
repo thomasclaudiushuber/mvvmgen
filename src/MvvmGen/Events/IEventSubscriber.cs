@@ -13,7 +13,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent eventData);
@@ -27,7 +27,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2> : IEventSubscriber<TEvent1>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent2 eventData);
@@ -42,7 +42,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3> : IEventSubscriber<TEvent1, TEvent2>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent3 eventData);
@@ -58,7 +58,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4> : IEventSubscriber<TEvent1, TEvent2, TEvent3>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent4 eventData);
@@ -75,7 +75,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5> : IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent5 eventData);
@@ -93,7 +93,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6> : IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent6 eventData);
@@ -112,7 +112,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7> : IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent7 eventData);
@@ -132,7 +132,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7, TEvent8> : IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent8 eventData);
@@ -153,7 +153,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7, TEvent8, TEvent9> : IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7, TEvent8>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent9 eventData);
@@ -175,7 +175,7 @@ namespace MvvmGen.Events
     public interface IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7, TEvent8, TEvent9, TEvent10> : IEventSubscriber<TEvent1, TEvent2, TEvent3, TEvent4, TEvent5, TEvent6, TEvent7, TEvent8, TEvent9>
     {
         /// <summary>
-        /// Gets called when the event occurs
+        /// Gets called when the event was published
         /// </summary>
         /// <param name="eventData">The event instance</param>
         void OnEvent(TEvent10 eventData);

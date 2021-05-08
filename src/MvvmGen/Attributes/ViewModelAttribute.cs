@@ -9,7 +9,7 @@ using System;
 namespace MvvmGen
 {
     /// <summary>
-    /// Specifies that a class is a ViewModel. With this attribute set on a class, a partial class definition will be generated.
+    /// Specifies that a class is a ViewModel. With this attribute set on a class, a partial class definition is generated.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ViewModelAttribute : Attribute
@@ -34,7 +34,7 @@ namespace MvvmGen
         public Type? ModelType { get; set; }
 
         /// <summary>
-        /// Gets or sets if a constructor is generated.
+        /// Gets or sets if a constructor is generated. Default value is true.
         /// </summary>
         public bool GenerateConstructor { get; set; } = true;
     }

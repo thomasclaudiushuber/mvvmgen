@@ -7,15 +7,15 @@
 namespace MvvmGen.ViewModels
 {
     /// <summary>
-    /// Represents a factory that can create view model instances with a parameterless <see cref="Create"/> method
+    /// Represents a factory that can create ViewModel instances with a parameterless <see cref="Create"/> method.
     /// </summary>
-    /// <typeparam name="T">The type of view model to create</typeparam>
+    /// <typeparam name="T">The type of ViewModel to create. Must be of type <see cref="ViewModelBase"/></typeparam>
     public interface IViewModelFactory<out T> where T : ViewModelBase
     {
         /// <summary>
-        /// Creates and returns a view model instance
+        /// Creates and returns a ViewModel instance
         /// </summary>
-        /// <returns>The created view model</returns>
+        /// <returns>The created ViewModel</returns>
         T Create();
     }
 }

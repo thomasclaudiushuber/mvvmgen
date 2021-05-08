@@ -27,7 +27,7 @@ namespace MvvmGen.Commands
         public event EventHandler? CanExecuteChanged;
 
         /// <summary>
-        /// Raises the <see cref="CanExecuteChanged"/> event
+        /// Raises the <see cref="CanExecuteChanged"/> event.
         /// </summary>
         public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 

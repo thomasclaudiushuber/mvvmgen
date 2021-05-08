@@ -9,7 +9,7 @@ using System;
 namespace MvvmGen
 {
     /// <summary>
-    /// Specifies that a property in the ViewModel should be generated for a field. Set this attribute on fields of a class that has the <see cref="ViewModelAttribute"/> set.
+    /// Specifies that a property in the ViewModel should be generated for a field. Set this attribute on a field of a class that has the <see cref="ViewModelAttribute"/> set.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class PropertyAttribute : Attribute
@@ -29,7 +29,7 @@ namespace MvvmGen
         }
 
         /// <summary>
-        /// Gets or sets the name of property to generate
+        /// Gets or sets the name of property to generate.
         /// </summary>
         public string? PropertyName { get; set; }
     }
