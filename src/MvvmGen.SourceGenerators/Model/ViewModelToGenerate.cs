@@ -5,11 +5,13 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace MvvmGen.SourceGenerators.Model
 {
+    /// <summary>
+    /// Contains all the details that must be generated for a class that is decorated with the MvvmGen.ViewModelAttribute.
+    /// </summary>
     internal class ViewModelToGenerate
     {
         public ViewModelToGenerate(INamedTypeSymbol viewModelClassSymbol)
@@ -17,19 +19,20 @@ namespace MvvmGen.SourceGenerators.Model
             ViewModelClassSymbol = viewModelClassSymbol;
         }
 
-        public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
-
-        public IEnumerable<PropertyToGenerate>? PropertiesToGenerate { get; internal set; }
+        public INamedTypeSymbol ViewModelClassSymbol { get; }
 
         public string? WrappedModelType { get; internal set; }
 
-        public INamedTypeSymbol ViewModelClassSymbol { get; }
-
         public bool IsEventSubscriber { get; internal set; }
+
+        public bool GenerateConstructor { get; internal set; }
+
+        public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
+
+        public IList<PropertyToGenerate>? PropertiesToGenerate { get; internal set; }
 
         public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; internal set; }
 
-        public bool GenerateConstructor { get; internal set; }
-        public bool GenerateViewModelFactory { get; internal set; }
+        public ViewModelFactoryToGenerate? ViewModelFactoryToGenerate { get; internal set; }
     }
 }

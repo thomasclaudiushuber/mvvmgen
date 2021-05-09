@@ -15,7 +15,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
 {
     internal static class ModelMemberInspector
     {
-        internal static string? Inspect(INamedTypeSymbol viewModelClassSymbol, AttributeData viewModelAttributeData, List<PropertyToGenerate> propertiesToGenerate)
+        internal static string? Inspect(AttributeData viewModelAttributeData, IList<PropertyToGenerate> propertiesToGenerate)
         {
             string? wrappedModelType = null;
 

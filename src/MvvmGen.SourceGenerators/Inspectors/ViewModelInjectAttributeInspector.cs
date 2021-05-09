@@ -29,8 +29,8 @@ namespace MvvmGen.SourceGenerators.Inspectors
                     {
                         var typeNameWithoutNamespace = type.Split('.').Last();
                         var isInterface = typeNameWithoutNamespace.StartsWith("I") && char.IsUpper(typeNameWithoutNamespace[0]) && char.IsUpper(typeNameWithoutNamespace[1]);
-                        propertyName = isInterface 
-                            ? typeNameWithoutNamespace.Substring(1) 
+                        propertyName = isInterface
+                            ? typeNameWithoutNamespace.Substring(1)
                             : typeNameWithoutNamespace;
                     }
                     if (propertyName is not null)
@@ -46,14 +46,13 @@ namespace MvvmGen.SourceGenerators.Inspectors
                                 5 => "public",
                                 _ => "protected"
                             }
-                    });
+                        });
                     }
                 }
             }
 
             return injectionsToGenerate;
         }
-
     }
 }
 

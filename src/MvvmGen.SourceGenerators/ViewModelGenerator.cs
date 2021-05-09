@@ -13,11 +13,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using MvvmGen.SourceGenerators.Generators;
 using MvvmGen.SourceGenerators.Inspectors;
-using MvvmGen.SourceGenerators.Extensions;
 using MvvmGen.SourceGenerators.Model;
 
 namespace MvvmGen.SourceGenerators
 {
+    /// <summary>
+    /// Generates ViewModels for classes that are decorated with the MvvmGen.ViewModelAttribute.
+    /// </summary>
     [Generator]
     public class ViewModelGenerator : ISourceGenerator
     {
@@ -65,7 +67,7 @@ namespace MvvmGen.SourceGenerators
                         vmBuilder.AppendLine("}");
                     }
 
-                    if (viewModelToGenerate.GenerateViewModelFactory)
+                    if (viewModelToGenerate.ViewModelFactoryToGenerate is not null)
                     {
                         vmBuilder.GenerateFactoryClass(viewModelToGenerate);
                     }
@@ -87,6 +89,9 @@ namespace MvvmGen.SourceGenerators
         }
     }
 
+    /// <summary>
+    /// Wraps a StringBuilder and manages indention
+    /// </summary>
     internal class ViewModelBuilder
     {
         private string _indent = "";
@@ -127,6 +132,7 @@ namespace MvvmGen.SourceGenerators
             {
                 _stringBuilder.AppendLine();
             }
+
             _isFirstMember = false;
         }
 
@@ -161,6 +167,9 @@ namespace MvvmGen.SourceGenerators
         public override string ToString() => _stringBuilder.ToString();
     }
 
+    /// <summary>
+    /// Receives all the classes that have the MvvmGen.ViewModelAttribute set.
+    /// </summary>
     internal class SyntaxReceiver : ISyntaxContextReceiver
     {
         public List<ViewModelToGenerate> ViewModelsToGenerate { get; } = new();
@@ -178,41 +187,39 @@ namespace MvvmGen.SourceGenerators
 
                 if (viewModelClassSymbol is not null && viewModelAttributeData is not null)
                 {
-                    var viewModelToGenerate = new ViewModelToGenerate(viewModelClassSymbol);
-
-                    viewModelToGenerate.InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol);
-
-                    viewModelToGenerate.GenerateConstructor = true;
-
-                    foreach (var arg in viewModelAttributeData.NamedArguments)
-                    {
-                        if (arg.Key == "GenerateConstructor")
-                        {
-                            viewModelToGenerate.GenerateConstructor = (bool?)arg.Value.Value == true;
-                        }
-                    }
-
-                    var viewModelFactoryAttribute = viewModelClassSymbol.GetAttributes().FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateFactoryAttribute");
-                    viewModelToGenerate.GenerateViewModelFactory = viewModelFactoryAttribute is not null;
-
                     var (commandsToGenerate, propertiesToGenerate) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
-                    viewModelToGenerate.CommandsToGenerate = commandsToGenerate;
-                    viewModelToGenerate.PropertiesToGenerate = propertiesToGenerate;
 
-                    viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelClassSymbol, viewModelAttributeData, propertiesToGenerate);
-
-                    foreach (var propertyToGenerate in propertiesToGenerate)
+                    var viewModelToGenerate = new ViewModelToGenerate(viewModelClassSymbol)
                     {
-                        propertyToGenerate.CommandsToInvalidate = commandsToGenerate
-                          .Where(x => x.CanExecuteAffectingProperties is not null
-                           && x.CanExecuteAffectingProperties.Contains(propertyToGenerate.PropertyName))
-                         .ToList();
-                    }
+                        InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol),
+                        GenerateConstructor = ViewModelAttributeInspector.Inspect(viewModelAttributeData),
+                        ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
+                        CommandsToGenerate = commandsToGenerate,
+                        PropertiesToGenerate = propertiesToGenerate
+                    };
+
+                    viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
+
+                    SetCommandsToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
 
                     viewModelToGenerate.IsEventSubscriber = viewModelClassSymbol.Interfaces.Any(x => x.ToDisplayString().StartsWith("MvvmGen.Events.IEventSubscriber"));
 
                     ViewModelsToGenerate.Add(viewModelToGenerate);
                 }
+            }
+        }
+
+        private static void SetCommandsToInvalidatePropertyOnPropertiesToGenerate(
+            IEnumerable<PropertyToGenerate> propertiesToGenerate,
+            IEnumerable<CommandToGenerate> commandsToGenerate)
+        {
+            var commandsWithInvalidationProperties = commandsToGenerate.Where(x => x.CanExecuteAffectingProperties is not null);
+
+            foreach (var propertyToGenerate in propertiesToGenerate)
+            {
+                propertyToGenerate.CommandsToInvalidate = commandsWithInvalidationProperties
+                    .Where(x => x.CanExecuteAffectingProperties.Contains(propertyToGenerate.PropertyName))
+                    .ToList();
             }
         }
     }
