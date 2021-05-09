@@ -46,10 +46,7 @@ namespace MvvmGen.SourceGenerators
 
                     vmBuilder.GenerateClass(viewModelToGenerate.ViewModelClassSymbol, viewModelBaseSymbol);
 
-                    if (viewModelToGenerate.GenerateConstructor)
-                    {
-                        vmBuilder.GenerateConstructor(viewModelToGenerate);
-                    }
+                    vmBuilder.GenerateConstructor(viewModelToGenerate);
 
                     vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate);
 
@@ -61,16 +58,13 @@ namespace MvvmGen.SourceGenerators
 
                     vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
 
-                    while (vmBuilder.IndentLevel > 1)
+                    while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a factory class
                     {
                         vmBuilder.DecreaseIndent();
                         vmBuilder.AppendLine("}");
                     }
 
-                    if (viewModelToGenerate.ViewModelFactoryToGenerate is not null)
-                    {
-                        vmBuilder.GenerateFactoryClass(viewModelToGenerate);
-                    }
+                    vmBuilder.GenerateFactoryClass(viewModelToGenerate);
 
                     while (vmBuilder.DecreaseIndent())
                     {

@@ -14,5 +14,14 @@ namespace MvvmGen
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ViewModelGenerateFactoryAttribute : Attribute
     {
+        /// <summary>
+        /// Gets or sets the name of the generated factory class.
+        /// </summary>
+        public string? ClassName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the generated factory interface.
+        /// </summary>
+        public string? InterfaceName { get; set; }
     }
 }

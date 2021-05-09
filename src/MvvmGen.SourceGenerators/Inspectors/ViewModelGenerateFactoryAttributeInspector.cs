@@ -18,9 +18,24 @@ namespace MvvmGen.SourceGenerators.Inspectors
             var viewModelFactoryAttribute = viewModelClassSymbol.GetAttributes()
                 .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateFactoryAttribute");
 
-            if(viewModelFactoryAttribute is not null)
+            if (viewModelFactoryAttribute is not null)
             {
-                viewModelFactoryToGenerate = new ViewModelFactoryToGenerate();
+                var className = $"{viewModelClassSymbol.Name}Factory";
+                var interfaceName = $"I{className}";
+
+                foreach (var arg in viewModelFactoryAttribute.NamedArguments)
+                {
+                    if (arg.Key == "ClassName")
+                    {
+                        className = arg.Value.Value?.ToString() ?? className;
+                    }
+                    else if (arg.Key == "InterfaceName")
+                    {
+                        interfaceName = arg.Value.Value?.ToString() ?? interfaceName;
+                    }
+                }
+
+                viewModelFactoryToGenerate = new ViewModelFactoryToGenerate(className, interfaceName);
             }
 
             return viewModelFactoryToGenerate;

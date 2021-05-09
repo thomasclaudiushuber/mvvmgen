@@ -17,13 +17,16 @@ namespace MvvmGen.SourceGenerators.Generators
     {
         internal static void GenerateConstructor(this ViewModelBuilder vmBuilder, ViewModelToGenerate viewModelToGenerate)
         {
-            Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol.Name,
+            if (viewModelToGenerate.GenerateConstructor)
+            {
+                Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol.Name,
                             viewModelToGenerate.InjectionsToGenerate,
                             viewModelToGenerate.CommandsToGenerate?.Any() == true,
                             viewModelToGenerate.IsEventSubscriber);
+            }
         }
 
-        internal static void Generate(ViewModelBuilder vmBuilder, string viewModelClassName,
+        private static void Generate(ViewModelBuilder vmBuilder, string viewModelClassName,
             IEnumerable<InjectionToGenerate>? injectionsToGenerate,
             bool hasCommands, bool isEventSubscriber)
         {

@@ -18,30 +18,32 @@ namespace MvvmGen.SourceGenerators.Generators
     {
         internal static void GenerateFactoryClass(this ViewModelBuilder vmBuilder, ViewModelToGenerate viewModelToGenerate)
         {
-            Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol,
-                viewModelToGenerate.InjectionsToGenerate);
-        }
+            if (viewModelToGenerate.ViewModelFactoryToGenerate is null)
+            {
+                return;
+            }
 
-        private static void Generate(ViewModelBuilder vmBuilder, INamedTypeSymbol viewModelClassSymbol,
-               IEnumerable<InjectionToGenerate>? injectionsToGenerate)
-        {
-            injectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
-            string viewModelClassName = viewModelClassSymbol.Name;
-            string accessModifier = viewModelClassSymbol.DeclaredAccessibility switch
+            var factoryToGenerate = viewModelToGenerate.ViewModelFactoryToGenerate;
+            var viewModelClassName = viewModelToGenerate.ViewModelClassSymbol.Name;
+            
+            var injectionsToGenerate = viewModelToGenerate.InjectionsToGenerate ?? Enumerable.Empty<InjectionToGenerate>();
+            
+            var accessModifier = viewModelToGenerate.ViewModelClassSymbol.DeclaredAccessibility switch
             {
                 Accessibility.Public => "public",
                 Accessibility.Internal => "internal",
                 _ => ""
             };
+
             vmBuilder.AppendLine();
-            vmBuilder.AppendLine($"{accessModifier} interface I{viewModelClassName}Factory : IViewModelFactory<{viewModelClassName}> {{ }}");
+            vmBuilder.AppendLine($"{accessModifier} interface {factoryToGenerate.InterfaceName} : IViewModelFactory<{viewModelClassName}> {{ }}");
             vmBuilder.AppendLine();
-            vmBuilder.AppendLine($"{accessModifier} class {viewModelClassName}Factory : I{viewModelClassName}Factory");
+            vmBuilder.AppendLine($"{accessModifier} class {factoryToGenerate.ClassName} : {factoryToGenerate.InterfaceName}");
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
 
-            vmBuilder.Append($"public {viewModelClassName}Factory(");
-            bool first = true;
+            vmBuilder.Append($"public {factoryToGenerate.ClassName}(");
+            var first = true;
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
                 if (!first)
@@ -55,6 +57,7 @@ namespace MvvmGen.SourceGenerators.Generators
             vmBuilder.AppendLine(")");
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
+
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
                 vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.PascalCaseToCamelCase()};");

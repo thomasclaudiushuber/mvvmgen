@@ -8,5 +8,14 @@ namespace MvvmGen.SourceGenerators.Model
 {
     public class ViewModelFactoryToGenerate
     {
+        public ViewModelFactoryToGenerate(string className, string interfaceName)
+        {
+            ClassName = className;
+            InterfaceName = interfaceName;
+        }
+
+        public string ClassName { get; }
+
+        public string InterfaceName { get; }
     }
 }

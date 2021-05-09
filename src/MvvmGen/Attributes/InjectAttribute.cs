@@ -9,7 +9,7 @@ using System;
 namespace MvvmGen
 {
     /// <summary>
-    /// Specifieds that a type needs to be injected into a ViewModel. Generates a constructor parameter and initializes a property of the specified type. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
+    /// Specifieds that a type is injected into a ViewModel. Generates a constructor parameter and initializes a property with the injected type. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class InjectAttribute : Attribute
@@ -17,23 +17,37 @@ namespace MvvmGen
         /// <summary>
         /// Initializes a new instance of the <see cref="InjectAttribute"/> class.
         /// </summary>
-        /// <param name="type">The type that gets injected inby the ViewModel. All properties of the model type will be generated in the ViewModel.</param>
+        /// <param name="type">The type that is injected into the ViewModel.</param>
         public InjectAttribute(Type type)
         {
             Type = type;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InjectAttribute"/> class.
+        /// </summary>
+        /// <param name="type">The type that is injected into the ViewModel.</param>
+        /// <param name="propertyName">The name of the property that stores the injected type.</param>
         public InjectAttribute(Type type, string propertyName)
         {
             Type = type;
             PropertyName = propertyName;
-
         }
 
+        /// <summary>
+        /// Gets the type that is injected into the ViewModel.
+        /// </summary>
         public Type Type { get; }
 
+        /// <summary>
+        /// Gets or sets the name of the property that stores the injected type.
+        /// </summary>
         public string? PropertyName { get; }
 
+
+        /// <summary>
+        /// Gets or sets the access modifier of the property that stores the injected type.
+        /// </summary>
         public AccessModifier PropertyAccessModifier { get; set; }
     }
 

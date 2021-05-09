@@ -13,9 +13,9 @@ namespace MvvmGen.ViewModels
     public interface IViewModelFactory<out T> where T : ViewModelBase
     {
         /// <summary>
-        /// Creates and returns a ViewModel instance
+        /// Creates and returns a ViewModel instance.
         /// </summary>
-        /// <returns>The created ViewModel</returns>
+        /// <returns>The created ViewModel instance</returns>
         T Create();
     }
 }
