@@ -44,14 +44,35 @@ namespace MvvmGen.Events
 
             eventAggregator.Publish(new CustomerAddedEvent(9));
 
-            Assert.Equal(expectedNumberOfSubscribers, eventAggregator._eventSubscribers[typeof(CustomerAddedEvent)].Count);
+            Assert.Equal(expectedNumberOfSubscribers, eventAggregator._subscribersByEvent[typeof(CustomerAddedEvent)].Count);
+        }
+
+        [InlineData(0, true)]
+        [InlineData(1, false)]
+        [Theory]
+        public void ShouldRemoveDeadSubscribersAfterUnregisterASubscriber(int expectedNumberOfSubscribers, bool garbageCollect)
+        {
+            var eventAggregator = new EventAggregator();
+
+            CreateAndRegisterSubscriber(eventAggregator);
+            var anotherSubscriber = new TestEventSubscriber<CustomerAddedEvent>();
+            eventAggregator.RegisterSubscriber(anotherSubscriber);
+
+            if (garbageCollect)
+            {
+                GC.Collect();
+            }
+
+            eventAggregator.UnregisterSubscriber(anotherSubscriber);
+
+            Assert.Equal(expectedNumberOfSubscribers, eventAggregator._subscribersByEvent[typeof(CustomerAddedEvent)].Count);
         }
 
         private WeakReference? _weakReference;
 
         private void CreateAndRegisterSubscriber(IEventAggregator eventAggregator)
         {
-            var sub = new CustomerAddedEventSubscriber();
+            var sub = new TestEventSubscriber<CustomerAddedEvent>();
             eventAggregator.RegisterSubscriber(sub);
 
             _weakReference = new WeakReference(sub);

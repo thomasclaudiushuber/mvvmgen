@@ -22,7 +22,14 @@ namespace MvvmGen.Events
         /// Registers an MvvmGen.Events.IEventSubscriber, so that it will receive events from the IEventAggregator instance.
         /// </summary>
         /// <typeparam name="TSubscriber">The subscriber type</typeparam>
-        /// <param name="subscriber">The subscriber instance</param>
+        /// <param name="subscriber">The subscriber instance to register</param>
         void RegisterSubscriber<TSubscriber>(TSubscriber subscriber);
+
+        /// <summary>
+        /// Unregisters an MvvmGen.Events.IEventSubscriber, so that it won't receive events anymore from the IEventAggregator instance.
+        /// </summary>
+        /// <typeparam name="TSubscriber">The subscriber type</typeparam>
+        /// <param name="subscriber">The subscriber instance to unregister</param>
+        void UnregisterSubscriber<TSubscriber>(TSubscriber subscriber);
     }
 }

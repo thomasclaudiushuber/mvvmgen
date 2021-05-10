@@ -4,29 +4,21 @@
 // Licensed under the MIT license => See the LICENSE file in project root
 // ***********************************************************************
 
+using System.Collections.Generic;
+
 namespace MvvmGen.Events
 {
-    public class CustomerAddedEventSubscriber : IEventSubscriber<CustomerAddedEvent>
+    public class TestEventSubscriber<T> : IEventSubscriber<T>
     {
-        public CustomerAddedEvent? ReceivedEvent { get; private set; }
+        public List<T> ReceivedEvents { get; private set; } = new();
 
-        public void OnEvent(CustomerAddedEvent theEvent)
+        public void OnEvent(T theEvent)
         {
-            ReceivedEvent = theEvent;
+            ReceivedEvents.Add( theEvent);
         }
     }
 
-    public class CustomerDeletedEventSubscriber : IEventSubscriber<CustomerDeletedEvent>
-    {
-        public CustomerDeletedEvent? ReceivedEvent { get; private set; }
-
-        public void OnEvent(CustomerDeletedEvent theEvent)
-        {
-            ReceivedEvent = theEvent;
-        }
-    }
-
-    public class CustomerAllEventsSubscriberSeparateInterfaces : IEventSubscriber<CustomerDeletedEvent>, IEventSubscriber<CustomerAddedEvent>
+    public class TestAllEventsSubscriberSeparateInterfaces : IEventSubscriber<CustomerDeletedEvent>, IEventSubscriber<CustomerAddedEvent>
     {
         public CustomerDeletedEvent? ReceivedCustomerDeletedEvent { get; private set; }
         public CustomerAddedEvent? ReceivedCustomerAddedEvent { get; private set; }

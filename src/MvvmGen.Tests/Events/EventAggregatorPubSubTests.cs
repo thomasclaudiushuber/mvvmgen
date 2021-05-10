@@ -16,13 +16,48 @@ namespace MvvmGen.Events
         {
             var eventAggregator = new EventAggregator();
 
-            var eventSubscriber = new CustomerAddedEventSubscriber();
+            var eventSubscriber = new TestEventSubscriber<CustomerAddedEvent>();
             eventAggregator.RegisterSubscriber(eventSubscriber);
 
             eventAggregator.Publish(new CustomerAddedEvent(5));
 
-            Assert.NotNull(eventSubscriber.ReceivedEvent);
-            Assert.Equal(5, eventSubscriber.ReceivedEvent?.CustomerId);
+            Assert.Single(eventSubscriber.ReceivedEvents);
+            Assert.Equal(5, eventSubscriber.ReceivedEvents[0].CustomerId);
+        }
+
+        [Fact]
+        public void ShouldReceiveEventThreeTimes()
+        {
+            var eventAggregator = new EventAggregator();
+
+            var eventSubscriber = new TestEventSubscriber<CustomerAddedEvent>();
+            eventAggregator.RegisterSubscriber(eventSubscriber);
+
+            eventAggregator.Publish(new CustomerAddedEvent(5));
+            eventAggregator.Publish(new CustomerAddedEvent(6));
+            eventAggregator.Publish(new CustomerAddedEvent(7));
+
+            Assert.Equal(3, eventSubscriber.ReceivedEvents.Count);
+            Assert.Equal(5, eventSubscriber.ReceivedEvents[0].CustomerId);
+            Assert.Equal(6, eventSubscriber.ReceivedEvents[1].CustomerId);
+            Assert.Equal(7, eventSubscriber.ReceivedEvents[2].CustomerId);
+        }
+
+        [Fact]
+        public void ShouldUnsubscribeFromEvent()
+        {
+            var eventAggregator = new EventAggregator();
+
+            var eventSubscriber = new TestEventSubscriber<CustomerAddedEvent>();
+            eventAggregator.RegisterSubscriber(eventSubscriber);
+
+            eventAggregator.Publish(new CustomerAddedEvent(5));
+            eventAggregator.UnregisterSubscriber(eventSubscriber);
+
+            eventAggregator.Publish(new CustomerAddedEvent(6));
+
+            Assert.Single(eventSubscriber.ReceivedEvents);
+            Assert.Equal(5, eventSubscriber.ReceivedEvents[0].CustomerId);
         }
 
         [Fact]
@@ -30,17 +65,19 @@ namespace MvvmGen.Events
         {
             var eventAggregator = new EventAggregator();
 
-            var customerAddedEventSubscriber = new CustomerAddedEventSubscriber();
+            var customerAddedEventSubscriber = new TestEventSubscriber<CustomerAddedEvent>();
             eventAggregator.RegisterSubscriber(customerAddedEventSubscriber);
 
-            var customerDeletedEventSubscriber = new CustomerDeletedEventSubscriber();
+            var customerDeletedEventSubscriber = new TestEventSubscriber<CustomerDeletedEvent>();
             eventAggregator.RegisterSubscriber(customerDeletedEventSubscriber);
 
             eventAggregator.Publish(new CustomerAddedEvent(5));
             eventAggregator.Publish(new CustomerDeletedEvent(7));
 
-            Assert.Equal(5, customerAddedEventSubscriber.ReceivedEvent?.CustomerId);
-            Assert.Equal(7, customerDeletedEventSubscriber.ReceivedEvent?.CustomerId);
+            Assert.Single(customerAddedEventSubscriber.ReceivedEvents);
+            Assert.Equal(5, customerAddedEventSubscriber.ReceivedEvents[0].CustomerId);
+            Assert.Single(customerDeletedEventSubscriber.ReceivedEvents);
+            Assert.Equal(7, customerDeletedEventSubscriber.ReceivedEvents[0].CustomerId);
         }
 
         [Fact]
@@ -65,7 +102,7 @@ namespace MvvmGen.Events
         {
             var eventAggregator = new EventAggregator();
 
-            var customerAllEventsSeparateInterfaceSubscriber = new CustomerAllEventsSubscriberSeparateInterfaces();
+            var customerAllEventsSeparateInterfaceSubscriber = new TestAllEventsSubscriberSeparateInterfaces();
             eventAggregator.RegisterSubscriber(customerAllEventsSeparateInterfaceSubscriber);
 
             eventAggregator.Publish(new CustomerAddedEvent(5));

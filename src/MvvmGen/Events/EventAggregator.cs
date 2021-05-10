@@ -11,29 +11,29 @@ using System.Linq;
 namespace MvvmGen.Events
 {
     /// <summary>
-    /// A class to communicate between loosely coupled objects
+    /// A class to communicate between loosely coupled objects, like for example ViewModels
     /// </summary>
     public class EventAggregator : IEventAggregator
     {
-        internal Dictionary<Type, List<WeakReference>> _eventSubscribers = new();
+        internal Dictionary<Type, List<WeakReference>> _subscribersByEvent = new();
 
         /// <inheritdoc/>
         public void Publish<TEvent>(TEvent eventToPublish)
         {
-            lock (_eventSubscribers)
+            lock (_subscribersByEvent)
             {
                 if (eventToPublish is null)
                 {
                     throw new ArgumentNullException(nameof(eventToPublish));
                 }
-                if (!_eventSubscribers.ContainsKey(typeof(TEvent)))
+                if (!_subscribersByEvent.ContainsKey(typeof(TEvent)))
                 {
                     return;
                 }
 
                 var subscribersToRemove = new List<WeakReference>();
 
-                foreach (var subscriber in _eventSubscribers[typeof(TEvent)])
+                foreach (var subscriber in _subscribersByEvent[typeof(TEvent)])
                 {
                     if (subscriber.IsAlive)
                     {
@@ -49,7 +49,7 @@ namespace MvvmGen.Events
 
                 foreach (var subscriber in subscribersToRemove)
                 {
-                    _eventSubscribers[typeof(TEvent)].Remove(subscriber);
+                    _subscribersByEvent[typeof(TEvent)].Remove(subscriber);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace MvvmGen.Events
         /// <inheritdoc/>
         public void RegisterSubscriber<TSubscriber>(TSubscriber subscriber)
         {
-            lock (_eventSubscribers)
+            lock (_subscribersByEvent)
             {
                 if (subscriber is null)
                 {
@@ -75,14 +75,47 @@ namespace MvvmGen.Events
 
                     foreach (var eventType in eventTypes)
                     {
-                        if (!_eventSubscribers.ContainsKey(eventType))
+                        if (!_subscribersByEvent.ContainsKey(eventType))
                         {
-                            _eventSubscribers.Add(eventType, new());
+                            _subscribersByEvent.Add(eventType, new());
                         }
-                        if (!_eventSubscribers[eventType].Any(x => x.IsAlive && x.Target.Equals(subscriber)))
+                        if (!_subscribersByEvent[eventType].Any(x => x.IsAlive && x.Target.Equals(subscriber)))
                         {
-                            _eventSubscribers[eventType].Add(weakReference);
+                            _subscribersByEvent[eventType].Add(weakReference);
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unregisters an MvvmGen.Events.IEventSubscriber, so that it won't receive events anymore from the IEventAggregator instance.
+        /// Note that calling this method is optional for an instance of this <see cref="EventAggregator"/> class, because the 
+        /// <see cref="EventAggregator"/> stores a subscriber internally in a <see cref="WeakReference"/>, which means
+        /// the subscriber can get garbage collected, even if you don't call this UnregisterSubscriber method.
+        /// Calling this method though will immediately unregister a subscriber, even before it got garbage collected.
+        /// </summary>
+        /// <typeparam name="TSubscriber">The subscriber type</typeparam>
+        /// <param name="subscriber">The subscriber instance to unregister</param>
+        public void UnregisterSubscriber<TSubscriber>(TSubscriber subscriber)
+        {
+            lock (_subscribersByEvent)
+            {
+                foreach (var subscribersByEvent in _subscribersByEvent)
+                {
+                    var subscribersToRemove = new List<WeakReference>();
+                    foreach (var weakReference in subscribersByEvent.Value)
+                    {
+                        if(!weakReference.IsAlive
+                         || weakReference.Target.Equals(subscriber))
+                        {
+                            subscribersToRemove.Add(weakReference);
+                        }
+                    }
+
+                    foreach(var subscriberToRemove in subscribersToRemove)
+                    {
+                        subscribersByEvent.Value.Remove(subscriberToRemove);
                     }
                 }
             }
