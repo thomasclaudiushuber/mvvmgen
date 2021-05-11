@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System;
 using System.Collections.Generic;
@@ -106,14 +106,14 @@ namespace MvvmGen.Events
                     var subscribersToRemove = new List<WeakReference>();
                     foreach (var weakReference in subscribersByEvent.Value)
                     {
-                        if(!weakReference.IsAlive
+                        if (!weakReference.IsAlive
                          || weakReference.Target.Equals(subscriber))
                         {
                             subscribersToRemove.Add(weakReference);
                         }
                     }
 
-                    foreach(var subscriberToRemove in subscribersToRemove)
+                    foreach (var subscriberToRemove in subscribersToRemove)
                     {
                         subscribersByEvent.Value.Remove(subscriberToRemove);
                     }

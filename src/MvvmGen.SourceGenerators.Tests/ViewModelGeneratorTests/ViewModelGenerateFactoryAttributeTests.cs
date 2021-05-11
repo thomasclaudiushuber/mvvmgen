@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using Xunit;
 
@@ -69,9 +69,9 @@ namespace MyCode
         [InlineData("EmpVmFactory", "IEmpVmFactory", "ClassName=\"EmpVmFactory\",InterfaceName=\"IEmpVmFactory\"")]
         [InlineData("EmployeeViewModelFactory", "IEmpVmFactory", "InterfaceName=\"IEmpVmFactory\"")]
         [InlineData("EmpVmFactory", "IEmployeeViewModelFactory", "ClassName=\"EmpVmFactory\"")]
-        [InlineData("EmployeeViewModelFactory", "IEmployeeViewModelFactory","")]
+        [InlineData("EmployeeViewModelFactory", "IEmployeeViewModelFactory", "")]
         [Theory]
-        public void GenerateFactoryClassForViewModelWithSpecifiedNames(string expectedClassName,string expectedInterfaceName,string attributeArguments)
+        public void GenerateFactoryClassForViewModelWithSpecifiedNames(string expectedClassName, string expectedInterfaceName, string attributeArguments)
         {
             ShouldGenerateExpectedCode(
       $@"using MvvmGen;

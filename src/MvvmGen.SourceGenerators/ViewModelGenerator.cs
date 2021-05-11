@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +100,8 @@ namespace MvvmGen.SourceGenerators
             _stringBuilder = new StringBuilder();
         }
 
+        public int IndentLevel => _indentLevel;
+
         public void IncreaseIndent()
         {
             _indentLevel++;
@@ -117,8 +119,6 @@ namespace MvvmGen.SourceGenerators
 
             return false;
         }
-
-        public int IndentLevel => _indentLevel;
 
         public void AppendLineBeforeMember()
         {

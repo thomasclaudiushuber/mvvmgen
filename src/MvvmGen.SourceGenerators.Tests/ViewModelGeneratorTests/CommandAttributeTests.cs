@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using Xunit;
 
@@ -144,13 +144,13 @@ namespace MyCode
 ");
         }
 
-        [InlineData("_ => Save(), _ => CanSave()","void Save()", "bool CanSave()")]
+        [InlineData("_ => Save(), _ => CanSave()", "void Save()", "bool CanSave()")]
         [InlineData("Save, _ => CanSave()", "void Save(object o)", "bool CanSave()")]
-        [InlineData("Save, CanSave","void Save(object o)", "bool CanSave(object o)")]
-        [InlineData("_ => Save(), CanSave","void Save()", "bool CanSave(object o)")]
+        [InlineData("Save, CanSave", "void Save(object o)", "bool CanSave(object o)")]
+        [InlineData("_ => Save(), CanSave", "void Save()", "bool CanSave(object o)")]
         [Theory]
         public void GenerateCommandWithParametersOnMethods(string expectedConstructorArguments,
-            string executeMethod,string canExecuteMethod)
+            string executeMethod, string canExecuteMethod)
         {
             ShouldGenerateExpectedCode(
       $@"using MvvmGen;

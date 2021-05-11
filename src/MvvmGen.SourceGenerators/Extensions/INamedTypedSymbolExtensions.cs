@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -28,6 +28,7 @@ namespace MvvmGen.SourceGenerators.Extensions
                     currentBaseType = currentBaseType.BaseType;
                 }
             }
+
             return inherits;
         }
     }

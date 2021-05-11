@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using Xunit;
 
@@ -10,9 +10,9 @@ namespace MvvmGen.SourceGenerators
 {
     public class PropertyCallMethodAttributeTests : ViewModelGeneratorTestsBase
     {
-        [InlineData("MyMethod();","", "[PropertyCallMethod(nameof(MyMethod))]")]
-        [InlineData("MyMethod();","", "[PropertyCallMethod(\"MyMethod\")]")]
-        [InlineData("MyMethod(_selectedItem);","string item", "[PropertyCallMethod(nameof(MyMethod),MethodArgs=\"_selectedItem\")]")]
+        [InlineData("MyMethod();", "", "[PropertyCallMethod(nameof(MyMethod))]")]
+        [InlineData("MyMethod();", "", "[PropertyCallMethod(\"MyMethod\")]")]
+        [InlineData("MyMethod(_selectedItem);", "string item", "[PropertyCallMethod(nameof(MyMethod),MethodArgs=\"_selectedItem\")]")]
         [Theory]
         public void GenerateMethodCallInProperty(string expectedMethodCall, string methodParameters, string onChangeCallMethodAttribute)
         {

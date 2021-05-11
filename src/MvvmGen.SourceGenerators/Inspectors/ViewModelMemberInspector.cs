@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +22,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
             var propertiesToGenerate = new List<PropertyToGenerate>();
             var propertyInvalidations = new Dictionary<string, List<string>>();
             var viewModelMembers = viewModelClassSymbol.GetMembers();
+
             foreach (var memberSymbol in viewModelMembers)
             {
                 if (memberSymbol is IMethodSymbol methodSymbol)
@@ -56,6 +57,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
 
                 string? propertyName = null;
                 var fieldName = fieldSymbol.Name;
+
                 foreach (var arg in propertyAttributeData.ConstructorArguments)
                 {
                     propertyName = arg.Value?.ToString();
@@ -92,14 +94,16 @@ namespace MvvmGen.SourceGenerators.Inspectors
                 {
                     var eventsToPublish = new List<EventToPublish>();
                     var methodsToCall = new List<MethodToCall>();
-                    var onChangePublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
-                    var onChangeCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
-                    foreach (var onChangePublishEventAttribute in onChangePublishEventAttributes)
+                    var propertyPublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
+                    var propertyCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
+
+                    foreach (var onChangePublishEventAttribute in propertyPublishEventAttributes)
                     {
                         var eventType = onChangePublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
                         if (eventType is { Length: > 0 })
                         {
                             var eventToPublish = new EventToPublish(eventType);
+
                             foreach (var arg in onChangePublishEventAttribute.NamedArguments)
                             {
                                 if (arg.Key == "EventConstructorArgs")
@@ -111,17 +115,19 @@ namespace MvvmGen.SourceGenerators.Inspectors
                                     eventToPublish.EventAggregatorMemberName = arg.Value.Value?.ToString();
                                 }
                             }
+
                             eventsToPublish.Add(eventToPublish);
                         }
                     }
 
-                    foreach (var onChangeCallMethodAttribute in onChangeCallMethodAttributes)
+                    foreach (var onChangeCallMethodAttribute in propertyCallMethodAttributes)
                     {
-                        string? methodName = onChangeCallMethodAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                        var methodName = onChangeCallMethodAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
 
                         if (methodName is { Length: > 0 })
                         {
                             var methodToCall = new MethodToCall(methodName);
+
                             foreach (var arg in onChangeCallMethodAttribute.NamedArguments)
                             {
                                 if (arg.Key == "MethodArgs")
@@ -129,6 +135,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
                                     methodToCall.MethodArgs = arg.Value.Value?.ToString();
                                 }
                             }
+
                             methodsToCall.Add(methodToCall);
                         }
                     }
@@ -181,7 +188,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
                 if (canExecuteMethodName is not null)
                 {
                     var canExecuteMethodSymbol = viewModelMembers.OfType<IMethodSymbol>().FirstOrDefault(x => x.Name == canExecuteMethodName);
-                    if(canExecuteMethodSymbol is not null)
+                    if (canExecuteMethodSymbol is not null)
                     {
                         canExecuteMethodInfo = new MethodInfo(canExecuteMethodSymbol.Name)
                         {

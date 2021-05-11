@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System.Collections.Generic;
 
@@ -19,11 +19,17 @@ namespace MvvmGen.SourceGenerators.Model
         }
 
         public string PropertyName { get; }
+
         public string PropertyType { get; }
+
         public string BackingField { get; }
+
         public bool IsReadOnly { get; }
+
         public IEnumerable<CommandToGenerate>? CommandsToInvalidate { get; set; }
+
         public IEnumerable<EventToPublish>? EventsToPublish { get; set; }
+
         public IEnumerable<MethodToCall>? MethodsToCall { get; set; }
     }
 

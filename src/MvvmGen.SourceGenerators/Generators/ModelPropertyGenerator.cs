@@ -1,10 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
-
-using System.Text;
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 namespace MvvmGen.SourceGenerators.Generators
 {
@@ -12,7 +10,7 @@ namespace MvvmGen.SourceGenerators.Generators
     {
         internal static void GenerateModelProperty(this ViewModelBuilder vmBuilder, string? wrappedModelType)
         {
-            if (wrappedModelType is { Length: >0 })
+            if (wrappedModelType is { Length: > 0 })
             {
                 vmBuilder.AppendLineBeforeMember();
                 vmBuilder.AppendLine($"protected {wrappedModelType} Model {{ get; set; }}");

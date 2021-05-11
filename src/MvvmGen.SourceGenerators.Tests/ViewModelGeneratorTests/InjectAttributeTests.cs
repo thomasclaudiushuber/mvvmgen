@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using Xunit;
 
@@ -52,7 +52,7 @@ namespace MyCode
         [InlineData("protected", "AccessModifier.Protected")]
         [InlineData("internal", "AccessModifier.Internal")]
         [InlineData("public", "AccessModifier.Public")]
-        [InlineData("protected","")]
+        [InlineData("protected", "")]
         [Theory]
         public void GeneratePropertyWithSpecifiedAccessModifier(string expectedAccessModifier, string attributeAcccessModifier)
         {

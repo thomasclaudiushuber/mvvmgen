@@ -1,13 +1,11 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MvvmGen.SourceGenerators.Extensions;
 using MvvmGen.SourceGenerators.Model;
 
@@ -58,7 +56,7 @@ namespace MvvmGen.SourceGenerators.Generators
                     vmBuilder.Append(", ");
                 }
                 first = false;
-                vmBuilder.Append($"{injectionToGenerate.Type} {injectionToGenerate.PropertyName.PascalCaseToCamelCase()}");
+                vmBuilder.Append($"{injectionToGenerate.Type} {injectionToGenerate.PropertyName.ToCamelCase()}");
             }
 
             vmBuilder.AppendLine(")");
@@ -66,7 +64,7 @@ namespace MvvmGen.SourceGenerators.Generators
             vmBuilder.IncreaseIndent();
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
-                vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.PascalCaseToCamelCase()};");
+                vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.ToCamelCase()};");
             }
 
             if (isEventSubscriber)

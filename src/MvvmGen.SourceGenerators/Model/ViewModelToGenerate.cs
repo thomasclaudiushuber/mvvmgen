@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
@@ -21,18 +21,18 @@ namespace MvvmGen.SourceGenerators.Model
 
         public INamedTypeSymbol ViewModelClassSymbol { get; }
 
-        public string? WrappedModelType { get; internal set; }
+        public string? WrappedModelType { get; set; }
 
-        public bool IsEventSubscriber { get; internal set; }
+        public bool IsEventSubscriber { get; set; }
 
-        public bool GenerateConstructor { get; internal set; }
+        public bool GenerateConstructor { get; set; }
 
         public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
 
-        public IList<PropertyToGenerate>? PropertiesToGenerate { get; internal set; }
+        public IList<PropertyToGenerate>? PropertiesToGenerate { get; set; }
 
-        public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; internal set; }
+        public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; set; }
 
-        public ViewModelFactoryToGenerate? ViewModelFactoryToGenerate { get; internal set; }
+        public ViewModelFactoryToGenerate? ViewModelFactoryToGenerate { get; set; }
     }
 }

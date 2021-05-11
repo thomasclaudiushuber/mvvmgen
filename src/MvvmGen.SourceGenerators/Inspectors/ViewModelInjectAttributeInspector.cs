@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,26 +16,31 @@ namespace MvvmGen.SourceGenerators.Inspectors
         internal static IEnumerable<InjectionToGenerate> Inspect(INamedTypeSymbol viewModelClassSymbol)
         {
             List<InjectionToGenerate> injectionsToGenerate = new();
-            var injectAttributeDatas = viewModelClassSymbol.GetAttributes().Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.InjectAttribute").Reverse().ToList();
+            var injectAttributeDatas = viewModelClassSymbol.GetAttributes()
+                .Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.InjectAttribute")
+                .Reverse()
+                .ToList();
+
             foreach (var attr in injectAttributeDatas)
             {
-                string? type = attr.ConstructorArguments.FirstOrDefault().Value?.ToString();
-                string? propertyName = attr.ConstructorArguments.Skip(1).FirstOrDefault().Value?.ToString();
-                int? propertyAccessModifier = (int?)attr.NamedArguments.SingleOrDefault(x => x.Key == "PropertyAccessModifier").Value.Value;
+                var injectedType = attr.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                var propertyName = attr.ConstructorArguments.Skip(1).FirstOrDefault().Value?.ToString();
+                var propertyAccessModifier = (int?)attr.NamedArguments.SingleOrDefault(x => x.Key == "PropertyAccessModifier").Value.Value;
 
-                if (type is not null) // Should never be null
+                if (injectedType is not null) // Should never be null
                 {
                     if (propertyName is null)
                     {
-                        var typeNameWithoutNamespace = type.Split('.').Last();
+                        var typeNameWithoutNamespace = injectedType.Split('.').Last();
                         var isInterface = typeNameWithoutNamespace.StartsWith("I") && char.IsUpper(typeNameWithoutNamespace[0]) && char.IsUpper(typeNameWithoutNamespace[1]);
                         propertyName = isInterface
                             ? typeNameWithoutNamespace.Substring(1)
                             : typeNameWithoutNamespace;
                     }
+
                     if (propertyName is not null)
                     {
-                        injectionsToGenerate.Add(new InjectionToGenerate(type, propertyName)
+                        injectionsToGenerate.Add(new InjectionToGenerate(injectedType, propertyName)
                         {
                             PropertyAccessModifier = propertyAccessModifier switch
                             {

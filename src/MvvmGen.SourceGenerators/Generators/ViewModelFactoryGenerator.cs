@@ -1,13 +1,10 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using MvvmGen.SourceGenerators.Extensions;
 using MvvmGen.SourceGenerators.Model;
@@ -25,9 +22,9 @@ namespace MvvmGen.SourceGenerators.Generators
 
             var factoryToGenerate = viewModelToGenerate.ViewModelFactoryToGenerate;
             var viewModelClassName = viewModelToGenerate.ViewModelClassSymbol.Name;
-            
+
             var injectionsToGenerate = viewModelToGenerate.InjectionsToGenerate ?? Enumerable.Empty<InjectionToGenerate>();
-            
+
             var accessModifier = viewModelToGenerate.ViewModelClassSymbol.DeclaredAccessibility switch
             {
                 Accessibility.Public => "public",
@@ -51,7 +48,7 @@ namespace MvvmGen.SourceGenerators.Generators
                     vmBuilder.Append(", ");
                 }
                 first = false;
-                vmBuilder.Append($"{injectionToGenerate.Type} {injectionToGenerate.PropertyName.PascalCaseToCamelCase()}");
+                vmBuilder.Append($"{injectionToGenerate.Type} {injectionToGenerate.PropertyName.ToCamelCase()}");
             }
 
             vmBuilder.AppendLine(")");
@@ -60,7 +57,7 @@ namespace MvvmGen.SourceGenerators.Generators
 
             foreach (var injectionToGenerate in injectionsToGenerate)
             {
-                vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.PascalCaseToCamelCase()};");
+                vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.ToCamelCase()};");
             }
 
             vmBuilder.DecreaseIndent();
@@ -80,6 +77,7 @@ namespace MvvmGen.SourceGenerators.Generators
                 first = false;
                 vmBuilder.Append(injectionToGenerate.PropertyName);
             }
+
             vmBuilder.AppendLine(");");
             vmBuilder.DecreaseIndent();
             vmBuilder.AppendLine("}");

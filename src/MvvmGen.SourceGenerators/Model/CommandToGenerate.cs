@@ -1,8 +1,8 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
 namespace MvvmGen.SourceGenerators.Model
 {
@@ -15,10 +15,14 @@ namespace MvvmGen.SourceGenerators.Model
         }
 
         public MethodInfo ExecuteMethod { get; }
+
         public string CommandName { get; }
+
         public MethodInfo? CanExecuteMethod { get; set; }
+
         public string[]? CanExecuteAffectingProperties { get; set; }
     }
+
     internal struct MethodInfo
     {
         public MethodInfo(string name) : this()
@@ -27,7 +31,9 @@ namespace MvvmGen.SourceGenerators.Model
         }
 
         public string Name { get; set; }
+
         public bool IsAsync { get; set; }
+
         public bool HasParameter { get; set; }
     }
 }

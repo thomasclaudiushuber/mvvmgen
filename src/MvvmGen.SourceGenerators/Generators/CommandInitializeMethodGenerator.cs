@@ -1,13 +1,11 @@
-﻿// ***********************************************************************
+﻿// ********************************************************************
 // ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
 // Copyright © by Thomas Claudius Huber
-// Licensed under the MIT license => See the LICENSE file in project root
-// ***********************************************************************
+// Licensed under the MIT license => See LICENSE file in project root
+// ********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MvvmGen.SourceGenerators.Model;
 
 namespace MvvmGen.SourceGenerators
@@ -42,8 +40,8 @@ namespace MvvmGen.SourceGenerators
             {
                 { IsAsync: true, HasParameter: true } => $"async x => await {methodInfo.Name}(x)",
                 { IsAsync: true, HasParameter: false } => $"async _ => await {methodInfo.Name}()",
-                { IsAsync: false, HasParameter: true} => $"{methodInfo.Name}",
-                { IsAsync: false, HasParameter: false} => $"_ => {methodInfo.Name}()",
+                { IsAsync: false, HasParameter: true } => $"{methodInfo.Name}",
+                { IsAsync: false, HasParameter: false } => $"_ => {methodInfo.Name}()",
             };
         }
     }
