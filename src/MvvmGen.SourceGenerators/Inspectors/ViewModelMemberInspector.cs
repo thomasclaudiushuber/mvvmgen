@@ -97,14 +97,14 @@ namespace MvvmGen.SourceGenerators.Inspectors
                     var propertyPublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
                     var propertyCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
 
-                    foreach (var onChangePublishEventAttribute in propertyPublishEventAttributes)
+                    foreach (var propertyPublishEventAttribute in propertyPublishEventAttributes)
                     {
-                        var eventType = onChangePublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                        var eventType = propertyPublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
                         if (eventType is { Length: > 0 })
                         {
                             var eventToPublish = new EventToPublish(eventType);
 
-                            foreach (var arg in onChangePublishEventAttribute.NamedArguments)
+                            foreach (var arg in propertyPublishEventAttribute.NamedArguments)
                             {
                                 if (arg.Key == "EventConstructorArgs")
                                 {
@@ -113,6 +113,10 @@ namespace MvvmGen.SourceGenerators.Inspectors
                                 else if (arg.Key == "EventAggregatorMemberName")
                                 {
                                     eventToPublish.EventAggregatorMemberName = arg.Value.Value?.ToString();
+                                }
+                                else if (arg.Key == "PublishCondition")
+                                {
+                                    eventToPublish.PublishCondition = arg.Value.Value?.ToString();
                                 }
                             }
 

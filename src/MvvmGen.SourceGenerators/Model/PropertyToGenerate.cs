@@ -45,6 +45,8 @@ namespace MvvmGen.SourceGenerators.Model
         public string? EventConstructorArgs { get; set; }
 
         public string? EventAggregatorMemberName { get; set; } = "EventAggregator";
+
+        public string? PublishCondition { get; set; }
     }
 
     internal class MethodToCall

@@ -29,7 +29,7 @@ namespace MvvmGen
         public Type EventType { get; }
 
         /// <summary>
-        /// Gets or sets the constructor arguments that are passed to the constructor of the <see cref="EventType"/> class. As the event is published in the setter of a property, you can specify for example "value" to pass the value of the property as an argument to the constructor of the event.
+        /// Gets or sets the constructor arguments that are passed to the constructor of the <see cref="EventType"/> class. As the event is published in the setter of a property, you can specify for example <code>"value"</code> to pass the value of the property as an argument to the constructor of the event, or you can specify <code>"value?.Id, value?.FirstName"</code> to pass two arguments to the event constructor.
         /// </summary>
         public string? EventConstructorArgs { get; set; }
 
@@ -37,5 +37,10 @@ namespace MvvmGen
         /// Gets or sets the name of the member that contains the <see cref="MvvmGen.Events.IEventAggregator"/> instance. The default value is "EventAggregator".
         /// </summary>
         public string EventAggregatorMemberName { get; set; } = "EventAggregator";
+
+        /// <summary>
+        /// Gets or sets a condition that must be met to publish the event. Pass for example in a string like <code>"value is not null"</code>
+        /// </summary>
+        public string? PublishCondition { get; set; }
     }
 }

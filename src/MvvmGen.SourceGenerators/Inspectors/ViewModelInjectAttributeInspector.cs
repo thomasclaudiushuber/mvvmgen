@@ -25,7 +25,19 @@ namespace MvvmGen.SourceGenerators.Inspectors
             {
                 var injectedType = attr.ConstructorArguments.FirstOrDefault().Value?.ToString();
                 var propertyName = attr.ConstructorArguments.Skip(1).FirstOrDefault().Value?.ToString();
-                var propertyAccessModifier = (int?)attr.NamedArguments.SingleOrDefault(x => x.Key == "PropertyAccessModifier").Value.Value;
+                int? propertyAccessModifier = null;
+                
+                foreach (var namedArgument in attr.NamedArguments)
+                {
+                    if (namedArgument.Key == "PropertyAccessModifier")
+                    {
+                        propertyAccessModifier = (int?)namedArgument.Value.Value;
+                    }
+                    else if (namedArgument.Key == "PropertyName")
+                    {
+                        propertyName = namedArgument.Value.Value?.ToString();
+                    }
+                }
 
                 if (injectedType is not null) // Should never be null
                 {

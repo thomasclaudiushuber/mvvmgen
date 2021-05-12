@@ -22,7 +22,7 @@ namespace MvvmGen.SourceGenerators
                 vmBuilder.IncreaseIndent();
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
-                    vmBuilder.Append($"{commandToGenerate.CommandName} = new({GetMethodCall(commandToGenerate.ExecuteMethod)}");
+                    vmBuilder.Append($"{commandToGenerate.CommandName} = new DelegateCommand({GetMethodCall(commandToGenerate.ExecuteMethod)}");
                     if (commandToGenerate.CanExecuteMethod.HasValue)
                     {
                         vmBuilder.Append($", {GetMethodCall(commandToGenerate.CanExecuteMethod.Value)}");

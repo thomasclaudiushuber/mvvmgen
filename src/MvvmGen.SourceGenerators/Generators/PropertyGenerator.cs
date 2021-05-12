@@ -59,7 +59,20 @@ namespace MvvmGen.SourceGenerators
             {
                 foreach (var eventToPublish in p.EventsToPublish)
                 {
+                    var createPublishCondition = eventToPublish.PublishCondition is { Length: > 0 };
+                    if (createPublishCondition)
+                    {
+                        vmBuilder.AppendLine($"if ({eventToPublish.PublishCondition})");
+                        vmBuilder.AppendLine("{");
+                        vmBuilder.IncreaseIndent();
+                    }
                     vmBuilder.AppendLine($"{eventToPublish.EventAggregatorMemberName}.Publish(new {eventToPublish.EventType}({eventToPublish.EventConstructorArgs}));");
+                    
+                    if (createPublishCondition)
+                    {
+                        vmBuilder.DecreaseIndent();
+                        vmBuilder.AppendLine("}");
+                    }
                 }
             }
             if (p.MethodsToCall is not null)

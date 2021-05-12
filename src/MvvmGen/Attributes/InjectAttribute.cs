@@ -42,7 +42,7 @@ namespace MvvmGen
         /// <summary>
         /// Gets or sets the name of the property that stores the injected type.
         /// </summary>
-        public string? PropertyName { get; }
+        public string? PropertyName { get; set; }
 
 
         /// <summary>
