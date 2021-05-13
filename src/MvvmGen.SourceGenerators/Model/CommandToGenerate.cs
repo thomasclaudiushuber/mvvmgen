@@ -32,7 +32,7 @@ namespace MvvmGen.SourceGenerators.Model
 
         public string Name { get; set; }
 
-        public bool IsAsync { get; set; }
+        public bool IsAwaitable { get; set; }
 
         public bool HasParameter { get; set; }
     }

@@ -144,6 +144,9 @@ namespace MyCode
 ");
         }
 
+        [InlineData("async x => await Save(x), _ => CanSave()", "async Task Save(object o)", "bool CanSave()")]
+        [InlineData("async _ => await Save(), _ => CanSave()", "async Task Save()", "bool CanSave()")]
+        [InlineData("_ => Save(), _ => CanSave()", "async void Save()", "bool CanSave()")]
         [InlineData("_ => Save(), _ => CanSave()", "void Save()", "bool CanSave()")]
         [InlineData("Save, _ => CanSave()", "void Save(object o)", "bool CanSave()")]
         [InlineData("Save, CanSave", "void Save(object o)", "bool CanSave(object o)")]

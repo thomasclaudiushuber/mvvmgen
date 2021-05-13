@@ -169,7 +169,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
                 var executeMethodInfo = new MethodInfo(methodSymbol.Name)
                 {
                     HasParameter = methodSymbol.Parameters.Any(),
-                    IsAsync = methodSymbol.IsAsync
+                    IsAwaitable = methodSymbol.IsAsync && methodSymbol.ReturnType.Name == "Task"
                 };
 
                 var commandName = $"{methodSymbol.Name}Command";
@@ -197,7 +197,7 @@ namespace MvvmGen.SourceGenerators.Inspectors
                         canExecuteMethodInfo = new MethodInfo(canExecuteMethodSymbol.Name)
                         {
                             HasParameter = canExecuteMethodSymbol.Parameters.Any(),
-                            IsAsync = canExecuteMethodSymbol.IsAsync
+                            IsAwaitable = canExecuteMethodSymbol.IsAsync && canExecuteMethodSymbol.ReturnType.Name == "Task"
                         };
                     }
                 }

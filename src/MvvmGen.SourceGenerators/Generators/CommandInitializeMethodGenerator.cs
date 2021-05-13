@@ -38,10 +38,10 @@ namespace MvvmGen.SourceGenerators
         {
             return methodInfo switch
             {
-                { IsAsync: true, HasParameter: true } => $"async x => await {methodInfo.Name}(x)",
-                { IsAsync: true, HasParameter: false } => $"async _ => await {methodInfo.Name}()",
-                { IsAsync: false, HasParameter: true } => $"{methodInfo.Name}",
-                { IsAsync: false, HasParameter: false } => $"_ => {methodInfo.Name}()",
+                { IsAwaitable: true, HasParameter: true } => $"async x => await {methodInfo.Name}(x)",
+                { IsAwaitable: true, HasParameter: false } => $"async _ => await {methodInfo.Name}()",
+                { IsAwaitable: false, HasParameter: true } => $"{methodInfo.Name}",
+                { IsAwaitable: false, HasParameter: false } => $"_ => {methodInfo.Name}()",
             };
         }
     }

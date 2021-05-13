@@ -191,7 +191,7 @@ namespace MvvmGen.SourceGenerators
                         CommandsToGenerate = commandsToGenerate,
                         PropertiesToGenerate = propertiesToGenerate
                     };
-
+                    
                     viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
 
                     SetCommandsToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
