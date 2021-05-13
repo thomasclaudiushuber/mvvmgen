@@ -15,8 +15,8 @@
     <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Uno, Xamarin.Forms and .NET MAUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
     <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <!--<RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>-->
-    <!--<RepositoryType>git</RepositoryType>-->
+    <RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
   </PropertyGroup>
