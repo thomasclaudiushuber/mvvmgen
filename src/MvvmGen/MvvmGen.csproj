@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;MvvmGen_PureGeneration</Configurations>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <Title>MvvmGen</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui xaml generator</PackageTags>
     <Product>MvvmGen</Product>
@@ -20,7 +22,46 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
   </PropertyGroup>
-  
+  <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureGeneration'">
+    <PackageId>MvvmGen</PackageId>
+    <AssemblyName>MvvmGen.SourceGenerators</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureGeneration'">
+    <PackageId>MvvmGen.PureGeneration</PackageId>
+    <DefineConstants>MVVMGEN_PUREGENERATION</DefineConstants>
+    <AssemblyName>MvvmGen.PureGeneration.SourceGenerators</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureGeneration'">
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\CommandAttribute.cs" Link="Library\Attributes\CommandAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\CommandInvalidateAttribute.cs" Link="Library\Attributes\CommandInvalidateAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\InjectAttribute.cs" Link="Library\Attributes\InjectAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\PropertyAttribute.cs" Link="Library\Attributes\PropertyAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\PropertyCallMethodAttribute.cs" Link="Library\Attributes\PropertyCallMethodAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\PropertyPublishEventAttribute.cs" Link="Library\Attributes\PropertyPublishEventAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\ViewModelAttribute.cs" Link="Library\Attributes\ViewModelAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="Library\Attributes\ViewModelGenerateFactoryAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Commands\DelegateCommand.cs" Link="Library\Commands\DelegateCommand.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\Events\EventAggregator.cs" Link="Library\Events\EventAggregator.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\Events\IEventAggregator.cs" Link="Library\Events\IEventAggregator.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\Events\IEventSubscriber.cs" Link="Library\Events\IEventSubscriber.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\ViewModels\IViewModelFactory.cs" Link="Library\ViewModels\IViewModelFactory.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\ViewModels\ViewModelBase.cs" Link="Library\ViewModels\ViewModelBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'!='MvvmGen_PureGeneration'">
+    <None Include="..\MvvmGen.Library\bin\Debug\netstandard2.0\MvvmGen.Library.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+  </ItemGroup>
+
+
+
   <ItemGroup>
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
@@ -30,10 +71,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\$(AssemblyName).SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
