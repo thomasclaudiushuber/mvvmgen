@@ -121,4 +121,4 @@ dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 
 
-file_header_template = ********************************************************************\n⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen\nCopyright © by Thomas Claudius Huber\nLicensed under the MIT license => See LICENSE file in project root\n********************************************************************
+file_header_template = ***********************************************************************\n⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen\nCopyright © by Thomas Claudius Huber\nLicensed under the MIT license => See LICENSE file in repository root\n***********************************************************************

@@ -2,7 +2,7 @@
 
 # ⚡ MvvmGen 
 
-[![MvvmGen Build](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/mvvmgen_build.yml/badge.svg)](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/mvvmgen_build.yml)
+[![Build MvvmGen](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/build_mvvmgen.yml/badge.svg)](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/build_mvvmgen.yml)
 
 ## The Next Generation MVVM library – Say Goodbye to the Boilerplate
 
