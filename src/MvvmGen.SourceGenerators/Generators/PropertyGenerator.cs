@@ -48,6 +48,13 @@ namespace MvvmGen
             vmBuilder.IncreaseIndent();
             vmBuilder.AppendLine($"{p.BackingField} = value;");
             vmBuilder.AppendLine($"OnPropertyChanged(\"{p.PropertyName}\");");
+            if(p.PropertiesToInvalidate is not null)
+            {
+                foreach(var propertyToInvalidate in p.PropertiesToInvalidate)
+                {
+                    vmBuilder.AppendLine($"OnPropertyChanged(\"{propertyToInvalidate}\");");
+                }
+            }
             if (p.CommandsToInvalidate is not null)
             {
                 foreach (var commandToInvalidate in p.CommandsToInvalidate)

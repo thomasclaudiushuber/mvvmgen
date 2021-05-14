@@ -31,6 +31,8 @@ namespace MvvmGen.Model
         public IEnumerable<EventToPublish>? EventsToPublish { get; set; }
 
         public IEnumerable<MethodToCall>? MethodsToCall { get; set; }
+
+        public IEnumerable<string>? PropertiesToInvalidate { get; set; }
     }
 
     internal class EventToPublish

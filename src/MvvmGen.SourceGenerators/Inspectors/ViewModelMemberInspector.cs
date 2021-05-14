@@ -20,30 +20,76 @@ namespace MvvmGen.Inspectors
         {
             var commandsToGenerate = new List<CommandToGenerate>();
             var propertiesToGenerate = new List<PropertyToGenerate>();
-            var propertyInvalidations = new Dictionary<string, List<string>>();
+            var commandPropertyInvalidationsByMethodName = new Dictionary<string, List<string>>();
+            var propertyInvalidationsByGeneratedPropertyName = new Dictionary<string, List<string>>();
+
             var viewModelMembers = viewModelClassSymbol.GetMembers();
 
             foreach (var memberSymbol in viewModelMembers)
             {
                 if (memberSymbol is IMethodSymbol methodSymbol)
                 {
-                    FindCommandsToGenerate(commandsToGenerate, propertyInvalidations, methodSymbol, viewModelMembers);
+                    FindCommandsToGenerate(commandsToGenerate, commandPropertyInvalidationsByMethodName, methodSymbol, viewModelMembers);
                 }
                 else if (memberSymbol is IFieldSymbol fieldSymbol)
                 {
                     FindPropertiesToGenerate(fieldSymbol, propertiesToGenerate);
+                }
+                else if (memberSymbol is IPropertySymbol propertySymbol)
+                {
+                    FindPropertyInvalidations(propertyInvalidationsByGeneratedPropertyName, propertySymbol);
+                }
+            }
+
+            foreach (var propertiesToInvalidate in propertyInvalidationsByGeneratedPropertyName)
+            {
+                var propertyToGenerate = propertiesToGenerate.SingleOrDefault(x => x.PropertyName == propertiesToInvalidate.Key);
+                if (propertyToGenerate is not null)
+                {
+                    propertyToGenerate.PropertiesToInvalidate = propertiesToInvalidate.Value;
                 }
             }
 
             foreach (var commandInfo in commandsToGenerate)
             {
                 var canExecuteAffectingProperties = new List<string>();
-                AddPropertyNames(commandInfo.CanExecuteMethod?.Name, canExecuteAffectingProperties, propertyInvalidations);
-                AddPropertyNames(commandInfo.ExecuteMethod.Name, canExecuteAffectingProperties, propertyInvalidations);
+                AddPropertyNames(commandInfo.CanExecuteMethod?.Name, canExecuteAffectingProperties, commandPropertyInvalidationsByMethodName);
+                AddPropertyNames(commandInfo.ExecuteMethod.Name, canExecuteAffectingProperties, commandPropertyInvalidationsByMethodName);
                 commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
             }
 
             return (commandsToGenerate, propertiesToGenerate);
+        }
+
+        private static void FindPropertyInvalidations(Dictionary<string, List<string>> propertyInvalidationsByPropertyName, IPropertySymbol propertySymbol)
+        {
+            var attributeDatas = propertySymbol.GetAttributes();
+            var invalidateAttributeDatas = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyInvalidateAttribute").ToList();
+
+            if (invalidateAttributeDatas is not null)
+            {
+                foreach (var attr in invalidateAttributeDatas)
+                {
+                    var propertyNameWithAttributes = propertySymbol.Name;
+
+                    var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
+                    var generatedPropertyName = attributeSyntax?.ArgumentList?.Arguments.First().GetStringValueFromAttributeArgument();
+
+                    if (generatedPropertyName is { Length: > 0 })
+                    {
+                        if (!propertyInvalidationsByPropertyName.ContainsKey(generatedPropertyName))
+                        {
+                            propertyInvalidationsByPropertyName[generatedPropertyName] = new List<string>();
+                        }
+
+                        if (!propertyInvalidationsByPropertyName[generatedPropertyName].Contains(propertyNameWithAttributes))
+                        {
+                            propertyInvalidationsByPropertyName[generatedPropertyName].Add(propertyNameWithAttributes);
+                        }
+                    }
+                }
+            }
+
         }
 
         private static void FindPropertiesToGenerate(IFieldSymbol fieldSymbol, List<PropertyToGenerate> propertiesToGenerate)

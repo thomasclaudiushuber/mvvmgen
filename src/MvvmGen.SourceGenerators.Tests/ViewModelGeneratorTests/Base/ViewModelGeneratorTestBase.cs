@@ -41,7 +41,19 @@ namespace MvvmGen.SourceGenerators
 
             foreach (var expectedCode in expectedGeneratedCode)
             {
-                Assert.True(generatorResult.GeneratedSources.Any(x => x.SourceText.ToString() == expectedCode));
+                var found = generatorResult.GeneratedSources.Any(x => x.SourceText.ToString() == expectedCode);
+
+                if (!found)
+                {
+                    Console.WriteLine($"Expected code not found: {expectedCode}");
+                    Console.WriteLine("Generated sources:");
+                    foreach (var generatedSourceResult in generatorResult.GeneratedSources)
+                    {
+                        Console.WriteLine(generatedSourceResult.SourceText.ToString());
+                    }
+                }
+
+                Assert.True(found, "Expected coud must be in generated sources");
             }
         }
 

@@ -38,6 +38,7 @@
     <EmbeddedResource Include="..\MvvmGen\Attributes\InjectAttribute.cs" Link="MvvmGenLib\Attributes\InjectAttribute.cs"/>
     <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyAttribute.cs" Link="MvvmGenLib\Attributes\PropertyAttribute.cs"/>
     <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyCallMethodAttribute.cs" Link="MvvmGenLib\Attributes\PropertyCallMethodAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyInvalidateAttribute.cs" Link="MvvmGenLib\Attributes\PropertyInvalidateAttribute.cs"/>
     <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyPublishEventAttribute.cs" Link="MvvmGenLib\Attributes\PropertyPublishEventAttribute.cs"/>
     <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelAttribute.cs"/>
     <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateFactoryAttribute.cs"/>
