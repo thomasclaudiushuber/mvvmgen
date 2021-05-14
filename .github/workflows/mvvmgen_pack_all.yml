@@ -1,0 +1,70 @@
+name: MvvmGen Pack
+
+on: workflow_dispatch
+
+jobs:
+  pack-mvvmgen:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Create release build of MvvmGen.Library
+      working-directory: src/MvvmGen.Library
+      run: dotnet build -c Release
+    - name: Create release build of MvvmGen
+      working-directory: src/MvvmGen
+      run: dotnet build -c Release
+    - name: Pack MvvmGen as NuGet
+      run: dotnet pack -v normal -c Release --no-restore 
+      working-directory: src/MvvmGen
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: src/MvvmGen/bin/Release/*.nupkg 
+  
+  pack-mvvmgen-pure-code-generation:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore -c MvvmGen_PureCodeGeneration
+    - name: Test
+      run: dotnet test --no-build --verbosity normal -c MvvmGen_PureCodeGeneration
+    - name: Create build of MvvmGen with PureCodeGeneration flag
+      working-directory: src/MvvmGen
+      run: dotnet build -c MvvmGen_PureCodeGeneration
+    - name: Pack MvvmGen.PureCodeGeneration as NuGet
+      run: dotnet pack -v normal -c MvvmGen_PureCodeGeneration --no-restore 
+      working-directory: src/MvvmGen
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: src/MvvmGen/bin/MvvmGen_PureCodeGeneration/*.nupkg 
+        

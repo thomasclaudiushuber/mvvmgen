@@ -1,4 +1,4 @@
-name: MvvmGen Build
+name: MvvmGen.PureCodeGen Build
 
 on:
   push:
@@ -24,6 +24,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -c MvvmGen_PureCodeGeneration
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal -c MvvmGen_PureCodeGeneration

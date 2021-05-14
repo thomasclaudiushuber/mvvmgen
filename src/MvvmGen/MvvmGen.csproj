@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <Title>MvvmGen</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui xaml generator</PackageTags>
     <Product>MvvmGen</Product>
-    <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Uno, Xamarin.Forms and .NET MAUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
     <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>
@@ -20,7 +21,48 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
   </PropertyGroup>
-  
+  <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
+    <PackageId>MvvmGen</PackageId>
+    <AssemblyName>MvvmGen.SourceGenerators</AssemblyName>
+    <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Uno, Xamarin.Forms and .NET MAUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
+    <PackageId>MvvmGen.PureCodeGeneration</PackageId>
+    <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
+    <AssemblyName>MvvmGen.PureCodeGeneration.SourceGenerators</AssemblyName>
+    <Description>MvvmGen.PureCodeGeneration is a lightweight, modern MVVM library for XAML applications. This package is a special version of the MvvmGen NuGet package. It has the same functionality, but it generates not only your ViewModels, but also the full MvvmGen library. This means that you have zero runtime dependencies with this package. As the package name says, its pure code generation.</Description>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\CommandAttribute.cs" Link="Library\Attributes\CommandAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\CommandInvalidateAttribute.cs" Link="Library\Attributes\CommandInvalidateAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\InjectAttribute.cs" Link="Library\Attributes\InjectAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\PropertyAttribute.cs" Link="Library\Attributes\PropertyAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\PropertyCallMethodAttribute.cs" Link="Library\Attributes\PropertyCallMethodAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\PropertyPublishEventAttribute.cs" Link="Library\Attributes\PropertyPublishEventAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\ViewModelAttribute.cs" Link="Library\Attributes\ViewModelAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="Library\Attributes\ViewModelGenerateFactoryAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen.Library\Commands\DelegateCommand.cs" Link="Library\Commands\DelegateCommand.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\Events\EventAggregator.cs" Link="Library\Events\EventAggregator.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\Events\IEventAggregator.cs" Link="Library\Events\IEventAggregator.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\Events\IEventSubscriber.cs" Link="Library\Events\IEventSubscriber.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\ViewModels\IViewModelFactory.cs" Link="Library\ViewModels\IViewModelFactory.cs" />
+    <EmbeddedResource Include="..\MvvmGen.Library\ViewModels\ViewModelBase.cs" Link="Library\ViewModels\ViewModelBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'!='MvvmGen_PureCodeGeneration'">
+    <None Include="..\MvvmGen.Library\bin\Debug\netstandard2.0\MvvmGen.Library.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+  </ItemGroup>
+
+
+
   <ItemGroup>
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
@@ -30,10 +72,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\$(AssemblyName).SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
