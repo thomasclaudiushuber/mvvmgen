@@ -53,7 +53,7 @@ namespace MvvmGen.SourceGenerators
                     }
                 }
 
-                Assert.True(found, "Expected coud must be in generated sources");
+                Assert.True(found, "Expected code must be in generated sources");
             }
         }
 

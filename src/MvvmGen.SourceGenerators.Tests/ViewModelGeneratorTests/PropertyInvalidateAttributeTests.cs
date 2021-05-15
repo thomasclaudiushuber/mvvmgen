@@ -1,9 +1,18 @@
-﻿using Xunit;
+﻿// ***********************************************************************
+// ⚡ MvvmGen => https://github.com/thomasclaudiushuber/mvvmgen
+// Copyright © by Thomas Claudius Huber
+// Licensed under the MIT license => See LICENSE file in repository root
+// ***********************************************************************
+
+using Xunit;
 
 namespace MvvmGen.SourceGenerators
 {
     public class PropertyInvalidateAttributeTests : ViewModelGeneratorTestsBase
     {
+        [InlineData(true, false, "[PropertyInvalidate(nameof(FirstName))]\n[PropertyInvalidate(nameof(FirstName))]")]
+        [InlineData(true, true, "[PropertyInvalidate(nameof(FirstName), nameof(LastName))]")]
+        [InlineData(true, true, "[PropertyInvalidate(\"FirstName\", \"LastName\")]")]
         [InlineData(true, true, "[PropertyInvalidate(nameof(FirstName))]\n[PropertyInvalidate(nameof(LastName))]")]
         [InlineData(true, true, "[PropertyInvalidate(\"FirstName\")]\n[PropertyInvalidate(\"LastName\")]")]
         [InlineData(true, false, "[PropertyInvalidate(\"FirstName\")]")]
@@ -13,7 +22,7 @@ namespace MvvmGen.SourceGenerators
         public void CallOnPropertyChangedInSettersOfOtherProperty(bool expectedInFirstName, bool expectedInLastName, string propertyInvalidateAttributes)
         {
             var onPropertyChangedCall = @"                    OnPropertyChanged(""FullName"");
-"; 
+";
             // Note: Do line-breaks in the string above with @"". 
             // If you use \r\n, the test will work on Windows, but fail on GitHub.
             // If you use \n, the test will fail on Windows, but work on GitHub. :-)

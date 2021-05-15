@@ -17,7 +17,7 @@ namespace MvvmGen
     {
         internal static void AddLibraryFilesToContext(GeneratorPostInitializationContext context)
         {
-            string libraryPath = "MvvmGen.SourceGenerators.MvvmGenLib";
+            var libraryPath = "MvvmGen.SourceGenerators.MvvmGenLib";
             var assembly = typeof(PureCodeGenerationLibraryLoader).Assembly;
             var embeddedLibraryCodeFiles = assembly.GetManifestResourceNames().Where(x => x.StartsWith(libraryPath));
 

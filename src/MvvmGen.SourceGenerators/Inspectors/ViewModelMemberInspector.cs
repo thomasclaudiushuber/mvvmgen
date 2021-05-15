@@ -73,23 +73,28 @@ namespace MvvmGen.Inspectors
                     var propertyNameWithAttributes = propertySymbol.Name;
 
                     var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
-                    var generatedPropertyName = attributeSyntax?.ArgumentList?.Arguments.First().GetStringValueFromAttributeArgument();
+                    var propertyNames = attributeSyntax?.ArgumentList?.Arguments.Select(x => x.GetStringValueFromAttributeArgument());
 
-                    if (generatedPropertyName is { Length: > 0 })
+                    if (propertyNames is not null)
                     {
-                        if (!propertyInvalidationsByPropertyName.ContainsKey(generatedPropertyName))
+                        foreach (var propertyName in propertyNames)
                         {
-                            propertyInvalidationsByPropertyName[generatedPropertyName] = new List<string>();
-                        }
+                            if (propertyName is { Length: > 0 })
+                            {
+                                if (!propertyInvalidationsByPropertyName.ContainsKey(propertyName))
+                                {
+                                    propertyInvalidationsByPropertyName[propertyName] = new List<string>();
+                                }
 
-                        if (!propertyInvalidationsByPropertyName[generatedPropertyName].Contains(propertyNameWithAttributes))
-                        {
-                            propertyInvalidationsByPropertyName[generatedPropertyName].Add(propertyNameWithAttributes);
+                                if (!propertyInvalidationsByPropertyName[propertyName].Contains(propertyNameWithAttributes))
+                                {
+                                    propertyInvalidationsByPropertyName[propertyName].Add(propertyNameWithAttributes);
+                                }
+                            }
                         }
                     }
                 }
             }
-
         }
 
         private static void FindPropertiesToGenerate(IFieldSymbol fieldSymbol, List<PropertyToGenerate> propertiesToGenerate)
@@ -219,7 +224,7 @@ namespace MvvmGen.Inspectors
                 };
 
                 var commandName = $"{methodSymbol.Name}Command";
-                string? canExecuteMethodName = commandAttributeData.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                var canExecuteMethodName = commandAttributeData.ConstructorArguments.FirstOrDefault().Value?.ToString();
 
                 foreach (var arg in commandAttributeData.NamedArguments)
                 {
@@ -265,8 +270,6 @@ namespace MvvmGen.Inspectors
                         propertyInvalidations.Add(methodIdentifier, new List<string>());
                     }
 
-                    string? propertyName = null;
-
                     // NOTE: The following does not work, as the CommandInvalidateAttribute usually relies on a generated property.
                     //       That generated property is not available as a symbol, as it didn't get compiled yet. And the property can't get compiled yet,
                     //       as the RaiseCanExecuteChanged method of the command might has to be called in the property setter, so that needs to be generated in.
@@ -282,13 +285,19 @@ namespace MvvmGen.Inspectors
                     //}
 
                     var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
-                    propertyName = attributeSyntax?.ArgumentList?.Arguments.First().GetStringValueFromAttributeArgument();
+                    var propertyNames = attributeSyntax?.ArgumentList?.Arguments.Select(x => x.GetStringValueFromAttributeArgument());
 
-                    if (propertyName is { Length: > 0 })
+                    if (propertyNames is not null)
                     {
-                        if (!propertyInvalidations[methodIdentifier].Contains(propertyName))
+                        foreach (var propertyName in propertyNames)
                         {
-                            propertyInvalidations[methodIdentifier].Add(propertyName);
+                            if (propertyName is { Length: > 0 })
+                            {
+                                if (!propertyInvalidations[methodIdentifier].Contains(propertyName))
+                                {
+                                    propertyInvalidations[methodIdentifier].Add(propertyName);
+                                }
+                            }
                         }
                     }
                 }

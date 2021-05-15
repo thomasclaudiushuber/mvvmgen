@@ -10,13 +10,24 @@ namespace MvvmGen.SourceGenerators
 {
     public class CommandInvalidateAttributeTests : ViewModelGeneratorTestsBase
     {
-        [InlineData(false, "[CommandInvalidate(nameof(FirstName))]")]
-        [InlineData(false, "[CommandInvalidate(\"FirstName\")]")]
-        [InlineData(true, "[CommandInvalidate(nameof(FirstName))]")]
-        [InlineData(true, "[CommandInvalidate(\"FirstName\")]")]
+        [InlineData(true, true, false, "[CommandInvalidate(nameof(FirstName),nameof(LastName))]")]
+        [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\",\"LastName\")]")]
+        [InlineData(true, true, false, "[CommandInvalidate(nameof(FirstName))]\r\n[CommandInvalidate(nameof(LastName))]")]
+        [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\")]\r\n[CommandInvalidate(\"LastName\"))]")]
+        [InlineData(true, false, false, "[CommandInvalidate(nameof(FirstName))]")]
+        [InlineData(true, false, false, "[CommandInvalidate(\"FirstName\")]")]
+        [InlineData(true, false, true, "[CommandInvalidate(nameof(FirstName))]")]
+        [InlineData(true, false, true, "[CommandInvalidate(\"FirstName\")]")]
         [Theory]
-        public void RaiseCanExecuteChangedInFirstNameProperty(bool putAttributeOnExecuteMethod, string commandInvalidateAttribute)
+        public void RaiseCanExecuteChangedInFirstNameProperty(bool isCallInFirstNamePropExpected, bool isCallInLastNamePropExpected,
+            bool putAttributeOnExecuteMethod, string commandInvalidateAttribute)
         {
+            var commandCall = @"                    SaveCommand.RaiseCanExecuteChanged();
+";
+
+            var expectedCallInFirstNameProp = isCallInFirstNamePropExpected ? commandCall : "";
+            var expectedCallInLastNameProp = isCallInLastNamePropExpected ? commandCall : "";
+
             ShouldGenerateExpectedCode(
       $@"using MvvmGen;
 
@@ -67,8 +78,7 @@ namespace MyCode
                 {{
                     _firstName = value;
                     OnPropertyChanged(""FirstName"");
-                    SaveCommand.RaiseCanExecuteChanged();
-                }}
+{expectedCallInFirstNameProp}                }}
             }}
         }}
 
@@ -81,7 +91,7 @@ namespace MyCode
                 {{
                     _lastName = value;
                     OnPropertyChanged(""LastName"");
-                }}
+{expectedCallInLastNameProp}                }}
             }}
         }}
     }}

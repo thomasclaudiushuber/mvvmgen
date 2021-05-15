@@ -5,9 +5,10 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 
 namespace MvvmGen
-{ 
+{
     /// <summary>
     /// Set this attribute once or multiple times on a readonly property that depends on another property.
     /// Typical case is you define a FullName property in your ViewModel that depends on FirstName and LastName.
@@ -26,14 +27,15 @@ namespace MvvmGen
         /// Initializes a new instance of the <see cref="PropertyInvalidateAttribute"/> class.
         /// </summary>
         /// <param name="propertyName">The name of the property in which the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised.</param>
-        public PropertyInvalidateAttribute(string propertyName)
+        /// /// <param name="morePropertyNames">More properties in which the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised.</param>
+        public PropertyInvalidateAttribute(string propertyName, params string[] morePropertyNames)
         {
-            PropertyName = propertyName;
+            PropertyNames = new[] { propertyName }.Concat(morePropertyNames).ToArray();
         }
 
         /// <summary>
-        /// Gets or sets the name of the property in which the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised.</param>
+        /// Gets the property names in which the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised.</param>
         /// </summary>
-        public string PropertyName { get; }
+        public string[] PropertyNames { get; }
     }
 }

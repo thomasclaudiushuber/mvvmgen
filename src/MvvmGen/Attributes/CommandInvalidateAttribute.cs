@@ -5,6 +5,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 
 namespace MvvmGen
 {
@@ -17,15 +18,16 @@ namespace MvvmGen
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandInvalidateAttribute"/> class.
         /// </summary>
-        /// <param name="propertyName">The name of the property in which the DelegateCommand's <see cref="MvvmGen.Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called</param>
-        public CommandInvalidateAttribute(string propertyName)
+        /// <param name="propertyName">The name of the property in which the DelegateCommand's <see cref="Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called</param>
+        /// <param name="morePropertyNames">More properties in which the DelegateCommand's <see cref="Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called</param>
+        public CommandInvalidateAttribute(string propertyName, params string[] morePropertyNames)
         {
-            PropertyName = propertyName;
+            PropertyNames = new[] { propertyName }.Concat(morePropertyNames).ToArray();
         }
 
         /// <summary>
-        /// Gets or sets the name of the property in which the DelegateCommand's <see cref="MvvmGen.Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called</param>
+        /// Gets the property names in which the DelegateCommand's <see cref="MvvmGen.Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called</param>
         /// </summary>
-        public string PropertyName { get; }
+        public string[] PropertyNames { get; }
     }
 }
