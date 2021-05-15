@@ -223,7 +223,7 @@ namespace MvvmGen.Inspectors
                     IsAwaitable = methodSymbol.IsAsync && methodSymbol.ReturnType.Name == "Task"
                 };
 
-                var commandName = $"{methodSymbol.Name}Command";
+                var commandPropertyName = $"{methodSymbol.Name}Command";
                 var canExecuteMethodName = commandAttributeData.ConstructorArguments.FirstOrDefault().Value?.ToString();
 
                 foreach (var arg in commandAttributeData.NamedArguments)
@@ -232,9 +232,9 @@ namespace MvvmGen.Inspectors
                     {
                         canExecuteMethodName = arg.Value.Value?.ToString();
                     }
-                    else if (arg.Key == "CommandName")
+                    else if (arg.Key == "PropertyName")
                     {
-                        commandName = arg.Value.Value?.ToString();
+                        commandPropertyName = arg.Value.Value?.ToString();
                     }
                 }
 
@@ -254,7 +254,7 @@ namespace MvvmGen.Inspectors
                 }
 
                 commandsToGenerate.Add(
-               new CommandToGenerate(executeMethodInfo, commandName)
+               new CommandToGenerate(executeMethodInfo, commandPropertyName)
                {
                    CanExecuteMethod = canExecuteMethodInfo
                });

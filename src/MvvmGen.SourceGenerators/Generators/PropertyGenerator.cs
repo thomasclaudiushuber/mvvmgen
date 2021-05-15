@@ -59,7 +59,7 @@ namespace MvvmGen
             {
                 foreach (var commandToInvalidate in p.CommandsToInvalidate)
                 {
-                    vmBuilder.AppendLine($"{commandToInvalidate.CommandName}.RaiseCanExecuteChanged();");
+                    vmBuilder.AppendLine($"{commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
                 }
             }
             if (p.EventsToPublish is not null)

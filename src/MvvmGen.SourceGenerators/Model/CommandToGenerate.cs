@@ -8,15 +8,15 @@ namespace MvvmGen.Model
 {
     internal class CommandToGenerate
     {
-        public CommandToGenerate(MethodInfo executeMethod, string commandName)
+        public CommandToGenerate(MethodInfo executeMethod, string propertyName)
         {
             ExecuteMethod = executeMethod;
-            CommandName = commandName;
+            PropertyName = propertyName;
         }
 
         public MethodInfo ExecuteMethod { get; }
 
-        public string CommandName { get; }
+        public string PropertyName { get; }
 
         public MethodInfo? CanExecuteMethod { get; set; }
 

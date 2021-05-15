@@ -24,7 +24,7 @@ namespace MvvmGen
             foreach (var codeFile in embeddedLibraryCodeFiles)
             {
                 var codeFileContent = GetContentOfEmbeddedResource(assembly, codeFile);
-                var fileNameHint = codeFile.Replace(libraryPath, "MvvmGen");
+                var fileNameHint = codeFile.Replace(libraryPath, "MvvmGen").Replace(".cs", ".g.cs");
                 context.AddSource(fileNameHint, codeFileContent);
             }
         }

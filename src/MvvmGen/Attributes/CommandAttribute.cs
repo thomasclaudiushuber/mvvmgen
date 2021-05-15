@@ -36,6 +36,6 @@ namespace MvvmGen
         /// <summary>
         /// Gets or sets the name of the command property.
         /// </summary>
-        public string? CommandName { get; set; }
+        public string? PropertyName { get; set; }
     }
 }

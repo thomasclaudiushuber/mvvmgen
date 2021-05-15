@@ -28,6 +28,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <PackageId>MvvmGen.PureCodeGeneration</PackageId>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
     <AssemblyName>MvvmGen.PureCodeGeneration.SourceGenerators</AssemblyName>
     <Description>MvvmGen.PureCodeGeneration is a lightweight, modern MVVM library for XAML applications. This package is a special version of the MvvmGen NuGet package. It has the same functionality, but it generates not only your ViewModels, but also the full MvvmGen library. This means that you have zero runtime dependencies with this package. As the package name says, its pure code generation.</Description>

@@ -112,7 +112,7 @@ namespace MyCode
   [ViewModel]
   public partial class EmployeeViewModel
   {{
-    [Command({canExecuteParameter}, CommandName=""SuperCommand"")]
+    [Command({canExecuteParameter}, PropertyName=""SuperCommand"")]
     public void SaveAll() {{ }}
 
     public bool CanSaveAll() => true;
