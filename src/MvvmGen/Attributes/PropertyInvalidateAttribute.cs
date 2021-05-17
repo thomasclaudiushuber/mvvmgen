@@ -4,6 +4,8 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Linq;
 
