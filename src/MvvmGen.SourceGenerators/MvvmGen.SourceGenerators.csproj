@@ -34,15 +34,15 @@
     <Description>MvvmGen.PureCodeGeneration is a lightweight, modern MVVM library for XAML applications. This package is a special version of the MvvmGen NuGet package. It has the same functionality, but it generates not only your ViewModels, but also the full MvvmGen library. This means that you have zero runtime dependencies with this package. As the package name says, its pure code generation.</Description>
   </PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
-    <EmbeddedResource Include="..\MvvmGen\Attributes\CommandAttribute.cs" Link="MvvmGenLib\Attributes\CommandAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\CommandInvalidateAttribute.cs" Link="MvvmGenLib\Attributes\CommandInvalidateAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\InjectAttribute.cs" Link="MvvmGenLib\Attributes\InjectAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyAttribute.cs" Link="MvvmGenLib\Attributes\PropertyAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyCallMethodAttribute.cs" Link="MvvmGenLib\Attributes\PropertyCallMethodAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyInvalidateAttribute.cs" Link="MvvmGenLib\Attributes\PropertyInvalidateAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyPublishEventAttribute.cs" Link="MvvmGenLib\Attributes\PropertyPublishEventAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelAttribute.cs"/>
-    <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateFactoryAttribute.cs"/>
+    <EmbeddedResource Include="..\MvvmGen\Attributes\CommandAttribute.cs" Link="MvvmGenLib\Attributes\CommandAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\CommandInvalidateAttribute.cs" Link="MvvmGenLib\Attributes\CommandInvalidateAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\InjectAttribute.cs" Link="MvvmGenLib\Attributes\InjectAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyAttribute.cs" Link="MvvmGenLib\Attributes\PropertyAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyCallMethodAttribute.cs" Link="MvvmGenLib\Attributes\PropertyCallMethodAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyInvalidateAttribute.cs" Link="MvvmGenLib\Attributes\PropertyInvalidateAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyPublishEventAttribute.cs" Link="MvvmGenLib\Attributes\PropertyPublishEventAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateFactoryAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Commands\DelegateCommand.cs" Link="MvvmGenLib\Commands\DelegateCommand.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\EventAggregator.cs" Link="MvvmGenLib\Events\EventAggregator.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\IEventAggregator.cs" Link="MvvmGenLib\Events\IEventAggregator.cs" />
@@ -50,20 +50,22 @@
     <EmbeddedResource Include="..\MvvmGen\ViewModels\IViewModelFactory.cs" Link="MvvmGenLib\ViewModels\IViewModelFactory.cs" />
     <EmbeddedResource Include="..\MvvmGen\ViewModels\ViewModelBase.cs" Link="MvvmGenLib\ViewModels\ViewModelBase.cs" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'!='MvvmGen_PureCodeGeneration'">
     <None Include="..\MvvmGen\bin\$(Configuration)\netstandard2.0\MvvmGen.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
+    <None Remove="_._" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'=='MvvmGen_PureCodeGeneration'">
+    <None Include="_._" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
   </ItemGroup>
-
-
 
   <ItemGroup>
     <None Include="..\..\LICENSE">
