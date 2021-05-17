@@ -44,7 +44,7 @@ namespace MvvmGen.Events
                         {
                             target.GetType()
                               .GetMethod(nameof(IEventSubscriber<object>.OnEvent), new[] { typeof(TEvent) })
-                              .Invoke(target, new object[] { eventToPublish });
+                              ?.Invoke(target, new object[] { eventToPublish });
                         }
                     }
                     else
@@ -71,7 +71,7 @@ namespace MvvmGen.Events
                 }
 
                 var subscriberInterfaces = typeof(TSubscriber).GetInterfaces()
-                  .Where(t => t.IsGenericType && t.FullName.StartsWith("MvvmGen.Events.IEventSubscriber")).ToList();
+                  .Where(t => t.IsGenericType && t.FullName?.StartsWith("MvvmGen.Events.IEventSubscriber") == true).ToList();
 
                 if (subscriberInterfaces.Any())
                 {
@@ -85,7 +85,7 @@ namespace MvvmGen.Events
                         {
                             _subscribersByEvent.Add(eventType, new());
                         }
-                        if (!_subscribersByEvent[eventType].Any(x => x.IsAlive && x.Target.Equals(subscriber)))
+                        if (!_subscribersByEvent[eventType].Any(x => x.IsAlive && x.Target?.Equals(subscriber) == true))
                         {
                             _subscribersByEvent[eventType].Add(weakReference);
                         }
@@ -107,13 +107,18 @@ namespace MvvmGen.Events
         {
             lock (_subscribersByEvent)
             {
+                if (subscriber is null)
+                {
+                    throw new ArgumentNullException(nameof(subscriber));
+                }
+
                 foreach (var subscribersByEvent in _subscribersByEvent)
                 {
                     var subscribersToRemove = new List<WeakReference>();
                     foreach (var weakReference in subscribersByEvent.Value)
                     {
                         if (!weakReference.IsAlive
-                         || weakReference.Target.Equals(subscriber))
+                         || weakReference.Target?.Equals(subscriber) == true)
                         {
                             subscribersToRemove.Add(weakReference);
                         }

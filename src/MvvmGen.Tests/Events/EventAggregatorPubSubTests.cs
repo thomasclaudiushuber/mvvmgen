@@ -81,10 +81,19 @@ namespace MvvmGen.Events
         }
 
         [Fact]
-        public void ShouldThrowIfSubscriberIsNull()
+        public void ShouldThrowIfSubscriberIsNullWhenRegistering()
         {
             var eventAggregator = new EventAggregator();
             var ex = Assert.Throws<ArgumentNullException>(() => eventAggregator.RegisterSubscriber<object>(null!));
+
+            Assert.Equal("subscriber", ex.ParamName);
+        }
+
+        [Fact]
+        public void ShouldThrowIfSubscriberIsNullWhenUnregistering()
+        {
+            var eventAggregator = new EventAggregator();
+            var ex = Assert.Throws<ArgumentNullException>(() => eventAggregator.UnregisterSubscriber<object>(null!));
 
             Assert.Equal("subscriber", ex.ParamName);
         }

@@ -18,7 +18,7 @@ namespace MvvmGen.SourceGenerators
         [Theory]
         public void GeneratePublishEventInProperty(string eventConstructorParameters, string attributeConstructorParameters)
         {
-            string attributeNamedArgument = ", EventConstructorArgs=";
+            var attributeNamedArgument = ", EventConstructorArgs=";
             if (!string.IsNullOrEmpty(attributeConstructorParameters))
             {
                 attributeNamedArgument += $"\"{ attributeConstructorParameters}\"";

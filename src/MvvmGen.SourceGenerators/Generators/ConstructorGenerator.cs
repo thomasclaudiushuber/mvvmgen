@@ -32,7 +32,7 @@ namespace MvvmGen.Generators
             vmBuilder.Append($"public {viewModelClassName}(");
             injectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
 
-            bool first = true;
+            var first = true;
             string? eventAggregatorAccessForSubscription = null;
             if (isEventSubscriber)
             {
