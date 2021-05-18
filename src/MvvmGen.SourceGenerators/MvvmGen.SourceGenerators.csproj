@@ -7,32 +7,14 @@
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Title>MvvmGen</Title>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui xaml generator</PackageTags>
-    <Product>MvvmGen</Product>
-    <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen</PackageProjectUrl>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <Language>en-US</Language>
-    <PackageIcon>packageIcon.png</PackageIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
-    <PackageId>MvvmGen</PackageId>
+  <PropertyGroup  Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
     <AssemblyName>MvvmGen.SourceGenerators</AssemblyName>
-    <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Uno, Xamarin.Forms and .NET MAUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
-    <PackageId>MvvmGen.PureCodeGeneration</PackageId>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
+  <PropertyGroup  Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <AssemblyName>MvvmGen.PureCodeGeneration.SourceGenerators</AssemblyName>
-    <Description>MvvmGen.PureCodeGeneration is a lightweight, modern MVVM library for XAML applications. This package is a special version of the MvvmGen NuGet package. It has the same functionality, but it generates not only your ViewModels, but also the full MvvmGen library. This means that you have zero runtime dependencies with this package. As the package name says, its pure code generation.</Description>
+    <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <EmbeddedResource Include="..\MvvmGen\Attributes\CommandAttribute.cs" Link="MvvmGenLib\Attributes\CommandAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Attributes\CommandInvalidateAttribute.cs" Link="MvvmGenLib\Attributes\CommandInvalidateAttribute.cs" />
@@ -50,32 +32,10 @@
     <EmbeddedResource Include="..\MvvmGen\ViewModels\IViewModelFactory.cs" Link="MvvmGenLib\ViewModels\IViewModelFactory.cs" />
     <EmbeddedResource Include="..\MvvmGen\ViewModels\ViewModelBase.cs" Link="MvvmGenLib\ViewModels\ViewModelBase.cs" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)'!='MvvmGen_PureCodeGeneration'">
-    <None Include="..\MvvmGen\bin\$(Configuration)\netstandard2.0\MvvmGen.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
-    <None Remove="_._" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)'=='MvvmGen_PureCodeGeneration'">
-    <None Include="_._" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="packageIcon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>
