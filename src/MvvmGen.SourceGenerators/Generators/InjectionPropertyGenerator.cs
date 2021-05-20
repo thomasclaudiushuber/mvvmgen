@@ -18,7 +18,7 @@ namespace MvvmGen
                 foreach (var injectionToGenerate in injectionsToGenerate)
                 {
                     vmBuilder.AppendLineBeforeMember();
-                    vmBuilder.AppendLine($"{injectionToGenerate.PropertyAccessModifier} {injectionToGenerate.Type} {injectionToGenerate.PropertyName} {{ get; private set; }}");
+                    vmBuilder.AppendLine($"{injectionToGenerate.PropertyAccessModifier} {injectionToGenerate.Type} {injectionToGenerate.PropertyName} {{ get; {injectionToGenerate.SetterAccessModifier} set; }}");
                 }
             }
         }

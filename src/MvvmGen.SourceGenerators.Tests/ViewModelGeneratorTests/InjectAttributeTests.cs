@@ -65,6 +65,8 @@ namespace MyCode
                 namedArgumentForAttribute = $",PropertyAccessModifier = {attributeAcccessModifier}";
             }
 
+            var expectedSetterAccessModifier = expectedAccessModifier == "private" ? "" : "private";
+
             ShouldGenerateExpectedCode(
       $@"using MvvmGen;
 
@@ -93,7 +95,7 @@ namespace MyCode
 
         partial void OnInitialize();
 
-        {expectedAccessModifier} MyCode.INavigationViewModel NavigationViewModel {{ get; private set; }}
+        {expectedAccessModifier} MyCode.INavigationViewModel NavigationViewModel {{ get; {expectedSetterAccessModifier} set; }}
     }}
 }}
 ");

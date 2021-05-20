@@ -18,6 +18,8 @@ namespace MvvmGen.Model
         public string PropertyName { get; }
 
         public string PropertyAccessModifier { get; set; } = "protected";
+
+        public string SetterAccessModifier => PropertyAccessModifier == "private" ? "" : "private";
     }
 }
 
