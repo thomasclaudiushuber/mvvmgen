@@ -1,30 +1,52 @@
-
-
 # ⚡ MvvmGen 
 
 [![Build MvvmGen](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/build_mvvmgen.yml/badge.svg)](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/build_mvvmgen.yml)
 
-## The Next Generation MVVM library - And Your Friend Who Writes the Boilerplate for You
+## Your Friend Who Writes the Boilerplate for You
 
-Hey there, welcome to the **MvvmGen** repository. MvvmGen is a lightweight and modern MVVM library (.NET Standard 2.0) that helps you to apply the popular Model-View-ViewModel-pattern (MVVM) in your XAML applications that you build with WPF, WinUI, Uno Platform, Xamarin Forms, or .NET MAUI.
+Hey there, welcome to the **MvvmGen** repository. **MvvmGen** is a lightweight 
+and modern MVVM library (.NET Standard 2.0) that helps you to apply 
+the popular Model-View-ViewModel-pattern (MVVM) in your XAML applications 
+that you build with WPF, WinUI, Uno Platform, Xamarin Forms, or .NET MAUI.
 
-MvvmGen contains everything you need to build XAML applications with the popular Model-View-ViewModel-pattern (MVVM):
+**MvvmGen** is a "Source Generator First/Only" framework that contains everything 
+you need to build XAML applications with the popular 
+Model-View-ViewModel-pattern (MVVM):
 - A `ViewModelBase` class
 - An `ICommand` implementation
 - An EventAggregator to communicate between ViewModels
+- **But the heart of MvvmGen** are its attributes like `ViewModel`, `Property`, `Command`
+and `Inject` that you use to hook up MvvmGen’s `ViewModelGenerator`. 
+The `ViewModelGenerator` is a Roslyn-based C# Source Generator that generates the boilerplate 
+for your ViewModel classes  behind the scenes while you type your code in Visual Studio.
 
-**But the key part of MvvmGen** are its attributes that you use to hook up MvvmGen’s `ViewModelGenerator`. The `ViewModelGenerator` is a Roslyn-based C# Source Generator that generates the boilerplate for your ViewModel classes behind the scenes while you type your code in Visual Studio.
+MvvmGen is licensed under the [MIT license](LICENSE).
 
-**MvvmGen** is a "Source Generators First/Only" framework, which means it is built on top of Roslyn-powered C# Source Generators. The generator is the heart of MvvmGen.
+## Get Started
 
-Now, you'll learn that creating a ViewModel is a lot of fun with **MvvmGen**! 🔥 (Also check out [the MvvmGen Samples repository](https://github.com/thomasclaudiushuber/mvvmgen-samples) that contains full applications built with WPF, WinUI, and MvvmGen)
+- [Documentation](docs/00_start_here.md)
+- [Samples](https://github.com/thomasclaudiushuber/mvvmgen-samples)
+- [Blog post that introduces MvvmGen](https://www.thomasclaudiushuber.com/2021/05/12/introducing-the-mvvmgen-library)
+- [Blog post about pure code generation](https://www.thomasclaudiushuber.com/2021/05/19/mvvmgen-the-special-edition-pure-code-generation)
 
+## Quick intro
 
-## How does it work? 
-Reference the NuGet package [MvvmGen](https://www.nuget.org/packages/MvvmGen/) in your .NET application, and then you're ready to go. MvvmGen will register itself as a C# source generator in your project, and it will be your friend who writes the boilerplate for you.
+In this quick intro, you'll learn that creating a ViewModel is a lot of fun with **MvvmGen**! 🔥 
 
-## Generating a ViewModel class
-To generate a ViewModel class, you create a new class, you mark it as `partial`, and you put MvvmGen's `ViewModel` attribute on the class:
+### Installing the MvvmGen NuGet Package 
+Reference the NuGet package [MvvmGen](https://www.nuget.org/packages/MvvmGen/) 
+in your .NET application, and then you're ready to go:
+```
+Install-Package MvvmGen
+```  
+
+MvvmGen will register itself as a C# source generator in your project, 
+and it will be your friend who writes the boilerplate for you.
+
+### Generating a ViewModel class
+
+To generate a ViewModel class, you create a new class, you mark it as `partial`,
+and you put MvvmGen's `ViewModel` attribute on the class:
 
 ```csharp
 using MvvmGen;
@@ -37,7 +59,11 @@ namespace MyWpfApp.ViewModel
   }
 }
 ```
-The `ViewModel` attribute tells MvvmGen to generate another partial `EmployeeViewModel` class. Right now, it will be a class that looks like this:
+
+The `ViewModel` attribute tells MvvmGen to generate another
+ partial `EmployeeViewModel` class. Right now, it will be a class 
+that looks like this:
+
 ```csharp
 using MvvmGen.Commands;
 using MvvmGen.Events;
@@ -57,13 +83,21 @@ namespace MyWpfApp.ViewModel
 }
 ```
 
-But there are way more attributes in the `MvvmGen` namespace that you can use. They allow you to build a full ViewModel like this:
+You can see that generated class in Visual Studio under Dependencies->Analyzers:
+![Generated class](docs/images/generate_a_viewModel_01.png)
+
+Beside the `ViewModel` attribute, you find many other attributes in the `MvvmGen` namespace 
+that you can use to decorate your ViewModel class. These attributes allow you to 
+build a full ViewModel like this:
+
 ```csharp
 using MvvmGen;
 using MvvmGen.Events;
 
 namespace MyWpfApp
 {
+  public record EmployeeSavedEvent(string FirstName, string LastName);
+
   [Inject(typeof(IEventAggregator))]
   [ViewModel]
   public partial class EmployeeViewModel
@@ -143,6 +177,4 @@ namespace MyWpfApp
 }
 ```
 
-You can read more [in this blog post that introduces MvvmGen](https://www.thomasclaudiushuber.com/2021/05/12/introducing-the-mvvmgen-library). You find also a docs directory in this repository that explains the different attributes that you can use.
-
-Please also check out [the MvvmGen Samples repository](https://github.com/thomasclaudiushuber/mvvmgen-samples) that contains full applications built with WPF, WinUI, and MvvmGen.
+To learn all the details, go to the [documentation in this repo](docs/00_start_here.md).
