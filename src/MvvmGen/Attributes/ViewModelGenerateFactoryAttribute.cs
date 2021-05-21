@@ -7,11 +7,12 @@
 #nullable enable
 
 using System;
+using MvvmGen.ViewModels;
 
 namespace MvvmGen
 {
     /// <summary>
-    /// Specifies that an <see cref="MvvmGen.ViewModels.IViewModelFactory{T}"/> is generated, where T is your ViewModel class. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
+    /// Specifies that an <see cref="IViewModelFactory{T}"/> is generated, where T is your ViewModel class. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ViewModelGenerateFactoryAttribute : Attribute

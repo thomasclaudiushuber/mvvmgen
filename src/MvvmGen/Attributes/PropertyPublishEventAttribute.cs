@@ -7,11 +7,12 @@
 #nullable enable
 
 using System;
+using MvvmGen.Events;
 
 namespace MvvmGen
 {
     /// <summary>
-    /// Specifies that an event should be puslished in the setter of a generated property. Set this attribute a field that has the <see cref="PropertyAttribute"/> set.
+    /// Specifies that an event should be published in the setter of a generated property. Set this attribute a field that has the <see cref="PropertyAttribute"/> set.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class PropertyPublishEventAttribute : Attribute
@@ -36,7 +37,7 @@ namespace MvvmGen
         public string? EventConstructorArgs { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the member that contains the <see cref="MvvmGen.Events.IEventAggregator"/> instance. The default value is "EventAggregator".
+        /// Gets or sets the name of the member that contains the <see cref="IEventAggregator"/> instance. The default value is "EventAggregator".
         /// </summary>
         public string EventAggregatorMemberName { get; set; } = "EventAggregator";
 

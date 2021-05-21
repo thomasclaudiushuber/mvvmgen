@@ -11,7 +11,7 @@ using System;
 namespace MvvmGen
 {
     /// <summary>
-    /// Specifieds that a type is injected into a ViewModel. Generates a constructor parameter and initializes a property with the injected type. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
+    /// Specifies that a type is injected into a ViewModel. Generates a constructor parameter and initializes a property with the injected type. Set this attribute on a class that has the <see cref="ViewModelAttribute"/> set.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class InjectAttribute : Attribute
