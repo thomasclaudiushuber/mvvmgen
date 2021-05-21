@@ -66,30 +66,27 @@ namespace MvvmGen.Inspectors
             var attributeDatas = propertySymbol.GetAttributes();
             var invalidateAttributeDatas = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyInvalidateAttribute").ToList();
 
-            if (invalidateAttributeDatas is not null)
+            foreach (var attr in invalidateAttributeDatas)
             {
-                foreach (var attr in invalidateAttributeDatas)
+                var propertyNameWithAttributes = propertySymbol.Name;
+
+                var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
+                var propertyNames = attributeSyntax?.ArgumentList?.Arguments.Select(x => x.GetStringValueFromAttributeArgument());
+
+                if (propertyNames is not null)
                 {
-                    var propertyNameWithAttributes = propertySymbol.Name;
-
-                    var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
-                    var propertyNames = attributeSyntax?.ArgumentList?.Arguments.Select(x => x.GetStringValueFromAttributeArgument());
-
-                    if (propertyNames is not null)
+                    foreach (var propertyName in propertyNames)
                     {
-                        foreach (var propertyName in propertyNames)
+                        if (propertyName is {Length: > 0})
                         {
-                            if (propertyName is { Length: > 0 })
+                            if (!propertyInvalidationsByPropertyName.ContainsKey(propertyName))
                             {
-                                if (!propertyInvalidationsByPropertyName.ContainsKey(propertyName))
-                                {
-                                    propertyInvalidationsByPropertyName[propertyName] = new List<string>();
-                                }
+                                propertyInvalidationsByPropertyName[propertyName] = new List<string>();
+                            }
 
-                                if (!propertyInvalidationsByPropertyName[propertyName].Contains(propertyNameWithAttributes))
-                                {
-                                    propertyInvalidationsByPropertyName[propertyName].Add(propertyNameWithAttributes);
-                                }
+                            if (!propertyInvalidationsByPropertyName[propertyName].Contains(propertyNameWithAttributes))
+                            {
+                                propertyInvalidationsByPropertyName[propertyName].Add(propertyNameWithAttributes);
                             }
                         }
                     }
@@ -137,70 +134,66 @@ namespace MvvmGen.Inspectors
                     var firstCharacter = propertyName.Substring(0, 1).ToUpper();
 
                     propertyName = propertyName.Length > 1
-                      ? firstCharacter + propertyName.Substring(1)
-                      : firstCharacter;
+                        ? firstCharacter + propertyName.Substring(1)
+                        : firstCharacter;
                 }
 
-                if (propertyName is not null)
+                var eventsToPublish = new List<EventToPublish>();
+                var methodsToCall = new List<MethodToCall>();
+                var propertyPublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
+                var propertyCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
+
+                foreach (var propertyPublishEventAttribute in propertyPublishEventAttributes)
                 {
-                    var eventsToPublish = new List<EventToPublish>();
-                    var methodsToCall = new List<MethodToCall>();
-                    var propertyPublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
-                    var propertyCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
-
-                    foreach (var propertyPublishEventAttribute in propertyPublishEventAttributes)
+                    var eventType = propertyPublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                    if (eventType is {Length: > 0})
                     {
-                        var eventType = propertyPublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
-                        if (eventType is { Length: > 0 })
+                        var eventToPublish = new EventToPublish(eventType);
+
+                        foreach (var arg in propertyPublishEventAttribute.NamedArguments)
                         {
-                            var eventToPublish = new EventToPublish(eventType);
-
-                            foreach (var arg in propertyPublishEventAttribute.NamedArguments)
+                            if (arg.Key == "EventConstructorArgs")
                             {
-                                if (arg.Key == "EventConstructorArgs")
-                                {
-                                    eventToPublish.EventConstructorArgs = arg.Value.Value?.ToString();
-                                }
-                                else if (arg.Key == "EventAggregatorMemberName")
-                                {
-                                    eventToPublish.EventAggregatorMemberName = arg.Value.Value?.ToString();
-                                }
-                                else if (arg.Key == "PublishCondition")
-                                {
-                                    eventToPublish.PublishCondition = arg.Value.Value?.ToString();
-                                }
+                                eventToPublish.EventConstructorArgs = arg.Value.Value?.ToString();
                             }
-
-                            eventsToPublish.Add(eventToPublish);
-                        }
-                    }
-
-                    foreach (var onChangeCallMethodAttribute in propertyCallMethodAttributes)
-                    {
-                        var methodName = onChangeCallMethodAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
-
-                        if (methodName is { Length: > 0 })
-                        {
-                            var methodToCall = new MethodToCall(methodName);
-
-                            foreach (var arg in onChangeCallMethodAttribute.NamedArguments)
+                            else if (arg.Key == "EventAggregatorMemberName")
                             {
-                                if (arg.Key == "MethodArgs")
-                                {
-                                    methodToCall.MethodArgs = arg.Value.Value?.ToString();
-                                }
+                                eventToPublish.EventAggregatorMemberName = arg.Value.Value?.ToString();
                             }
-
-                            methodsToCall.Add(methodToCall);
+                            else if (arg.Key == "PublishCondition")
+                            {
+                                eventToPublish.PublishCondition = arg.Value.Value?.ToString();
+                            }
                         }
-                    }
 
-                    propertiesToGenerate.Add(new PropertyToGenerate(propertyName, propertyType, fieldName)
-                    {
-                        EventsToPublish = eventsToPublish,
-                        MethodsToCall = methodsToCall
-                    });
+                        eventsToPublish.Add(eventToPublish);
+                    }
                 }
+
+                foreach (var onChangeCallMethodAttribute in propertyCallMethodAttributes)
+                {
+                    var methodName = onChangeCallMethodAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+
+                    if (methodName is {Length: > 0})
+                    {
+                        var methodToCall = new MethodToCall(methodName);
+
+                        foreach (var arg in onChangeCallMethodAttribute.NamedArguments)
+                        {
+                            if (arg.Key == "MethodArgs")
+                            {
+                                methodToCall.MethodArgs = arg.Value.Value?.ToString();
+                            }
+                        }
+
+                        methodsToCall.Add(methodToCall);
+                    }
+                }
+
+                propertiesToGenerate.Add(new PropertyToGenerate(propertyName, propertyType, fieldName) {
+                    EventsToPublish = eventsToPublish,
+                    MethodsToCall = methodsToCall
+                });
             }
         }
 
@@ -276,9 +269,9 @@ namespace MvvmGen.Inspectors
                     //       So, the AttributeData class in the commented foreach loop below will return an empty string for the constructor argument
                     //       of an attribute like [CommandInvalidate(nameof(FirstName))], as the FirstName property didn't get generated yet.
                     //       Solution for this is to use the AttributeSyntax as shown on the next two code lines.
-                    //       The attribute syntax contains the pure code as text, including the nameof(FirstName) expression. 
+                    //       The attribute syntax contains the pure code as text, including the nameof(FirstName) expression.
                     //       So let's grab the property name there.
-                    // 
+                    //
                     //foreach (var arg in attr.ConstructorArguments)
                     //{
                     //  propertyName = arg.Value?.ToString();

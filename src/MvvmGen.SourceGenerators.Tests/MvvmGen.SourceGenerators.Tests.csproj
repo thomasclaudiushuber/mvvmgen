@@ -4,7 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>MvvmGen</RootNamespace>
-    <Nullable>enable</Nullable>
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
   </PropertyGroup>
 

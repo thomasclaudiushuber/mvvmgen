@@ -20,7 +20,7 @@ namespace MvvmGen.SourceGenerators
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   public interface IEmployeeDataProvider {{}}
 
   [Inject(typeof(IEmployeeDataProvider){attributeArgument}))]
@@ -57,12 +57,12 @@ namespace MyCode
         [InlineData("public", "AccessModifier.Public")]
         [InlineData("protected", "")]
         [Theory]
-        public void GeneratePropertyWithSpecifiedAccessModifier(string expectedAccessModifier, string attributeAcccessModifier)
+        public void GeneratePropertyWithSpecifiedAccessModifier(string expectedAccessModifier, string attributeAccessModifier)
         {
             var namedArgumentForAttribute = "";
-            if (attributeAcccessModifier is { Length: > 0 })
+            if (attributeAccessModifier is { Length: > 0 })
             {
-                namedArgumentForAttribute = $",PropertyAccessModifier = {attributeAcccessModifier}";
+                namedArgumentForAttribute = $",PropertyAccessModifier = {attributeAccessModifier}";
             }
 
             var expectedSetterAccessModifier = expectedAccessModifier == "private" ? "" : "private";
@@ -71,7 +71,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   public interface INavigationViewModel {{}}
 
   [Inject(typeof(INavigationViewModel){namedArgumentForAttribute})]
@@ -108,7 +108,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   [Inject(typeof(MvvmGen.Events.IEventAggregator)))]
   [ViewModel]
   public partial class EmployeeViewModel
@@ -144,7 +144,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   public interface IEventAggregator {{}}
   public interface IEmployeeDataProvider {{}}
   public interface IDialogService {{}}

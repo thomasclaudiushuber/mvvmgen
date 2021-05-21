@@ -21,14 +21,14 @@ namespace MvvmGen.Events
         void Publish<TEvent>(TEvent eventToPublish);
 
         /// <summary>
-        /// Registers an MvvmGen.Events.IEventSubscriber, so that it will receive events from the IEventAggregator instance.
+        /// Registers an MvvmGen.Events.IEventSubscriber, so that it will receive events from the <see cref="IEventAggregator"/> instance.
         /// </summary>
         /// <typeparam name="TSubscriber">The subscriber type</typeparam>
         /// <param name="subscriber">The subscriber instance to register</param>
         void RegisterSubscriber<TSubscriber>(TSubscriber subscriber);
 
         /// <summary>
-        /// Unregisters an MvvmGen.Events.IEventSubscriber, so that it won't receive events anymore from the IEventAggregator instance.
+        /// Unregisters an <see cref="IEventSubscriber{TEvent}"/>, so that it won't receive events anymore from the <see cref="IEventAggregator"/> instance.
         /// </summary>
         /// <typeparam name="TSubscriber">The subscriber type</typeparam>
         /// <param name="subscriber">The subscriber instance to unregister</param>

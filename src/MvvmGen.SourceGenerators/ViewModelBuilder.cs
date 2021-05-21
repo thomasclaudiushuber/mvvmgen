@@ -16,7 +16,7 @@ namespace MvvmGen
         private string _indent = "";
         private const int _indentSpaces = 4;
         private int _indentLevel;
-        private bool _wasLastCallApendLine = true;
+        private bool _wasLastCallAppendLine = true;
         private bool _isFirstMember = true;
         private readonly StringBuilder _stringBuilder;
 
@@ -57,27 +57,27 @@ namespace MvvmGen
 
         public void AppendLine(string line)
         {
-            if (_wasLastCallApendLine) // If last call was only Append, you shouldn't add the indent
+            if (_wasLastCallAppendLine) // If last call was only Append, you shouldn't add the indent
             {
                 _stringBuilder.Append(_indent);
             }
 
             _stringBuilder.AppendLine($"{line}");
-            _wasLastCallApendLine = true;
+            _wasLastCallAppendLine = true;
         }
 
         public void AppendLine()
         {
             _stringBuilder.AppendLine();
-            _wasLastCallApendLine = true;
+            _wasLastCallAppendLine = true;
         }
 
         public void Append(string stringToAppend)
         {
-            if (_wasLastCallApendLine)
+            if (_wasLastCallAppendLine)
             {
                 _stringBuilder.Append(_indent);
-                _wasLastCallApendLine = false;
+                _wasLastCallAppendLine = false;
             }
 
             _stringBuilder.Append(stringToAppend);

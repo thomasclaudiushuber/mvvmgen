@@ -16,10 +16,10 @@ namespace MvvmGen.SourceGenerators
         public void GenerateViewModel(string attribute)
         {
             ShouldGenerateExpectedCode(
-      $@"using MvvmGen; 
+      $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   {attribute}
   public partial class EmployeeViewModel
   {{
@@ -47,10 +47,10 @@ namespace MyCode
         public void GenerateViewModelWithoutConstructor()
         {
             ShouldGenerateExpectedCode(
-      $@"using MvvmGen; 
+      $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   [ViewModel(GenerateConstructor=false)]
   public partial class EmployeeViewModel
   {{
@@ -72,10 +72,10 @@ namespace MyCode
         public void GenerateViewModelWithoutConstructorNoEmptyLineForFirstMember()
         {
             ShouldGenerateExpectedCode(
-      $@"using MvvmGen; 
+      $@"using MvvmGen;
 
 namespace MyCode
-{{  
+{{
   [Inject(typeof(string),""InjectedString"")]
   [ViewModel(GenerateConstructor=false)]
   public partial class EmployeeViewModel
@@ -96,7 +96,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromIt()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromIt()
         {
             ShouldGenerateExpectedCode(
        @"using System.ComponentModel;
@@ -104,7 +104,7 @@ using MvvmGen;
 using MvvmGen.ViewModels;
 
 namespace MyCode
-{   
+{
   public class CustomViewModelBase : ViewModelBase
   {
     protected void OnPropertyChanged(string propertyName) { }
@@ -134,7 +134,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromItViewAnotherViewModelAttribute()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromItViewAnotherViewModelAttribute()
         {
             ShouldGenerateExpectedCode(
        @"using System.ComponentModel;
@@ -142,9 +142,9 @@ using MvvmGen;
 using MvvmGen.ViewModels;
 
 namespace MyCode
-{   
+{
   [ViewModel]
-  public class CustomViewModelBase 
+  public class CustomViewModelBase
   {
   }
 
@@ -188,7 +188,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevels()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevels()
         {
             ShouldGenerateExpectedCode(
        $@"using System.ComponentModel;
@@ -196,9 +196,9 @@ using MvvmGen;
 using MvvmGen.ViewModels;
 
 namespace MyCode
-{{   
+{{
   [ViewModel]
-  public class MoreCustomViewModelBase 
+  public class MoreCustomViewModelBase
   {{
   }}
 
@@ -262,7 +262,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevelsAndWithoutViewModelAttributeOnMiddleClass()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevelsAndWithoutViewModelAttributeOnMiddleClass()
         {
             ShouldGenerateExpectedCode(
        $@"using System.ComponentModel;
@@ -270,9 +270,9 @@ using MvvmGen;
 using MvvmGen.ViewModels;
 
 namespace MyCode
-{{   
+{{
   [ViewModel]
-  public class MoreCustomViewModelBase 
+  public class MoreCustomViewModelBase
   {{
   }}
 
@@ -329,7 +329,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
     public class Employee
     {{
         public string FirstName {{ get; set; }}
@@ -395,7 +395,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
     public class Employee
     {{
         public Employee (int id)

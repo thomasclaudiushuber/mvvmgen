@@ -23,7 +23,7 @@ namespace MvvmGen.SourceGenerators
         {
             var onPropertyChangedCall = @"                    OnPropertyChanged(""FullName"");
 ";
-            // Note: Do line-breaks in the string above with @"". 
+            // Note: Do line-breaks in the string above with @"".
             // If you use \r\n, the test will work on Windows, but fail on GitHub.
             // If you use \n, the test will fail on Windows, but work on GitHub. :-)
 

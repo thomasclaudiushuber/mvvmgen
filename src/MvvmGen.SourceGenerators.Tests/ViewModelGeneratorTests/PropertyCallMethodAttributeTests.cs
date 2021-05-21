@@ -21,14 +21,14 @@ namespace MvvmGen.SourceGenerators
 using MvvmGen.Events;
 
 namespace MyCode
-{{   
+{{
   [ViewModel(GenerateConstructor=false)]
   public partial class EmployeeViewModel
   {{
     private void MyMethod({methodParameters}){{ }}
 
     {onChangeCallMethodAttribute}
-    [Property] 
+    [Property]
     private string _selectedItem;
   }}
 }}",

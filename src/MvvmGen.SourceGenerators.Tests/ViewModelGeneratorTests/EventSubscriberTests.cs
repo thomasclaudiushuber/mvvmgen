@@ -18,7 +18,7 @@ namespace MvvmGen.SourceGenerators
 using MvvmGen.Events;
 
 namespace MyCode
-{{   
+{{
   [ViewModel]
   public partial class EmployeeViewModel : IEventSubscriber<string,int>
   {{
@@ -54,7 +54,7 @@ namespace MyCode
 using MvvmGen.Events;
 
 namespace MyCode
-{{   
+{{
   [Inject(typeof(IEventAggregator))]
   [ViewModel]
   public partial class EmployeeViewModel : IEventSubscriber<string,int>
@@ -94,7 +94,7 @@ namespace MyCode
 using MvvmGen.Events;
 
 namespace MyCode
-{{   
+{{
   [Inject(typeof(IEventAggregator),""AwesomeEventAggregator"")]
   [ViewModel]
   public partial class EmployeeViewModel : IEventSubscriber<string,int>

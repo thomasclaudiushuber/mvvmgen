@@ -31,7 +31,7 @@ namespace MvvmGen.ViewModels
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event
         /// </summary>
-        /// <param name="e">(optional) The name of the changed property.</param>
+        /// <param name="propertyName">(optional) The name of the changed property.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));

@@ -15,10 +15,10 @@ namespace MvvmGen
         {
             if (commandsToGenerate is not null)
             {
-                foreach (var comandToGenerate in commandsToGenerate)
+                foreach (var commandToGenerate in commandsToGenerate)
                 {
                     vmBuilder.AppendLineBeforeMember();
-                    vmBuilder.AppendLine($"public DelegateCommand {comandToGenerate.PropertyName} {{ get; private set; }}");
+                    vmBuilder.AppendLine($"public DelegateCommand {commandToGenerate.PropertyName} {{ get; private set; }}");
                 }
             }
         }

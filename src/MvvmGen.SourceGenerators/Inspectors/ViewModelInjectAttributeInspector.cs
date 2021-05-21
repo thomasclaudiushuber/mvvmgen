@@ -50,21 +50,16 @@ namespace MvvmGen.Inspectors
                             : typeNameWithoutNamespace;
                     }
 
-                    if (propertyName is not null)
-                    {
-                        injectionsToGenerate.Add(new InjectionToGenerate(injectedType, propertyName)
-                        {
-                            PropertyAccessModifier = propertyAccessModifier switch
-                            {
-                                1 => "private",
-                                2 => "protected internal",
-                                3 => "protected",
-                                4 => "internal",
-                                5 => "public",
-                                _ => "protected"
-                            }
-                        });
-                    }
+                    injectionsToGenerate.Add(new InjectionToGenerate(injectedType, propertyName) {
+                        PropertyAccessModifier = propertyAccessModifier switch {
+                            1 => "private",
+                            2 => "protected internal",
+                            3 => "protected",
+                            4 => "internal",
+                            5 => "public",
+                            _ => "protected"
+                        }
+                    });
                 }
             }
 
