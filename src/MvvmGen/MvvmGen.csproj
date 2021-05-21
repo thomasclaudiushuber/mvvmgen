@@ -12,7 +12,7 @@
     <Title>MvvmGen</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui xaml generator</PackageTags>
+    <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui uno xaml generator</PackageTags>
     <Product>MvvmGen</Product>
     <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
