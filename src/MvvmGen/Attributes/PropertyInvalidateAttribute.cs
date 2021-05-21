@@ -36,7 +36,7 @@ namespace MvvmGen
         }
 
         /// <summary>
-        /// Gets the property names in which the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised.</param>
+        /// Gets the property names in which the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised.
         /// </summary>
         public string[] PropertyNames { get; }
     }

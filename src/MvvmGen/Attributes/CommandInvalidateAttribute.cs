@@ -28,7 +28,7 @@ namespace MvvmGen
         }
 
         /// <summary>
-        /// Gets the property names in which the DelegateCommand's <see cref="MvvmGen.Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called</param>
+        /// Gets the property names in which the DelegateCommand's <see cref="MvvmGen.Commands.DelegateCommand.RaiseCanExecuteChanged"/> method is called.
         /// </summary>
         public string[] PropertyNames { get; }
     }

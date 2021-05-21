@@ -276,9 +276,9 @@ namespace MvvmGen.Inspectors
                     //       So, the AttributeData class in the commented foreach loop below will return an empty string for the constructor argument
                     //       of an attribute like [CommandInvalidate(nameof(FirstName))], as the FirstName property didn't get generated yet.
                     //       Solution for this is to use the AttributeSyntax as shown on the next two code lines.
-                    //       The attribute syntax contains the pure code as text, including the nameof(FirstName) expression. 
+                    //       The attribute syntax contains the pure code as text, including the nameof(FirstName) expression.
                     //       So let's grab the property name there.
-                    // 
+                    //
                     //foreach (var arg in attr.ConstructorArguments)
                     //{
                     //  propertyName = arg.Value?.ToString();
