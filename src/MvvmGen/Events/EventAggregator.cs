@@ -96,7 +96,7 @@ namespace MvvmGen.Events
 
         /// <summary>
         /// Unregisters an MvvmGen.Events.IEventSubscriber, so that it won't receive events anymore from the IEventAggregator instance.
-        /// Note that calling this method is optional for an instance of this <see cref="EventAggregator"/> class, because the 
+        /// Note that calling this method is optional for an instance of this <see cref="EventAggregator"/> class, because the
         /// <see cref="EventAggregator"/> stores a subscriber internally in a <see cref="WeakReference"/>, which means
         /// the subscriber can get garbage collected, even if you don't call this UnregisterSubscriber method.
         /// Calling this method though will immediately unregister a subscriber, even before it got garbage collected.

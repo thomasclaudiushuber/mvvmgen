@@ -17,7 +17,7 @@ namespace MvvmGen.SourceGenerators
       @"using MvvmGen;
 
 namespace MyCode
-{   
+{
   [ViewModel]
   public partial class EmployeeViewModel
   {
@@ -61,7 +61,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
     [ViewModel]
     public partial class EmployeeViewModel
     {{
@@ -108,7 +108,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   [ViewModel]
   public partial class EmployeeViewModel
   {{
@@ -159,7 +159,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
     [ViewModel]
     public partial class EmployeeViewModel
     {{

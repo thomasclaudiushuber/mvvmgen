@@ -33,7 +33,7 @@ namespace MvvmGen.SourceGenerators
 using MvvmGen.Events;
 
 namespace MyCode
-{{   
+{{
   public record SelectedEmployeeChangedEvent({eventConstructorParameters})
 
   class Employee
@@ -47,7 +47,7 @@ namespace MyCode
   public partial class EmployeeViewModel
   {{
     [PropertyPublishEvent(typeof(SelectedEmployeeChangedEvent){attributeNamedArgument})]
-    [Property] 
+    [Property]
     private Employee _selectedItem;
   }}
 }}",
@@ -113,7 +113,7 @@ namespace MyCode
 using MvvmGen.Events;
 
 namespace MyCode
-{{   
+{{
   public record SelectedEmployeeChangedEvent()
 
   class Employee
@@ -127,7 +127,7 @@ namespace MyCode
   public partial class EmployeeViewModel
   {{
     [PropertyPublishEvent(typeof(SelectedEmployeeChangedEvent){publishConditionArgument})]
-    [Property] 
+    [Property]
     private Employee _selectedItem;
   }}
 }}",

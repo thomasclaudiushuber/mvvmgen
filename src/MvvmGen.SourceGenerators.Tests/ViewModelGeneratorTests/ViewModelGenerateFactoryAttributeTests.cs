@@ -20,7 +20,7 @@ namespace MvvmGen.SourceGenerators
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   public interface IEmployeeDataProvider {{}}
 
   [Inject(typeof(IEmployeeDataProvider)))]
@@ -77,7 +77,7 @@ namespace MyCode
       $@"using MvvmGen;
 
 namespace MyCode
-{{   
+{{
   public interface IEmployeeDataProvider {{}}
 
   [Inject(typeof(IEmployeeDataProvider)))]
