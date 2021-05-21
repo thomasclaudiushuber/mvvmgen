@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
     <RootNamespace>MvvmGen</RootNamespace>
   </PropertyGroup>
@@ -21,13 +19,13 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
     <PackageId>MvvmGen</PackageId>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Uno, Xamarin.Forms and .NET MAUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <PackageId>MvvmGen.PureCodeGeneration</PackageId>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -35,12 +33,12 @@
     <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
     <Description>MvvmGen.PureCodeGeneration is a lightweight, modern MVVM library for XAML applications. This package is a special version of the MvvmGen NuGet package. It has the same functionality, but it generates not only your ViewModels, but also the full MvvmGen library. This means that you have zero runtime dependencies with this package. As the package name says, it's pure code generation.</Description>
   </PropertyGroup>
-  
+
   <ItemGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
     <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\MvvmGen.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Remove="_._" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\MvvmGen.PureCodeGeneration.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
       <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0"/>
