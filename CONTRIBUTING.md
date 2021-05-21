@@ -1,4 +1,12 @@
-# Contributor License Agreement
+# Contributing
+
+Hey, great you want to contribute to **MvvmGen**.
+
+I look forward to your issues in form of bug reports and feature requests.
+
+Please also read the following contributor license agreement.
+
+## Contributor License Agreement
 
 By contributing your code to **MvvmGen** you grant **Thomas Claudius Huber** a non-exclusive, irrevocable, worldwide,
 royalty-free, sublicenseable, transferable license under all of Your relevant intellectual property rights

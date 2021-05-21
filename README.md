@@ -5,20 +5,10 @@
 ## Your Friend Who Writes the Boilerplate for You
 
 Hey there, welcome to the **MvvmGen** repository. **MvvmGen** is a lightweight 
-and modern MVVM library (.NET Standard 2.0) that helps you to apply 
-the popular Model-View-ViewModel-pattern (MVVM) in your XAML applications 
-that you build with WPF, WinUI, Uno Platform, Xamarin Forms, or .NET MAUI.
-
-**MvvmGen** is a "Source Generator First/Only" framework that contains everything 
-you need to build XAML applications with the popular 
-Model-View-ViewModel-pattern (MVVM):
-- A `ViewModelBase` class
-- An `ICommand` implementation
-- An EventAggregator to communicate between ViewModels
-- **But the heart of MvvmGen** are its attributes like `ViewModel`, `Property`, `Command`
-and `Inject` that you use to hook up MvvmGen’s `ViewModelGenerator`. 
-The `ViewModelGenerator` is a Roslyn-based C# Source Generator that generates the boilerplate 
-for your ViewModel classes  behind the scenes while you type your code in Visual Studio.
+and modern MVVM library (.NET Standard 2.0) built with C# Source Generators
+that helps you to apply the popular Model-View-ViewModel-pattern (MVVM) 
+in your XAML applications that you build with WPF, WinUI, Uno Platform, 
+Xamarin Forms, or .NET MAUI.
 
 MvvmGen is licensed under the [MIT license](LICENSE).
 

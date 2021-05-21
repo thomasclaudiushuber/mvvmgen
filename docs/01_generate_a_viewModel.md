@@ -8,7 +8,7 @@ In this article you learn everything about generating a ViewModel:
 ## Install the MvvmGen NuGet Package
 To get started with MvvmGen, install the NuGet Package MvvmGen
 ```
-Install-Package MvvmGen
+dotnet add package MvvmGen
 ```
 After that, you are ready to generate a ViewModel. 
 

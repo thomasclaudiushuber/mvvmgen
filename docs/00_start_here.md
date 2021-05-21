@@ -1,9 +1,17 @@
 # Welcome to the MvvmGen Docs
 
 **MvvmGen** is a modern and lightweight MVVM library that is built 
-on top of C# Source Generators.
+on top of C# Source Generators. It is a "Source Generator First/Only" framework 
+that contains everything that you need to build XAML applications with the popular 
+Model-View-ViewModel-pattern (MVVM):
+- A `ViewModelBase` class
+- An `ICommand` implementation
+- An EventAggregator to communicate between ViewModels
+- Attributes like `ViewModel`, `Property`, `Command`
+and `Inject` that you use to hook up MvvmGen’s C# Source Generator, the 
+so-called `ViewModelGenerator`
 
-Here in the docs you'll learn about its features. Beside the docs,
+Here in the docs you'll learn about the features of **MvvmGen**. Beside the docs,
 please also check out [the MvvmGen Samples repository](https://github.com/thomasclaudiushuber/mvvmgen-samples) 
 that contains full applications built with WPF, WinUI, and MvvmGen.
 
