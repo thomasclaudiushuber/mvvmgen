@@ -14,7 +14,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui uno xaml generator</PackageTags>
     <Product>MvvmGen</Product>
-    <PackageProjectUrl>https://www.thomasclaudiushuber.com/mvvmgen</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/thomasclaudiushuber/mvvmgen</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/thomasclaudiushuber/mvvmgen</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
