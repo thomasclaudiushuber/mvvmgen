@@ -10,7 +10,7 @@ Hey there, welcome to the **MvvmGen** repository. **MvvmGen** is a lightweight
 and modern MVVM library (.NET Standard 2.0) built with C# Source Generators
 that helps you to apply the popular Model-View-ViewModel-pattern (MVVM) 
 in your XAML applications that you build with WPF, WinUI, Uno Platform, 
-Xamarin Forms, or .NET MAUI.
+Avalonia, Xamarin Forms, or .NET MAUI.
 
 MvvmGen is licensed under the [MIT license](LICENSE).
 
