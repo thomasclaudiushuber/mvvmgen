@@ -30,7 +30,7 @@ namespace MyWpfApp.ViewModel
 ```
 The `ViewModel` attribute tells MvvmGen's `ViewModelGenerator` to generate
 a partial `EmployeeViewModel` class that looks like below.
-This generation happens on the fly while you type in your code editor.
+This generation happens on-the-fly while you type in your code editor.
 
 ```csharp
 using MvvmGen.Commands;
@@ -50,7 +50,7 @@ namespace MyWpfApp.ViewModel
     }
 }
 ```
-As you can see, the generaated class inherits from `ViewModelBase`. 
+As you can see, the generated class inherits from `ViewModelBase`. 
 `ViewModelBase` is MvvmGen's base class for ViewModels. It implements the
 `INotifyPropertyChanged` interface that defines the `PropertyChanged` event,
 and it has a protected `OnPropertyChanged` method to raise that event from subclasses. 
@@ -59,7 +59,7 @@ and it has a protected `OnPropertyChanged` method to raise that event from subcl
 > `ViewModelBase`. Then the generated class won't inherit from `ViewModelBase`.
 > This allows you to define custom base classes for your ViewModels.
 
-The generated ViewModel class in the code snippet above has also constructor.
+The generated ViewModel class in the code snippet above has also a constructor.
 From that constructor a `partial` method with the name `OnInitialize` is called.
 You can implement this `partial` method in your code if you want 
 to add some initialization logic:
