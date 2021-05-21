@@ -1,6 +1,8 @@
 # ⚡ MvvmGen 
 
 [![Build MvvmGen](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/build_mvvmgen.yml/badge.svg)](https://github.com/thomasclaudiushuber/mvvmgen/actions/workflows/build_mvvmgen.yml)
+[![NuGet MvvmGen](https://img.shields.io/nuget/v/MvvmGen.svg?label=NuGet%20MvvmGen)](https://www.nuget.org/packages/Mvvmgen)
+[![NuGet MvvmGen](https://img.shields.io/nuget/v/MvvmGen.PureCodeGeneration.svg?label=NuGet%20MvvmGen.PureCodeGeneration)](https://www.nuget.org/packages/Mvvmgen.PureCodeGeneration)
 
 ## Your Friend Who Writes the Boilerplate for You
 
