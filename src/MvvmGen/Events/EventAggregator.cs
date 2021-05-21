@@ -22,12 +22,12 @@ namespace MvvmGen.Events
         /// <inheritdoc/>
         public void Publish<TEvent>(TEvent eventToPublish)
         {
+            if (eventToPublish is null)
+            {
+                throw new ArgumentNullException(nameof(eventToPublish));
+            }
             lock (_subscribersByEvent)
             {
-                if (eventToPublish is null)
-                {
-                    throw new ArgumentNullException(nameof(eventToPublish));
-                }
                 if (!_subscribersByEvent.ContainsKey(typeof(TEvent)))
                 {
                     return;
@@ -63,32 +63,33 @@ namespace MvvmGen.Events
         /// <inheritdoc/>
         public void RegisterSubscriber<TSubscriber>(TSubscriber subscriber)
         {
+            if (subscriber is null)
+            {
+                throw new ArgumentNullException(nameof(subscriber));
+            }
+
+            var subscriberInterfaces = typeof(TSubscriber).GetInterfaces()
+                .Where(t => t.IsGenericType && t.FullName?.StartsWith("MvvmGen.Events.IEventSubscriber") == true).ToList();
+            if (!subscriberInterfaces.Any())
+            {
+                return;
+            }
+
+            var weakReference = new WeakReference(subscriber);
+
+            var eventTypes = subscriberInterfaces.SelectMany(x => x.GenericTypeArguments).Distinct();
             lock (_subscribersByEvent)
             {
-                if (subscriber is null)
+                foreach (var eventType in eventTypes)
                 {
-                    throw new ArgumentNullException(nameof(subscriber));
-                }
-
-                var subscriberInterfaces = typeof(TSubscriber).GetInterfaces()
-                  .Where(t => t.IsGenericType && t.FullName?.StartsWith("MvvmGen.Events.IEventSubscriber") == true).ToList();
-
-                if (subscriberInterfaces.Any())
-                {
-                    var weakReference = new WeakReference(subscriber);
-
-                    var eventTypes = subscriberInterfaces.SelectMany(x => x.GenericTypeArguments).Distinct();
-
-                    foreach (var eventType in eventTypes)
+                    if (!_subscribersByEvent.ContainsKey(eventType))
                     {
-                        if (!_subscribersByEvent.ContainsKey(eventType))
-                        {
-                            _subscribersByEvent.Add(eventType, new());
-                        }
-                        if (!_subscribersByEvent[eventType].Any(x => x.IsAlive && x.Target?.Equals(subscriber) == true))
-                        {
-                            _subscribersByEvent[eventType].Add(weakReference);
-                        }
+                        _subscribersByEvent.Add(eventType, new());
+                    }
+
+                    if (!_subscribersByEvent[eventType].Any(x => x.IsAlive && x.Target?.Equals(subscriber) == true))
+                    {
+                        _subscribersByEvent[eventType].Add(weakReference);
                     }
                 }
             }
@@ -105,13 +106,12 @@ namespace MvvmGen.Events
         /// <param name="subscriber">The subscriber instance to unregister</param>
         public void UnregisterSubscriber<TSubscriber>(TSubscriber subscriber)
         {
+            if (subscriber is null)
+            {
+                throw new ArgumentNullException(nameof(subscriber));
+            }
             lock (_subscribersByEvent)
             {
-                if (subscriber is null)
-                {
-                    throw new ArgumentNullException(nameof(subscriber));
-                }
-
                 foreach (var subscribersByEvent in _subscribersByEvent)
                 {
                     var subscribersToRemove = new List<WeakReference>();
