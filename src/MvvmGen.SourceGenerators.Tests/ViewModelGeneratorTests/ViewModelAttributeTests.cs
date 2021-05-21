@@ -96,7 +96,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromIt()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromIt()
         {
             ShouldGenerateExpectedCode(
        @"using System.ComponentModel;
@@ -134,7 +134,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromItViewAnotherViewModelAttribute()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromItViewAnotherViewModelAttribute()
         {
             ShouldGenerateExpectedCode(
        @"using System.ComponentModel;
@@ -188,7 +188,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevels()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevels()
         {
             ShouldGenerateExpectedCode(
        $@"using System.ComponentModel;
@@ -262,7 +262,7 @@ namespace MyCode
         }
 
         [Fact]
-        public void GenerateViewModelBaseNotIfClassInderictlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevelsAndWithoutViewModelAttributeOnMiddleClass()
+        public void GenerateViewModelBaseNotIfClassIndirectlyInheritsFromItViewAnotherViewModelAttributeWithMoreLevelsAndWithoutViewModelAttributeOnMiddleClass()
         {
             ShouldGenerateExpectedCode(
        $@"using System.ComponentModel;

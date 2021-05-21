@@ -57,12 +57,12 @@ namespace MyCode
         [InlineData("public", "AccessModifier.Public")]
         [InlineData("protected", "")]
         [Theory]
-        public void GeneratePropertyWithSpecifiedAccessModifier(string expectedAccessModifier, string attributeAcccessModifier)
+        public void GeneratePropertyWithSpecifiedAccessModifier(string expectedAccessModifier, string attributeAccessModifier)
         {
             var namedArgumentForAttribute = "";
-            if (attributeAcccessModifier is { Length: > 0 })
+            if (attributeAccessModifier is { Length: > 0 })
             {
-                namedArgumentForAttribute = $",PropertyAccessModifier = {attributeAcccessModifier}";
+                namedArgumentForAttribute = $",PropertyAccessModifier = {attributeAccessModifier}";
             }
 
             var expectedSetterAccessModifier = expectedAccessModifier == "private" ? "" : "private";
