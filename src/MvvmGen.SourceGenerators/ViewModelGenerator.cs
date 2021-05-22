@@ -21,7 +21,7 @@ namespace MvvmGen
     /// Generates ViewModels for classes that are decorated with the MvvmGen.ViewModelAttribute.
     /// </summary>
     [Generator]
-#if MVVMGEN_PURE_CODE_GENERATION
+#if MVVMGEN_PURECODEGENERATION
     public class ViewModelAndLibraryGenerator : ISourceGenerator
 #else
     public class ViewModelGenerator : ISourceGenerator
@@ -82,7 +82,7 @@ namespace MvvmGen
 
         public void Initialize(GeneratorInitializationContext context)
         {
-#if MVVMGEN_PURE_CODE_GENERATION
+#if MVVMGEN_PURECODEGENERATION
             context.RegisterForPostInitialization(PureCodeGenerationLibraryLoader.AddLibraryFilesToContext);
 #endif
 

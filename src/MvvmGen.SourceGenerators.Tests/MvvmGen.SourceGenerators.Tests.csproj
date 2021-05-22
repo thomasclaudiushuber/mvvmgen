@@ -7,10 +7,6 @@
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
-    <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />

@@ -4,7 +4,7 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
-#if MVVMGEN_PURE_CODE_GENERATION
+#if MVVMGEN_PURECODEGENERATION
 
 using System.IO;
 using System.Linq;
