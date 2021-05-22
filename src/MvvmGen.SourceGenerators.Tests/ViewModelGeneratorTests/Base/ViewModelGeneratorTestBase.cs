@@ -14,9 +14,23 @@ namespace MvvmGen.SourceGenerators
 {
     public class ViewModelGeneratorTestsBase
     {
+        static PortableExecutableReference[] metadataReferences;
+
+        static ViewModelGeneratorTestsBase()
+        {
+            #if(!MVVMGEN_PURE_CODE_GENERATION)
+            //Endure MvvmGen is loaded
+            System.Reflection.Assembly.Load("MvvmGen");
+            #endif
+
+            metadataReferences = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic)
+                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                .ToArray();
+        }
+
         protected static void ShouldGenerateExpectedCode(string inputCode, params string[] expectedGeneratedCode)
         {
-            var metadataReferences = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Select(a => MetadataReference.CreateFromFile(a.Location)).ToArray();
             var inputCompilation = CreateCompilation(inputCode, metadataReferences);
 
 #if MVVMGEN_PURE_CODE_GENERATION
