@@ -18,7 +18,7 @@ namespace MvvmGen.SourceGenerators
 
         static ViewModelGeneratorTestsBase()
         {
-            #if(MVVMGEN_PURE_CODE_GENERATION)
+            #if(!MVVMGEN_PURE_CODE_GENERATION)
             //Endure MvvmGen is loaded
             System.Reflection.Assembly.Load("MvvmGen");
             #endif
