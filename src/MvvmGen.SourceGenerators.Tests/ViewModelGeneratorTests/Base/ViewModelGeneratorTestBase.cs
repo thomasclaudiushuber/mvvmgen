@@ -19,8 +19,7 @@ namespace MvvmGen.SourceGenerators
 
         static ViewModelGeneratorTestsBase()
         {
-            //Endure MvvmGen assemblies are loaded
-            Assembly.Load("MvvmGen.SourceGenerators");
+            //Endure MvvmGen is loaded
             Assembly.Load("MvvmGen");
 
             metadataReferences = AppDomain.CurrentDomain.GetAssemblies()
