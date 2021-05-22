@@ -6,43 +6,31 @@
 
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using VerifyXunit;
-using VerifyTests;
 using Xunit;
 
 namespace MvvmGen.SourceGenerators
 {
-    [UsesVerify]
     public class ViewModelGeneratorTestsBase
     {
-        protected static SettingsTask VerifyGenerateCode(string inputCode, [CallerFilePath] string sourceFile = "")
+        static PortableExecutableReference[] metadataReferences;
+
+        static ViewModelGeneratorTestsBase()
         {
-            var metadataReferences = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Select(a => MetadataReference.CreateFromFile(a.Location)).ToArray();
-            var inputCompilation = CreateCompilation(inputCode, metadataReferences);
+            #if(!MVVMGEN_PURE_CODE_GENERATION)
+            //Endure MvvmGen is loaded
+            System.Reflection.Assembly.Load("MvvmGen");
+            #endif
 
-#if MVVMGEN_PURE_CODE_GENERATION
-            ViewModelAndLibraryGenerator generator = new();
-#else
-            ViewModelGenerator generator = new();
-#endif
-            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
-
-            driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out var outputCompilation, out var diagnostics);
-
-            var runResult = driver.GetRunResult();
-
-            var generatorResult = runResult.Results[0];
-            var target = generatorResult.GeneratedSources.Select(x => x.SourceText);
-            return Verifier.Verify(target, null, sourceFile);
+            metadataReferences = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic)
+                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                .ToArray();
         }
 
         protected static void ShouldGenerateExpectedCode(string inputCode, params string[] expectedGeneratedCode)
         {
-            var metadataReferences = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Select(a => MetadataReference.CreateFromFile(a.Location)).ToArray();
             var inputCompilation = CreateCompilation(inputCode, metadataReferences);
 
 #if MVVMGEN_PURE_CODE_GENERATION
