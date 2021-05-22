@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
@@ -14,9 +15,22 @@ namespace MvvmGen.SourceGenerators
 {
     public class ViewModelGeneratorTestsBase
     {
+        static PortableExecutableReference[] metadataReferences;
+
+        static ViewModelGeneratorTestsBase()
+        {
+            //Endure MvvmGen assemblies are loaded
+            Assembly.Load("MvvmGen.SourceGenerators");
+            Assembly.Load("MvvmGen");
+
+            metadataReferences = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic)
+                .Select(a => MetadataReference.CreateFromFile(a.Location))
+                .ToArray();
+        }
+
         protected static void ShouldGenerateExpectedCode(string inputCode, params string[] expectedGeneratedCode)
         {
-            var metadataReferences = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Select(a => MetadataReference.CreateFromFile(a.Location)).ToArray();
             var inputCompilation = CreateCompilation(inputCode, metadataReferences);
 
 #if MVVMGEN_PURE_CODE_GENERATION
