@@ -10,7 +10,6 @@
   </PropertyGroup>
   <PropertyGroup  Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <AssemblyName>MvvmGen.PureCodeGeneration.SourceGenerators</AssemblyName>
-    <DefineConstants>MVVMGEN_PURE_CODE_GENERATION</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
