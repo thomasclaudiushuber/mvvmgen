@@ -5,7 +5,6 @@
 // ***********************************************************************
 
 using System.Threading.Tasks;
-using VerifyXunit;
 using Xunit;
 
 namespace MvvmGen.SourceGenerators
