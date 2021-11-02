@@ -30,7 +30,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel()
         {{
@@ -61,7 +61,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
     }}
 }}
@@ -87,7 +87,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         protected string InjectedString {{ get; private set; }}
     }}
@@ -105,7 +105,7 @@ using MvvmGen.ViewModels;
 
 namespace MyCode
 {
-  public class CustomViewModelBase : ViewModelBase
+  public class CustomViewModelBase : global::MvvmGen.ViewModels.ViewModelBase
   {
     protected void OnPropertyChanged(string propertyName) { }
   }
@@ -158,7 +158,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class CustomViewModelBase : ViewModelBase
+    partial class CustomViewModelBase : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public CustomViewModelBase()
         {{
@@ -217,7 +217,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class MoreCustomViewModelBase : ViewModelBase
+    partial class MoreCustomViewModelBase : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public MoreCustomViewModelBase()
         {{
@@ -291,7 +291,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class MoreCustomViewModelBase : ViewModelBase
+    partial class MoreCustomViewModelBase : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public MoreCustomViewModelBase()
         {{
@@ -346,7 +346,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel()
         {{
@@ -416,7 +416,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel()
         {{
