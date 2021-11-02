@@ -15,7 +15,7 @@ namespace MvvmGen.Generators
         {
             var inheritFromViewModelBaseClass = !InheritsFromViewModelBase(viewModelClassSymbol, viewModelBaseSymbol);
 
-            vmBuilder.AppendLine($"partial class {viewModelClassSymbol.Name}" + (inheritFromViewModelBaseClass ? " : MvvmGen.ViewModels.ViewModelBase" : ""));
+            vmBuilder.AppendLine($"partial class {viewModelClassSymbol.Name}" + (inheritFromViewModelBaseClass ? " : global::MvvmGen.ViewModels.ViewModelBase" : ""));
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
         }

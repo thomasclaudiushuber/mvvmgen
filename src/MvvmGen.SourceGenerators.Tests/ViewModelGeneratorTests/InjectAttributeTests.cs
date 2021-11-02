@@ -34,7 +34,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel(MyCode.IEmployeeDataProvider {expectedConstructorParameterName})
         {{
@@ -85,7 +85,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel(MyCode.INavigationViewModel navigationViewModel)
         {{
@@ -120,7 +120,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel(MvvmGen.Events.IEventAggregator eventAggregator)
         {{
@@ -163,7 +163,7 @@ namespace MyCode
 
 namespace MyCode
 {{
-    partial class EmployeeViewModel : ViewModelBase
+    partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
         public EmployeeViewModel(MyCode.IEventAggregator eventAggregator, MyCode.IEmployeeDataProvider employeeDataProvider, MyCode.IDialogService dialogService)
         {{
