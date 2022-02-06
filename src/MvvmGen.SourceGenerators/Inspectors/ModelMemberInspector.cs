@@ -32,7 +32,7 @@ namespace MvvmGen.Inspectors
                 if (modelTypedConstant.Value.Value is INamedTypeSymbol model)
                 {
                     wrappedModelType = $"{model}";
-                    var members = model.GetMembers();
+                    var members = GetAllMembers(model);
                     foreach (var member in members)
                     {
                         if (member is IMethodSymbol { MethodKind: MethodKind.PropertyGet } methodSymbol)
@@ -49,6 +49,18 @@ namespace MvvmGen.Inspectors
             }
 
             return wrappedModelType;
+        }
+
+        private static IEnumerable<ISymbol> GetAllMembers(INamedTypeSymbol model)
+        {
+            List<ISymbol> members = new(model.GetMembers());
+            while (model.BaseType is not null)
+            {
+                members.InsertRange(0, model.BaseType.GetMembers());
+                model = model.BaseType;
+            }
+
+            return members;
         }
     }
 }
