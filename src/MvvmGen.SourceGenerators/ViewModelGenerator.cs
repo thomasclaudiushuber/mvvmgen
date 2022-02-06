@@ -110,7 +110,9 @@ namespace MvvmGen
 
                 if (viewModelClassSymbol is not null && viewModelAttributeData is not null)
                 {
-                    var (commandsToGenerate, propertiesToGenerate) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
+                    var (commandsToGenerate, 
+                        propertiesToGenerate,
+                        propertyInvalidationsByGeneratedPropertyName) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
 
                     var viewModelToGenerate = new ViewModelToGenerate(viewModelClassSymbol)
                     {
@@ -123,11 +125,26 @@ namespace MvvmGen
 
                     viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
 
+                    SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate,propertyInvalidationsByGeneratedPropertyName);
+
                     SetCommandsToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
 
                     viewModelToGenerate.IsEventSubscriber = viewModelClassSymbol.Interfaces.Any(x => x.ToDisplayString().StartsWith("MvvmGen.Events.IEventSubscriber"));
 
                     ViewModelsToGenerate.Add(viewModelToGenerate);
+                }
+            }
+        }
+
+        private void SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(IList<PropertyToGenerate> propertiesToGenerate, 
+            Dictionary<string, List<string>> propertyInvalidationsByGeneratedPropertyName)
+        {
+            foreach (var propertiesToInvalidate in propertyInvalidationsByGeneratedPropertyName)
+            {
+                var propertyToGenerate = propertiesToGenerate.SingleOrDefault(x => x.PropertyName == propertiesToInvalidate.Key);
+                if (propertyToGenerate is not null)
+                {
+                    propertyToGenerate.PropertiesToInvalidate = propertiesToInvalidate.Value;
                 }
             }
         }
