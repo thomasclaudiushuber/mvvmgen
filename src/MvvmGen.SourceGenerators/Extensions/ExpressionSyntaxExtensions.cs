@@ -8,15 +8,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace MvvmGen.Extensions
 {
-    public static class AttributeArgumentSyntaxExtensions
+    public static class ExpressionSyntaxExtensions
     {
-        public static string GetStringValueFromAttributeArgument(this AttributeArgumentSyntax attributeArgumentSyntax)
+        public static string GetStringValueFromExpression(this ExpressionSyntax expressionSyntax)
         {
-            var stringValue = attributeArgumentSyntax.Expression switch
+            var stringValue = expressionSyntax switch
             {
                 InvocationExpressionSyntax invocationExpressionSyntax => invocationExpressionSyntax.ArgumentList.Arguments[0].ToString(),
                 LiteralExpressionSyntax literalExpressionSyntax => literalExpressionSyntax.Token.ValueText,
-                _ => attributeArgumentSyntax.Expression.ToString()
+                _ => expressionSyntax.ToString()
             };
 
             return stringValue;

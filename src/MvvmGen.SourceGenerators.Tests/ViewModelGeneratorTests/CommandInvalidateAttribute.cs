@@ -12,6 +12,10 @@ namespace MvvmGen.SourceGenerators
     {
         [InlineData(true, true, false, "[CommandInvalidate(nameof(FirstName),nameof(LastName))]")]
         [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\",\"LastName\")]")]
+        [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\",new string[]{\"LastName\"})]")]
+        [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\",new[]{\"LastName\"})]")]
+        [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\",new string[]{nameof(LastName)})]")]
+        [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\",new[]{nameof(LastName)})]")]
         [InlineData(true, true, false, "[CommandInvalidate(nameof(FirstName))]\r\n[CommandInvalidate(nameof(LastName))]")]
         [InlineData(true, true, false, "[CommandInvalidate(\"FirstName\")]\r\n[CommandInvalidate(\"LastName\"))]")]
         [InlineData(true, false, false, "[CommandInvalidate(nameof(FirstName))]")]
