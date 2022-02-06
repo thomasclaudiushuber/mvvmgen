@@ -15,7 +15,9 @@ namespace MvvmGen.Inspectors
 {
     internal static class ViewModelMemberInspector
     {
-        internal static (List<CommandToGenerate> CommandsToGenerate, List<PropertyToGenerate> PropertiesToGenerate)
+        internal static (List<CommandToGenerate> CommandsToGenerate,
+                         List<PropertyToGenerate> PropertiesToGenerate,
+                         Dictionary<string,List<string>> PropertyInvalidationsByGeneratedPropertyName)
             Inspect(INamedTypeSymbol viewModelClassSymbol)
         {
             var commandsToGenerate = new List<CommandToGenerate>();
@@ -41,15 +43,6 @@ namespace MvvmGen.Inspectors
                 }
             }
 
-            foreach (var propertiesToInvalidate in propertyInvalidationsByGeneratedPropertyName)
-            {
-                var propertyToGenerate = propertiesToGenerate.SingleOrDefault(x => x.PropertyName == propertiesToInvalidate.Key);
-                if (propertyToGenerate is not null)
-                {
-                    propertyToGenerate.PropertiesToInvalidate = propertiesToInvalidate.Value;
-                }
-            }
-
             foreach (var commandInfo in commandsToGenerate)
             {
                 var canExecuteAffectingProperties = new List<string>();
@@ -58,7 +51,7 @@ namespace MvvmGen.Inspectors
                 commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
             }
 
-            return (commandsToGenerate, propertiesToGenerate);
+            return (commandsToGenerate, propertiesToGenerate,propertyInvalidationsByGeneratedPropertyName);
         }
 
         private static void FindPropertyInvalidations(Dictionary<string, List<string>> propertyInvalidationsByPropertyName, IPropertySymbol propertySymbol)
