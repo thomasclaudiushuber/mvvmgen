@@ -12,7 +12,11 @@ namespace MvvmGen.SourceGenerators
     {
         [InlineData(true, false, "[PropertyInvalidate(nameof(FirstName))]\n[PropertyInvalidate(nameof(FirstName))]")]
         [InlineData(true, true, "[PropertyInvalidate(nameof(FirstName), nameof(LastName))]")]
+        [InlineData(true, true, "[PropertyInvalidate(nameof(FirstName), new string[]{nameof(LastName)})]")]
+        [InlineData(true, true, "[PropertyInvalidate(nameof(FirstName), new[]{nameof(LastName)})]")]
         [InlineData(true, true, "[PropertyInvalidate(\"FirstName\", \"LastName\")]")]
+        [InlineData(true, true, "[PropertyInvalidate(\"FirstName\", new string[]{\"LastName\"})]")]
+        [InlineData(true, true, "[PropertyInvalidate(\"FirstName\", new[]{\"LastName\"})]")]
         [InlineData(true, true, "[PropertyInvalidate(nameof(FirstName))]\n[PropertyInvalidate(nameof(LastName))]")]
         [InlineData(true, true, "[PropertyInvalidate(\"FirstName\")]\n[PropertyInvalidate(\"LastName\")]")]
         [InlineData(true, false, "[PropertyInvalidate(\"FirstName\")]")]
