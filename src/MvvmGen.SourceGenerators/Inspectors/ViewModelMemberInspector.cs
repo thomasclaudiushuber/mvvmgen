@@ -71,7 +71,7 @@ namespace MvvmGen.Inspectors
                 var propertyNameWithAttributes = propertySymbol.Name;
 
                 var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
-                var propertyNames = attributeSyntax?.ArgumentList?.Arguments.Select(x => x.Expression.GetStringValueFromExpression());
+                var propertyNames = attributeSyntax?.ArgumentList?.Arguments.SelectMany(x => x.GetStringValues());
 
                 if (propertyNames is not null)
                 {
@@ -279,7 +279,7 @@ namespace MvvmGen.Inspectors
                     //}
 
                     var attributeSyntax = ((AttributeSyntax?)attr.ApplicationSyntaxReference?.GetSyntax());
-                    var propertyNames = attributeSyntax?.ArgumentList?.Arguments.SelectMany(x => GetStringValues(x));
+                    var propertyNames = attributeSyntax?.ArgumentList?.Arguments.SelectMany(x => x.GetStringValues());
 
                     if (propertyNames is not null)
                     {
@@ -294,39 +294,6 @@ namespace MvvmGen.Inspectors
                             }
                         }
                     }
-                }
-            }
-        }
-
-        private static IEnumerable<string> GetStringValues(AttributeArgumentSyntax syntax)
-        {
-            if (syntax.Expression is ArrayCreationExpressionSyntax arrayCreationSyntax)
-            {
-                foreach (var str in GetStringsFromArrayInitializer(arrayCreationSyntax.Initializer))
-                {
-                    yield return str;
-                }
-            }
-            else if (syntax.Expression is ImplicitArrayCreationExpressionSyntax implicitArrayCreationSyntax)
-            {
-                foreach (var str in GetStringsFromArrayInitializer(implicitArrayCreationSyntax.Initializer))
-                {
-                    yield return str;
-                }
-            }
-            else
-            {
-                yield return syntax.Expression.GetStringValueFromExpression();
-            }
-        }
-
-        private static IEnumerable<string> GetStringsFromArrayInitializer(InitializerExpressionSyntax? initializer)
-        {
-            if (initializer is not null)
-            {
-                foreach (var initializerExpression in initializer.Expressions)
-                {
-                    yield return initializerExpression.GetStringValueFromExpression();
                 }
             }
         }
