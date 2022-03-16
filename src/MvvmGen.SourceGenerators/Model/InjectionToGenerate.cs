@@ -15,7 +15,7 @@ namespace MvvmGen.Model
         }
         public string Type { get; }
 
-        public string PropertyName { get; }
+        public string PropertyName { get; internal set; }
 
         public string PropertyAccessModifier { get; set; } = "protected";
 
