@@ -5,10 +5,10 @@
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup  Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
+  <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
     <AssemblyName>MvvmGen.SourceGenerators</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup  Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
+  <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <AssemblyName>MvvmGen.PureCodeGeneration.SourceGenerators</AssemblyName>
   </PropertyGroup>
 
@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
