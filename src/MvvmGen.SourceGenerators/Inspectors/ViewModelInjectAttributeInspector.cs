@@ -43,7 +43,13 @@ namespace MvvmGen.Inspectors
                 {
                     if (propertyName is null)
                     {
-                        var typeNameWithoutNamespace = injectedType.Split('.').Last();
+                        var typeWithNamespace = injectedType;
+                        if (typeWithNamespace.Contains("<"))
+                        {
+                            typeWithNamespace = typeWithNamespace.Substring(0, typeWithNamespace.IndexOf("<"));
+                        }
+
+                        var typeNameWithoutNamespace = typeWithNamespace.Split('.').Last();
                         var isInterface = typeNameWithoutNamespace.StartsWith("I") && char.IsUpper(typeNameWithoutNamespace[0]) && char.IsUpper(typeNameWithoutNamespace[1]);
                         propertyName = isInterface
                             ? typeNameWithoutNamespace.Substring(1)
@@ -60,6 +66,18 @@ namespace MvvmGen.Inspectors
                             _ => "protected"
                         }
                     });
+                }
+            }
+
+            // Can be if same generic interface is injected multiple times
+            var duplicatePropertyGroups = injectionsToGenerate.GroupBy(x => x.PropertyName).Where(g => g.Count() > 1);
+
+            foreach (var duplicatePropertyGroup in duplicatePropertyGroups)
+            {
+                var count = 1;
+                foreach (var injectionToGenerate in duplicatePropertyGroup)
+                {
+                    injectionToGenerate.PropertyName = injectionToGenerate.PropertyName + count++;
                 }
             }
 
