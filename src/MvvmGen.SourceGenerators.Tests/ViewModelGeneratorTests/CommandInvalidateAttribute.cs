@@ -23,14 +23,42 @@ namespace MvvmGen.SourceGenerators
         [InlineData(true, false, true, "[CommandInvalidate(nameof(FirstName))]")]
         [InlineData(true, false, true, "[CommandInvalidate(\"FirstName\")]")]
         [Theory]
-        public void RaiseCanExecuteChangedInFirstNameProperty(bool isCallInFirstNamePropExpected, bool isCallInLastNamePropExpected,
-            bool putAttributeOnExecuteMethod, string commandInvalidateAttribute)
+        public void RaiseCanExecuteChangedInFirstNameProperty(
+            bool isCallInFirstNamePropExpected,
+            bool isCallInLastNamePropExpected,
+            bool putAttributeOnExecuteMethod,
+            string commandInvalidateAttribute)
         {
-            var commandCall = @"                    SaveCommand.RaiseCanExecuteChanged();
-";
+            var expectedIfElseBlock = "";
 
-            var expectedCallInFirstNameProp = isCallInFirstNamePropExpected ? commandCall : "";
-            var expectedCallInLastNameProp = isCallInLastNamePropExpected ? commandCall : "";
+            if (isCallInFirstNamePropExpected && isCallInLastNamePropExpected)
+            {
+                expectedIfElseBlock = 
+                $@"if (propertyName == ""FirstName"")
+                {{
+                    SaveCommand.RaiseCanExecuteChanged();
+                }}
+                else if (propertyName == ""LastName"")
+                {{
+                    SaveCommand.RaiseCanExecuteChanged();
+                }}";
+            }
+            else if (isCallInFirstNamePropExpected)
+            {
+                expectedIfElseBlock =
+               $@"if (propertyName == ""FirstName"")
+                {{
+                    SaveCommand.RaiseCanExecuteChanged();
+                }}";
+            }
+            else if (isCallInLastNamePropExpected)
+            {
+                expectedIfElseBlock =
+               $@"if (propertyName == ""LastName"")
+                {{
+                    SaveCommand.RaiseCanExecuteChanged();
+                }}";
+            }
 
             ShouldGenerateExpectedCode(
       $@"using MvvmGen;
@@ -82,7 +110,7 @@ namespace MyCode
                 {{
                     _firstName = value;
                     OnPropertyChanged(""FirstName"");
-{expectedCallInFirstNameProp}                }}
+                }}
             }}
         }}
 
@@ -95,8 +123,14 @@ namespace MyCode
                 {{
                     _lastName = value;
                     OnPropertyChanged(""LastName"");
-{expectedCallInLastNameProp}                }}
+                }}
             }}
+        }}
+
+        protected override void InvalidateCommands(string? propertyName)
+        {{
+            base.InvalidateCommands(propertyName);
+            {expectedIfElseBlock}
         }}
     }}
 }}
