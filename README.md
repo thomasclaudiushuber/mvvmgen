@@ -146,7 +146,6 @@ namespace MyWpfApp
         {
           _firstName = value;
           OnPropertyChanged("FirstName");
-          SaveCommand.RaiseCanExecuteChanged();
         }
       }
     }
@@ -165,6 +164,15 @@ namespace MyWpfApp
     }
 
     protected MvvmGen.Events.IEventAggregator EventAggregator { get; private set; }
+    
+    protected override void InvalidateCommands(string? propertyName)
+    {
+      base.InvalidateCommands(propertyName);
+      if(propertyName == "FirstName")
+      {
+          SaveCommand.RaiseCanExecuteChanged();
+      }
+    }
   }
 }
 ```
