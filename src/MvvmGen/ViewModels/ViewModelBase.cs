@@ -41,7 +41,7 @@ namespace MvvmGen.ViewModels
         /// <summary>
         /// Invalidates the commands for the changed propertyName
         /// </summary>
-        /// <param name="changedPropertyName">The name of the changed property.</param>
-        protected virtual void InvalidateCommands(string? changedPropertyName) { }
+        /// <param name="propertyName">The name of the changed property.</param>
+        protected virtual void InvalidateCommands(string? propertyName) { }
     }
 }
