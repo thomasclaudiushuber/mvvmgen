@@ -16,13 +16,15 @@ namespace MvvmGen.Inspectors
     internal static class ViewModelMemberInspector
     {
         internal static (List<CommandToGenerate> CommandsToGenerate,
+                         Dictionary<string, List<string>> CommandsToInvalidateByPropertyName,
                          List<PropertyToGenerate> PropertiesToGenerate,
-                         Dictionary<string,List<string>> PropertyInvalidationsByGeneratedPropertyName)
+                         Dictionary<string, List<string>> PropertyInvalidationsByGeneratedPropertyName)
             Inspect(INamedTypeSymbol viewModelClassSymbol)
         {
             var commandsToGenerate = new List<CommandToGenerate>();
             var propertiesToGenerate = new List<PropertyToGenerate>();
             var commandPropertyInvalidationsByMethodName = new Dictionary<string, List<string>>();
+            var commandsToInvalidateByPropertyName = new Dictionary<string, List<string>>();
             var propertyInvalidationsByGeneratedPropertyName = new Dictionary<string, List<string>>();
 
             var viewModelMembers = viewModelClassSymbol.GetMembers();
@@ -45,13 +47,12 @@ namespace MvvmGen.Inspectors
 
             foreach (var commandInfo in commandsToGenerate)
             {
-                var canExecuteAffectingProperties = new List<string>();
-                AddPropertyNames(commandInfo.CanExecuteMethod?.Name, canExecuteAffectingProperties, commandPropertyInvalidationsByMethodName);
-                AddPropertyNames(commandInfo.ExecuteMethod.Name, canExecuteAffectingProperties, commandPropertyInvalidationsByMethodName);
-                commandInfo.CanExecuteAffectingProperties = canExecuteAffectingProperties.ToArray();
+                AddCommandToInvalidateToDictionary(commandInfo,
+                    commandsToInvalidateByPropertyName,
+                    commandPropertyInvalidationsByMethodName);
             }
 
-            return (commandsToGenerate, propertiesToGenerate,propertyInvalidationsByGeneratedPropertyName);
+            return (commandsToGenerate, commandsToInvalidateByPropertyName, propertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
         }
 
         private static void FindPropertyInvalidations(Dictionary<string, List<string>> propertyInvalidationsByPropertyName, IPropertySymbol propertySymbol)
@@ -291,21 +292,24 @@ namespace MvvmGen.Inspectors
             }
         }
 
-        private static void AddPropertyNames(string? methodName, List<string> canExecuteAffectingProperties, Dictionary<string, List<string>> propertyInvalidations)
+        private static void AddCommandToInvalidateToDictionary(CommandToGenerate commandInfo,
+            Dictionary<string, List<string>> commandsToInvalidateByPropertyName,
+            Dictionary<string, List<string>> commandPropertyInvalidationsByMethodName)
         {
-            if (methodName is null)
-            {
-                return;
-            }
+            var propertyNames = commandPropertyInvalidationsByMethodName.Where(x =>
+             x.Key == commandInfo.ExecuteMethod.Name
+             || x.Key == commandInfo.CanExecuteMethod?.Name)
+                 .SelectMany(x => x.Value);
 
-            if (propertyInvalidations.ContainsKey(methodName))
+            foreach (var propertyName in propertyNames)
             {
-                foreach (var propertyName in propertyInvalidations[methodName])
+                if (!commandsToInvalidateByPropertyName.ContainsKey(propertyName))
                 {
-                    if (!canExecuteAffectingProperties.Contains(propertyName))
-                    {
-                        canExecuteAffectingProperties.Add(propertyName);
-                    }
+                    commandsToInvalidateByPropertyName[propertyName] = new List<string>();
+                }
+                if (!commandsToInvalidateByPropertyName[propertyName].Contains(commandInfo.PropertyName))
+                {
+                    commandsToInvalidateByPropertyName[propertyName].Add(commandInfo.PropertyName);
                 }
             }
         }

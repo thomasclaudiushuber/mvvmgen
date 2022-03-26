@@ -63,8 +63,8 @@ private bool CanSave()
 ## Invalidate Commands
 
 Look at the following `CanSave` method. It depends on the properties `FirstName` and `LastName`.
-That means the `SaveCommand` should raise its `CanExecuteChanged` event in the setters of the properties
-`FirstName` and `LastName`.
+That means the `SaveCommand` should raise its `CanExecuteChanged` event when the properties
+`FirstName` and `LastName` were changed.
 
 ```csharp
 [ViewModel]
@@ -84,7 +84,7 @@ public partial class EmployeeViewModel
 }
 ```
 
-To raise the `CanExecuteChanged` event for a command in a property setter, you use the `CommandInvalidate` attribute like below:
+To raise the `CanExecuteChanged` event for a command when a property changes, you use the `CommandInvalidate` attribute like below:
 
 ```csharp
 [CommandInvalidate(nameof(FirstName))]
@@ -144,8 +144,8 @@ public partial class EmployeeViewModel
 ```
 
 Now, with the `CommandInvalidate` attribute in place, the generated partial class for the ViewModel above looks like below.
-Note how the RaiseCanExecuteChanged method of the `SaveCommand` is now called in the setters of the 
-properties `FirstName` and `LastName`.
+Note the added override of the `InvalidateCommands` method of the `ViewModelBase` class. It calls the `RaiseCanExecuteChanged`
+method of the `SaveCommand` when the properties `FirstName` or `LastName` were changed.
 
 ```csharp
 partial class EmployeeViewModel : ViewModelBase
@@ -174,7 +174,6 @@ partial class EmployeeViewModel : ViewModelBase
       {
         _firstName = value;
         OnPropertyChanged("FirstName");
-        SaveCommand.RaiseCanExecuteChanged();
       }
     }
   }
@@ -188,8 +187,20 @@ partial class EmployeeViewModel : ViewModelBase
       {
         _lastName = value;
         OnPropertyChanged("LastName");
-        SaveCommand.RaiseCanExecuteChanged();
       }
+    }
+  }
+
+  protected override void InvalidateCommands(string? propertyName)
+  {
+    base.InvalidateCommands(propertyName);
+    if (propertyName == "FirstName")
+    {
+      SaveCommand.RaiseCanExecuteChanged();
+    }
+    else if (propertyName == "LastName")
+    {
+      SaveCommand.RaiseCanExecuteChanged();
     }
   }
 }

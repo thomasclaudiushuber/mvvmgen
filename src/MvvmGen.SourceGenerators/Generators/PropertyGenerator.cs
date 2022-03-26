@@ -55,13 +55,6 @@ namespace MvvmGen
                     vmBuilder.AppendLine($"OnPropertyChanged(\"{propertyToInvalidate}\");");
                 }
             }
-            if (p.CommandsToInvalidate is not null)
-            {
-                foreach (var commandToInvalidate in p.CommandsToInvalidate)
-                {
-                    vmBuilder.AppendLine($"{commandToInvalidate.PropertyName}.RaiseCanExecuteChanged();");
-                }
-            }
             if (p.EventsToPublish is not null)
             {
                 foreach (var eventToPublish in p.EventsToPublish)

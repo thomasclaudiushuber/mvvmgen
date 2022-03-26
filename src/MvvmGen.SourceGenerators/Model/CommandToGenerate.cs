@@ -19,8 +19,6 @@ namespace MvvmGen.Model
         public string PropertyName { get; }
 
         public MethodInfo? CanExecuteMethod { get; set; }
-
-        public string[]? CanExecuteAffectingProperties { get; set; }
     }
 
     internal struct MethodInfo
