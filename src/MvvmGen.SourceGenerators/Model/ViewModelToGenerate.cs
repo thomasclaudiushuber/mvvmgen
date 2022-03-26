@@ -29,6 +29,8 @@ namespace MvvmGen.Model
 
         public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
 
+        public IDictionary<string, List<string>>? CommandsToInvalidateByPropertyName { get; set; }
+
         public IList<PropertyToGenerate>? PropertiesToGenerate { get; set; }
 
         public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; set; }

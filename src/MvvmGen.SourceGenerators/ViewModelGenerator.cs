@@ -61,6 +61,8 @@ namespace MvvmGen
 
                     vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
 
+                    vmBuilder.GenerateInvalidateCommandsMethod(viewModelToGenerate.CommandsToInvalidateByPropertyName);
+
                     while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a factory class
                     {
                         vmBuilder.DecreaseIndent();
@@ -110,7 +112,8 @@ namespace MvvmGen
 
                 if (viewModelClassSymbol is not null && viewModelAttributeData is not null)
                 {
-                    var (commandsToGenerate, 
+                    var (commandsToGenerate,
+                        commandsToInvalidateByPropertyName,
                         propertiesToGenerate,
                         propertyInvalidationsByGeneratedPropertyName) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
 
@@ -120,14 +123,13 @@ namespace MvvmGen
                         GenerateConstructor = ViewModelAttributeInspector.Inspect(viewModelAttributeData),
                         ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
                         CommandsToGenerate = commandsToGenerate,
-                        PropertiesToGenerate = propertiesToGenerate
+                        PropertiesToGenerate = propertiesToGenerate,
+                        CommandsToInvalidateByPropertyName = commandsToInvalidateByPropertyName
                     };
 
                     viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
 
-                    SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate,propertyInvalidationsByGeneratedPropertyName);
-
-                    SetCommandsToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
+                    SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
 
                     viewModelToGenerate.IsEventSubscriber = viewModelClassSymbol.Interfaces.Any(x => x.ToDisplayString().StartsWith("MvvmGen.Events.IEventSubscriber"));
 
@@ -136,7 +138,7 @@ namespace MvvmGen
             }
         }
 
-        private void SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(IList<PropertyToGenerate> propertiesToGenerate, 
+        private void SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(IList<PropertyToGenerate> propertiesToGenerate,
             Dictionary<string, List<string>> propertyInvalidationsByGeneratedPropertyName)
         {
             foreach (var propertiesToInvalidate in propertyInvalidationsByGeneratedPropertyName)
@@ -146,20 +148,6 @@ namespace MvvmGen
                 {
                     propertyToGenerate.PropertiesToInvalidate = propertiesToInvalidate.Value;
                 }
-            }
-        }
-
-        private static void SetCommandsToInvalidatePropertyOnPropertiesToGenerate(
-            IEnumerable<PropertyToGenerate> propertiesToGenerate,
-            IEnumerable<CommandToGenerate> commandsToGenerate)
-        {
-            var commandsWithInvalidationProperties = commandsToGenerate.Where(x => x.CanExecuteAffectingProperties is not null);
-
-            foreach (var propertyToGenerate in propertiesToGenerate)
-            {
-                propertyToGenerate.CommandsToInvalidate = commandsWithInvalidationProperties
-                    .Where(x => x.CanExecuteAffectingProperties.Contains(propertyToGenerate.PropertyName))
-                    .ToList();
             }
         }
     }
