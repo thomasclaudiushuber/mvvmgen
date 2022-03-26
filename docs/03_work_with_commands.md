@@ -130,7 +130,6 @@ public partial class EmployeeViewModel
   [Property] private string _firstName;
   [Property] private string _lastName;
 
-
   [Command(CanExecuteMethod = nameof(CanSave))]
   private void Save() { }
 
@@ -270,7 +269,7 @@ When you define it on your execute method, it doesn't mean that you have to defi
 [ViewModel]
 public partial class EmployeeViewModel
 {
-  [Command(CanExecuteMethod =nameof(CanSave))]
+  [Command(CanExecuteMethod = nameof(CanSave))]
   private void Save(object obj) { }
 
   private bool CanSave() { return true;  }
@@ -282,7 +281,7 @@ Also the other way, defining it on the can-execute method, but not on the execut
 [ViewModel]
 public partial class EmployeeViewModel
 {
-  [Command(CanExecuteMethod =nameof(CanSave))]
+  [Command(CanExecuteMethod = nameof(CanSave))]
   private void Save() { }
 
   private bool CanSave(object obj) { return true;  }
@@ -294,7 +293,7 @@ And of course, you can also define it on both methods:
 [ViewModel]
 public partial class EmployeeViewModel
 {
-  [Command(CanExecuteMethod =nameof(CanSave))]
+  [Command(CanExecuteMethod = nameof(CanSave))]
   private void Save(object obj) { }
 
   private bool CanSave(object obj) { return true;  }
