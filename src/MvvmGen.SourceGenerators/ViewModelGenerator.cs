@@ -43,6 +43,8 @@ namespace MvvmGen
 
                     vmBuilder.GenerateCommentHeader(versionString);
 
+                    vmBuilder.GenerateNullableDirective();
+
                     vmBuilder.GenerateUsingDirectives();
 
                     vmBuilder.GenerateNamespace(viewModelToGenerate.ViewModelClassSymbol);
