@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MvvmGen
+namespace MvvmGen.Generators
 {
     internal static class CommandInvalidateMethodGenerator
     {

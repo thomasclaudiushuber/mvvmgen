@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using MvvmGen.Model;
 
-namespace MvvmGen
+namespace MvvmGen.Generators
 {
     internal static class InjectionPropertyGenerator
     {

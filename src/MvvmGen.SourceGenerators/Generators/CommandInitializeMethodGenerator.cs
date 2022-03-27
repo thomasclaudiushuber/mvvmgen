@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MvvmGen.Model;
 
-namespace MvvmGen
+namespace MvvmGen.Generators
 {
     internal static class CommandInitializeMethodGenerator
     {
