@@ -25,6 +25,15 @@ namespace MvvmGen.Generators
 
             var injectionsToGenerate = viewModelToGenerate.InjectionsToGenerate ?? Enumerable.Empty<InjectionToGenerate>();
 
+            if (viewModelToGenerate.IsEventSubscriber
+                && !injectionsToGenerate.Any(x => x.Type == "MvvmGen.Events.IEventAggregator"))
+            {
+                injectionsToGenerate = new[]
+                {
+                    new InjectionToGenerate("MvvmGen.Events.IEventAggregator","EventAggregator")
+                }.Concat(injectionsToGenerate);
+            }
+
             var accessModifier = viewModelToGenerate.ViewModelClassSymbol.DeclaredAccessibility switch
             {
                 Accessibility.Public => "public",
