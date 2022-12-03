@@ -22,11 +22,7 @@ namespace MvvmGen
     /// Generates ViewModels for classes that are decorated with the MvvmGen.ViewModelAttribute.
     /// </summary>
     [Generator]
-#if MVVMGEN_PURECODEGENERATION
-    public class ViewModelAndLibraryGenerator : IIncrementalGenerator
-#else
     public class ViewModelGenerator : IIncrementalGenerator
-#endif
     {
         private static readonly string _versionString;
 
@@ -62,7 +58,7 @@ namespace MvvmGen
         {
             var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
             var viewModelClassSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
-            var viewModelAttributeData = viewModelClassSymbol?.GetAttributes().First(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelAttribute");
+            var viewModelAttributeData = viewModelClassSymbol?.GetAttributes().FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelAttribute");
 
             if (viewModelClassSymbol is null || viewModelAttributeData is null)
             {
