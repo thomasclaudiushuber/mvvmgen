@@ -5,6 +5,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -22,134 +23,142 @@ namespace MvvmGen
     /// </summary>
     [Generator]
 #if MVVMGEN_PURECODEGENERATION
-    public class ViewModelAndLibraryGenerator : ISourceGenerator
+    public class ViewModelAndLibraryGenerator : IIncrementalGenerator
 #else
-    public class ViewModelGenerator : ISourceGenerator
+    public class ViewModelGenerator : IIncrementalGenerator
 #endif
     {
-        public void Execute(GeneratorExecutionContext context)
+        private static readonly string _versionString;
+
+        static ViewModelGenerator()
         {
-            if (context.SyntaxContextReceiver is not SyntaxReceiver receiver)
+            _versionString = typeof(ViewModelGenerator).Assembly.GetName().Version.ToString(3);
+        }
+
+        public void Initialize(IncrementalGeneratorInitializationContext context)
+        {
+            var viewModelBaseSymbol = context.CompilationProvider
+                .Select(static (c, _) => c.GetTypeByMetadataName("MvvmGen.ViewModels.ViewModelBase"));
+
+            var viewModelsToGenerate = context.SyntaxProvider.CreateSyntaxProvider(
+                 predicate: static (s, _) => IsClassWithAttributes(s),
+                 transform: static (s, _) => BuildViewModelToGenerate(s))
+                 .Where(x => x is not null)
+                 .Collect();
+
+            var combined = viewModelBaseSymbol.Combine(viewModelsToGenerate);
+
+            context.RegisterSourceOutput(combined,
+                static (spc, source) => Execute(spc, source.Left, source.Right!));
+
+#if MVVMGEN_PURECODEGENERATION
+            context.RegisterPostInitializationOutput(PureCodeGenerationLibraryLoader.AddLibraryFilesToContext);
+#endif
+        }
+
+        private static bool IsClassWithAttributes(SyntaxNode s) => s is ClassDeclarationSyntax { AttributeLists: { Count: > 0 } };
+
+        private static ViewModelToGenerate? BuildViewModelToGenerate(GeneratorSyntaxContext context)
+        {
+            var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
+            var viewModelClassSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
+            var viewModelAttributeData = viewModelClassSymbol?.GetAttributes().First(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelAttribute");
+
+            if (viewModelClassSymbol is null || viewModelAttributeData is null)
+            {
+                return null;
+            }
+
+            var (commandsToGenerate,
+                commandsToInvalidateByPropertyName,
+                propertiesToGenerate,
+                propertyInvalidationsByGeneratedPropertyName) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
+
+            var viewModelToGenerate = new ViewModelToGenerate(viewModelClassSymbol)
+            {
+                InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol),
+                GenerateConstructor = ViewModelAttributeInspector.Inspect(viewModelAttributeData),
+                ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
+                CommandsToGenerate = commandsToGenerate,
+                PropertiesToGenerate = propertiesToGenerate,
+                CommandsToInvalidateByPropertyName = commandsToInvalidateByPropertyName
+            };
+
+            viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
+
+            SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
+
+            viewModelToGenerate.IsEventSubscriber = viewModelClassSymbol.Interfaces.Any(x => x.ToDisplayString().StartsWith("MvvmGen.Events.IEventSubscriber"));
+
+            return viewModelToGenerate;
+
+            static void SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(
+                IList<PropertyToGenerate> propertiesToGenerate,
+                Dictionary<string, List<string>> propertyInvalidationsByGeneratedPropertyName)
+            {
+                foreach (var propertiesToInvalidate in propertyInvalidationsByGeneratedPropertyName)
+                {
+                    var propertyToGenerate = propertiesToGenerate.SingleOrDefault(x => x.PropertyName == propertiesToInvalidate.Key);
+                    if (propertyToGenerate is not null)
+                    {
+                        propertyToGenerate.PropertiesToInvalidate = propertiesToInvalidate.Value;
+                    }
+                }
+            }
+        }
+
+        private static void Execute(SourceProductionContext spc,
+            INamedTypeSymbol? viewModelBaseSymbol,
+            ImmutableArray<ViewModelToGenerate> viewModelsToGenerate)
+        {
+            if (viewModelBaseSymbol is null)
             {
                 return;
             }
-            var versionString = GetType().Assembly.GetName().Version.ToString(3);
-            var viewModelBaseSymbol = context.Compilation.GetTypeByMetadataName("MvvmGen.ViewModels.ViewModelBase");
-            if (viewModelBaseSymbol is not null)
+
+            foreach (var viewModelToGenerate in viewModelsToGenerate)
             {
-                foreach (var viewModelToGenerate in receiver.ViewModelsToGenerate)
+                var vmBuilder = new ViewModelBuilder();
+
+                vmBuilder.GenerateCommentHeader(_versionString);
+
+                vmBuilder.GenerateNullableDirective();
+
+                vmBuilder.GenerateUsingDirectives();
+
+                vmBuilder.GenerateNamespace(viewModelToGenerate.ViewModelClassSymbol);
+
+                vmBuilder.GenerateClass(viewModelToGenerate.ViewModelClassSymbol, viewModelBaseSymbol);
+
+                vmBuilder.GenerateConstructor(viewModelToGenerate);
+
+                vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate);
+
+                vmBuilder.GenerateCommandProperties(viewModelToGenerate.CommandsToGenerate);
+
+                vmBuilder.GenerateProperties(viewModelToGenerate.PropertiesToGenerate);
+
+                vmBuilder.GenerateModelProperty(viewModelToGenerate.WrappedModelType);
+
+                vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
+
+                vmBuilder.GenerateInvalidateCommandsMethod(viewModelToGenerate.CommandsToInvalidateByPropertyName);
+
+                while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a factory class
                 {
-                    var vmBuilder = new ViewModelBuilder();
-
-                    vmBuilder.GenerateCommentHeader(versionString);
-
-                    vmBuilder.GenerateNullableDirective();
-
-                    vmBuilder.GenerateUsingDirectives();
-
-                    vmBuilder.GenerateNamespace(viewModelToGenerate.ViewModelClassSymbol);
-
-                    vmBuilder.GenerateClass(viewModelToGenerate.ViewModelClassSymbol, viewModelBaseSymbol);
-
-                    vmBuilder.GenerateConstructor(viewModelToGenerate);
-
-                    vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate);
-
-                    vmBuilder.GenerateCommandProperties(viewModelToGenerate.CommandsToGenerate);
-
-                    vmBuilder.GenerateProperties(viewModelToGenerate.PropertiesToGenerate);
-
-                    vmBuilder.GenerateModelProperty(viewModelToGenerate.WrappedModelType);
-
-                    vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
-
-                    vmBuilder.GenerateInvalidateCommandsMethod(viewModelToGenerate.CommandsToInvalidateByPropertyName);
-
-                    while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a factory class
-                    {
-                        vmBuilder.DecreaseIndent();
-                        vmBuilder.AppendLine("}");
-                    }
-
-                    vmBuilder.GenerateFactoryClass(viewModelToGenerate);
-
-                    while (vmBuilder.DecreaseIndent())
-                    {
-                        vmBuilder.AppendLine("}");
-                    }
-
-                    var sourceText = SourceText.From(vmBuilder.ToString(), Encoding.UTF8);
-                    context.AddSource($"{viewModelToGenerate.ViewModelClassSymbol.ContainingNamespace}.{viewModelToGenerate.ViewModelClassSymbol.Name}.g.cs", sourceText);
+                    vmBuilder.DecreaseIndent();
+                    vmBuilder.AppendLine("}");
                 }
-            }
-        }
 
-        public void Initialize(GeneratorInitializationContext context)
-        {
-#if MVVMGEN_PURECODEGENERATION
-            context.RegisterForPostInitialization(PureCodeGenerationLibraryLoader.AddLibraryFilesToContext);
-#endif
+                vmBuilder.GenerateFactoryClass(viewModelToGenerate);
 
-            context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
-        }
-    }
-
-    /// <summary>
-    /// Receives all the classes that have the MvvmGen.ViewModelAttribute set.
-    /// </summary>
-    internal class SyntaxReceiver : ISyntaxContextReceiver
-    {
-        public List<ViewModelToGenerate> ViewModelsToGenerate { get; } = new();
-
-        /// <summary>
-        /// Called for every syntax node in the compilation, we can inspect the nodes and save any information useful for generation
-        /// </summary>
-        public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
-        {
-            if (context.Node is ClassDeclarationSyntax
-                { AttributeLists: { Count: > 0 } } classDeclarationSyntax)
-            {
-                var viewModelClassSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
-                var viewModelAttributeData = viewModelClassSymbol?.GetAttributes().SingleOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelAttribute");
-
-                if (viewModelClassSymbol is not null && viewModelAttributeData is not null)
+                while (vmBuilder.DecreaseIndent())
                 {
-                    var (commandsToGenerate,
-                        commandsToInvalidateByPropertyName,
-                        propertiesToGenerate,
-                        propertyInvalidationsByGeneratedPropertyName) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
-
-                    var viewModelToGenerate = new ViewModelToGenerate(viewModelClassSymbol)
-                    {
-                        InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol),
-                        GenerateConstructor = ViewModelAttributeInspector.Inspect(viewModelAttributeData),
-                        ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
-                        CommandsToGenerate = commandsToGenerate,
-                        PropertiesToGenerate = propertiesToGenerate,
-                        CommandsToInvalidateByPropertyName = commandsToInvalidateByPropertyName
-                    };
-
-                    viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
-
-                    SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
-
-                    viewModelToGenerate.IsEventSubscriber = viewModelClassSymbol.Interfaces.Any(x => x.ToDisplayString().StartsWith("MvvmGen.Events.IEventSubscriber"));
-
-                    ViewModelsToGenerate.Add(viewModelToGenerate);
+                    vmBuilder.AppendLine("}");
                 }
-            }
-        }
 
-        private void SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(IList<PropertyToGenerate> propertiesToGenerate,
-            Dictionary<string, List<string>> propertyInvalidationsByGeneratedPropertyName)
-        {
-            foreach (var propertiesToInvalidate in propertyInvalidationsByGeneratedPropertyName)
-            {
-                var propertyToGenerate = propertiesToGenerate.SingleOrDefault(x => x.PropertyName == propertiesToInvalidate.Key);
-                if (propertyToGenerate is not null)
-                {
-                    propertyToGenerate.PropertiesToInvalidate = propertiesToInvalidate.Value;
-                }
+                var sourceText = SourceText.From(vmBuilder.ToString(), Encoding.UTF8);
+                spc.AddSource($"{viewModelToGenerate.ViewModelClassSymbol.ContainingNamespace}.{viewModelToGenerate.ViewModelClassSymbol.Name}.g.cs", sourceText);
             }
         }
     }

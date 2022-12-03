@@ -15,7 +15,7 @@ namespace MvvmGen
 {
     internal static class PureCodeGenerationLibraryLoader
     {
-        internal static void AddLibraryFilesToContext(GeneratorPostInitializationContext context)
+        internal static void AddLibraryFilesToContext(IncrementalGeneratorPostInitializationContext context)
         {
             var libraryPath = "MvvmGen.SourceGenerators.MvvmGenLib";
             var assembly = typeof(PureCodeGenerationLibraryLoader).Assembly;
