@@ -17,7 +17,7 @@ namespace MvvmGen.Generators
         {
             if (viewModelToGenerate.GenerateConstructor)
             {
-                Generate(vmBuilder, viewModelToGenerate.ViewModelClassSymbol.Name,
+                Generate(vmBuilder, viewModelToGenerate.ClassName,
                             viewModelToGenerate.InjectionsToGenerate,
                             viewModelToGenerate.CommandsToGenerate?.Any() == true,
                             viewModelToGenerate.IsEventSubscriber);

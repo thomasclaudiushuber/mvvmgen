@@ -4,24 +4,16 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
-using Microsoft.CodeAnalysis;
+using MvvmGen.Model;
 
 namespace MvvmGen.Generators
 {
     internal static class NamespaceGenerator
     {
-        internal static void GenerateNamespace(this ViewModelBuilder vmBuilder, INamedTypeSymbol viewModelClassSymbol)
+        internal static void GenerateNamespace(this ViewModelBuilder vmBuilder, ViewModelToGenerate viewModelToGenerate)
         {
             vmBuilder.AppendLine();
-
-            // Add namespace declaration
-            if (viewModelClassSymbol.ContainingNamespace is null)
-            {
-                return;
-                // TODO: Show an error here. ViewModel class must be top-level within a namespace
-            }
-
-            vmBuilder.AppendLine($"namespace {viewModelClassSymbol.ContainingNamespace}");
+            vmBuilder.AppendLine($"namespace {viewModelToGenerate.NamespaceName}");
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
         }
