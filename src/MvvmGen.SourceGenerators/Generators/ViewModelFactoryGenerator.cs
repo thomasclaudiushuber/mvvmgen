@@ -21,7 +21,7 @@ namespace MvvmGen.Generators
             }
 
             var factoryToGenerate = viewModelToGenerate.ViewModelFactoryToGenerate;
-            var viewModelClassName = viewModelToGenerate.ViewModelClassSymbol.Name;
+            var viewModelClassName = viewModelToGenerate.ClassName;
 
             var injectionsToGenerate = viewModelToGenerate.InjectionsToGenerate ?? Enumerable.Empty<InjectionToGenerate>();
 
@@ -34,13 +34,6 @@ namespace MvvmGen.Generators
                 }.Concat(injectionsToGenerate);
             }
 
-            var accessModifier = viewModelToGenerate.ViewModelClassSymbol.DeclaredAccessibility switch
-            {
-                Accessibility.Public => "public",
-                Accessibility.Internal => "internal",
-                _ => ""
-            };
-
             var returnType = viewModelClassName;
 
             if (factoryToGenerate.CustomReturnType is not null)
@@ -51,6 +44,8 @@ namespace MvvmGen.Generators
             {
                 returnType = viewModelToGenerate.ViewModelInterfaceToGenerate.InterfaceName;
             }
+
+            var accessModifier = viewModelToGenerate.ClassAccessModifier;
 
             vmBuilder.AppendLine();
             vmBuilder.AppendLine($"{accessModifier} interface {factoryToGenerate.InterfaceName} : IViewModelFactory<{returnType}> {{ }}");

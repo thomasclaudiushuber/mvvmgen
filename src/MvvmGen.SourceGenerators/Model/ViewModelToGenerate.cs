@@ -5,7 +5,6 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
 
 namespace MvvmGen.Model
 {
@@ -14,18 +13,25 @@ namespace MvvmGen.Model
     /// </summary>
     internal class ViewModelToGenerate
     {
-        public ViewModelToGenerate(INamedTypeSymbol viewModelClassSymbol)
+        public ViewModelToGenerate(string className, string namespaceName)
         {
-            ViewModelClassSymbol = viewModelClassSymbol;
+            ClassName = className;
+            NamespaceName = namespaceName;
         }
 
-        public INamedTypeSymbol ViewModelClassSymbol { get; }
+        public string ClassName { get; }
+
+        public string? ClassAccessModifier { get; set; }
+
+        public string NamespaceName { get; }
 
         public string? WrappedModelType { get; set; }
 
         public bool IsEventSubscriber { get; set; }
 
         public bool GenerateConstructor { get; set; }
+
+        public bool InheritFromViewModelBase { get; set; }
 
         public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
 

@@ -4,7 +4,6 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
-using Microsoft.CodeAnalysis;
 using MvvmGen.Model;
 
 namespace MvvmGen.Generators
@@ -20,12 +19,7 @@ namespace MvvmGen.Generators
 
             var interfaceToGenerate = viewModelToGenerate.ViewModelInterfaceToGenerate;
 
-            var accessModifier = viewModelToGenerate.ViewModelClassSymbol.DeclaredAccessibility switch
-            {
-                Accessibility.Public => "public",
-                Accessibility.Internal => "internal",
-                _ => ""
-            };
+            var accessModifier = viewModelToGenerate.ClassAccessModifier;
 
             vmBuilder.AppendLine();
             vmBuilder.AppendLine($"{accessModifier} interface {interfaceToGenerate.InterfaceName}");
