@@ -82,6 +82,8 @@ namespace MvvmGen
 
             viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
 
+            viewModelToGenerate.ViewModelInterfaceToGenerate = ViewModelGenerateInterfaceAttributeInspector.Inspect(viewModelClassSymbol, viewModelToGenerate.PropertiesToGenerate);
+
             SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
 
             viewModelToGenerate.IsEventSubscriber = viewModelClassSymbol.Interfaces.Any(x => x.ToDisplayString().StartsWith("MvvmGen.Events.IEventSubscriber"));
@@ -124,7 +126,7 @@ namespace MvvmGen
 
                 vmBuilder.GenerateNamespace(viewModelToGenerate.ViewModelClassSymbol);
 
-                vmBuilder.GenerateClass(viewModelToGenerate.ViewModelClassSymbol, viewModelBaseSymbol);
+                vmBuilder.GenerateClass(viewModelToGenerate, viewModelBaseSymbol);
 
                 vmBuilder.GenerateConstructor(viewModelToGenerate);
 
@@ -140,11 +142,13 @@ namespace MvvmGen
 
                 vmBuilder.GenerateInvalidateCommandsMethod(viewModelToGenerate.CommandsToInvalidateByPropertyName);
 
-                while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a factory class
+                while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a ViewModel interface and/or a factory class
                 {
                     vmBuilder.DecreaseIndent();
                     vmBuilder.AppendLine("}");
                 }
+
+                vmBuilder.GenerateViewModelInterface(viewModelToGenerate);
 
                 vmBuilder.GenerateFactoryClass(viewModelToGenerate);
 

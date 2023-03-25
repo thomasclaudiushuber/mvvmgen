@@ -41,8 +41,19 @@ namespace MvvmGen.Generators
                 _ => ""
             };
 
+            var returnType = viewModelClassName;
+
+            if (factoryToGenerate.CustomReturnType is not null)
+            {
+                returnType = factoryToGenerate.CustomReturnType;
+            }
+            else if (viewModelToGenerate.ViewModelInterfaceToGenerate is not null)
+            {
+                returnType = viewModelToGenerate.ViewModelInterfaceToGenerate.InterfaceName;
+            }
+
             vmBuilder.AppendLine();
-            vmBuilder.AppendLine($"{accessModifier} interface {factoryToGenerate.InterfaceName} : IViewModelFactory<{viewModelClassName}> {{ }}");
+            vmBuilder.AppendLine($"{accessModifier} interface {factoryToGenerate.InterfaceName} : IViewModelFactory<{returnType}> {{ }}");
             vmBuilder.AppendLine();
             vmBuilder.AppendLine($"{accessModifier} class {factoryToGenerate.ClassName} : {factoryToGenerate.InterfaceName}");
             vmBuilder.AppendLine("{");
@@ -74,8 +85,9 @@ namespace MvvmGen.Generators
 
             InjectionPropertyGenerator.GenerateInjectionProperties(vmBuilder, injectionsToGenerate);
 
+
             vmBuilder.AppendLine();
-            vmBuilder.Append($"public {viewModelClassName} Create() => new {viewModelClassName}(");
+            vmBuilder.Append($"public {returnType} Create() => new {viewModelClassName}(");
             first = true;
             foreach (var injectionToGenerate in injectionsToGenerate)
             {

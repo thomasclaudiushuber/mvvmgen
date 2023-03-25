@@ -26,5 +26,13 @@ namespace MvvmGen
         /// Gets or sets the name of the generated factory interface.
         /// </summary>
         public string? InterfaceName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the return type of the Create method. By default, this will be
+        /// - either the ViewModel type
+        /// - or the generated interface by the ViewModelGenerateInterface attribute
+        /// But you can explicitly specify here a custom return type if needed. 
+        /// </summary>
+        public Type? ReturnType { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace MvvmGen.Inspectors
             {
                 var className = $"{viewModelClassSymbol.Name}Factory";
                 var interfaceName = $"I{className}";
+                string? customReturnType = null;
 
                 foreach (var arg in viewModelFactoryAttribute.NamedArguments)
                 {
@@ -33,9 +34,13 @@ namespace MvvmGen.Inspectors
                     {
                         interfaceName = arg.Value.Value?.ToString() ?? interfaceName;
                     }
+                    else if (arg.Key == "ReturnType")
+                    {
+                        customReturnType = arg.Value.Value?.ToString();
+                    }
                 }
 
-                viewModelFactoryToGenerate = new ViewModelFactoryToGenerate(className, interfaceName);
+                viewModelFactoryToGenerate = new ViewModelFactoryToGenerate(className, interfaceName, customReturnType);
             }
 
             return viewModelFactoryToGenerate;
