@@ -22,6 +22,7 @@
     <EmbeddedResource Include="..\MvvmGen\Attributes\PropertyPublishEventAttribute.cs" Link="MvvmGenLib\Attributes\PropertyPublishEventAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateFactoryAttribute.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateInterfaceAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateInterfaceAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Commands\DelegateCommand.cs" Link="MvvmGenLib\Commands\DelegateCommand.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\EventAggregator.cs" Link="MvvmGenLib\Events\EventAggregator.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\IEventAggregator.cs" Link="MvvmGenLib\Events\IEventAggregator.cs" />
