@@ -6,16 +6,40 @@
 
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using MvvmGen.Model;
 
 namespace MvvmGen.Generators
 {
     internal static class ClassGenerator
     {
-        internal static void GenerateClass(this ViewModelBuilder vmBuilder, INamedTypeSymbol viewModelClassSymbol, INamedTypeSymbol viewModelBaseSymbol)
+        internal static void GenerateClass(this ViewModelBuilder vmBuilder, ViewModelToGenerate viewModelToGenerate, INamedTypeSymbol viewModelBaseSymbol)
         {
+            var viewModelClassSymbol = viewModelToGenerate.ViewModelClassSymbol;
+
             var inheritFromViewModelBaseClass = !InheritsFromViewModelBase(viewModelClassSymbol, viewModelBaseSymbol);
 
-            vmBuilder.AppendLine($"partial class {viewModelClassSymbol.Name}" + (inheritFromViewModelBaseClass ? " : global::MvvmGen.ViewModels.ViewModelBase" : ""));
+            vmBuilder.Append($"partial class {viewModelClassSymbol.Name}");
+
+            if (inheritFromViewModelBaseClass)
+            {
+                vmBuilder.Append(" : global::MvvmGen.ViewModels.ViewModelBase");
+            }
+
+            if (viewModelToGenerate.ViewModelInterfaceToGenerate is not null)
+            {
+                if (inheritFromViewModelBaseClass)
+                {
+                    vmBuilder.Append(", ");
+                }
+                else
+                {
+                    vmBuilder.Append(" : ");
+                }
+
+                vmBuilder.Append(viewModelToGenerate.ViewModelInterfaceToGenerate.InterfaceName);
+            }
+
+            vmBuilder.AppendLine();
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
         }

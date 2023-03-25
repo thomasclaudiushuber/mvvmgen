@@ -36,5 +36,7 @@ namespace MvvmGen.Model
         public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; set; }
 
         public ViewModelFactoryToGenerate? ViewModelFactoryToGenerate { get; set; }
+
+        public ViewModelInterfaceToGenerate? ViewModelInterfaceToGenerate { get; set; }
     }
 }
