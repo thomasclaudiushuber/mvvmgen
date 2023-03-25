@@ -9,7 +9,7 @@
 using System;
 
 namespace MvvmGen
-    
+
 {
     /// <summary>
     /// Specifies that an interface is generated for your ViewModel class. 

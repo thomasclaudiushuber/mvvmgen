@@ -4,8 +4,8 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace MvvmGen.Extensions
 {

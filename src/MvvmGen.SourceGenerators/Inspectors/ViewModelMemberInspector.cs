@@ -16,7 +16,7 @@ namespace MvvmGen.Inspectors
     internal static class ViewModelMemberInspector
     {
         internal static (List<CommandToGenerate> CommandsToGenerate,
-                         Dictionary<string, List<string>> CommandsToInvalidateByPropertyName,
+                         IEnumerable<CommandInvalidationToGenerate> CommandInvalidationsToGenerate,
                          List<PropertyToGenerate> PropertiesToGenerate,
                          Dictionary<string, List<string>> PropertyInvalidationsByGeneratedPropertyName)
             Inspect(INamedTypeSymbol viewModelClassSymbol)
@@ -52,7 +52,9 @@ namespace MvvmGen.Inspectors
                     commandPropertyInvalidationsByMethodName);
             }
 
-            return (commandsToGenerate, commandsToInvalidateByPropertyName, propertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
+            var commandInvalidationsToGenerate = commandsToInvalidateByPropertyName.Select(x => new CommandInvalidationToGenerate(x.Key, x.Value));
+
+            return (commandsToGenerate, commandInvalidationsToGenerate, propertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
         }
 
         private static void FindPropertyInvalidations(Dictionary<string, List<string>> propertyInvalidationsByPropertyName, IPropertySymbol propertySymbol)
@@ -132,8 +134,8 @@ namespace MvvmGen.Inspectors
                         : firstCharacter;
                 }
 
-                var eventsToPublish = new List<EventToPublish>();
-                var methodsToCall = new List<MethodToCall>();
+                var eventsToPublish = new List<PropertyEventPublication>();
+                var methodsToCall = new List<PropertyMethodCall>();
                 var propertyPublishEventAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyPublishEventAttribute").ToList();
                 var propertyCallMethodAttributes = attributeDatas.Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyCallMethodAttribute").ToList();
 
@@ -142,25 +144,25 @@ namespace MvvmGen.Inspectors
                     var eventType = propertyPublishEventAttribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
                     if (eventType is { Length: > 0 })
                     {
-                        var eventToPublish = new EventToPublish(eventType);
+                        var eventPublication = new PropertyEventPublication(eventType);
 
                         foreach (var arg in propertyPublishEventAttribute.NamedArguments)
                         {
                             if (arg.Key == "EventConstructorArgs")
                             {
-                                eventToPublish.EventConstructorArgs = arg.Value.Value?.ToString();
+                                eventPublication.EventConstructorArgs = arg.Value.Value?.ToString();
                             }
                             else if (arg.Key == "EventAggregatorMemberName")
                             {
-                                eventToPublish.EventAggregatorMemberName = arg.Value.Value?.ToString();
+                                eventPublication.EventAggregatorMemberName = arg.Value.Value?.ToString();
                             }
                             else if (arg.Key == "PublishCondition")
                             {
-                                eventToPublish.PublishCondition = arg.Value.Value?.ToString();
+                                eventPublication.PublishCondition = arg.Value.Value?.ToString();
                             }
                         }
 
-                        eventsToPublish.Add(eventToPublish);
+                        eventsToPublish.Add(eventPublication);
                     }
                 }
 
@@ -170,17 +172,17 @@ namespace MvvmGen.Inspectors
 
                     if (methodName is { Length: > 0 })
                     {
-                        var methodToCall = new MethodToCall(methodName);
+                        var methodCall = new PropertyMethodCall(methodName);
 
                         foreach (var arg in onChangeCallMethodAttribute.NamedArguments)
                         {
                             if (arg.Key == "MethodArgs")
                             {
-                                methodToCall.MethodArgs = arg.Value.Value?.ToString();
+                                methodCall.MethodArgs = arg.Value.Value?.ToString();
                             }
                         }
 
-                        methodsToCall.Add(methodToCall);
+                        methodsToCall.Add(methodCall);
                     }
                 }
 
@@ -205,7 +207,7 @@ namespace MvvmGen.Inspectors
 
             if (commandAttributeData is not null)
             {
-                var executeMethodInfo = new MethodInfo(methodSymbol.Name)
+                var executeMethodInfo = new CommandMethod(methodSymbol.Name)
                 {
                     HasParameter = methodSymbol.Parameters.Any(),
                     IsAwaitable = methodSymbol.IsAsync && methodSymbol.ReturnType.Name == "Task"
@@ -226,14 +228,14 @@ namespace MvvmGen.Inspectors
                     }
                 }
 
-                MethodInfo? canExecuteMethodInfo = null;
+                CommandMethod? canExecuteMethodInfo = null;
 
                 if (canExecuteMethodName is not null)
                 {
                     var canExecuteMethodSymbol = viewModelMembers.OfType<IMethodSymbol>().FirstOrDefault(x => x.Name == canExecuteMethodName);
                     if (canExecuteMethodSymbol is not null)
                     {
-                        canExecuteMethodInfo = new MethodInfo(canExecuteMethodSymbol.Name)
+                        canExecuteMethodInfo = new CommandMethod(canExecuteMethodSymbol.Name)
                         {
                             HasParameter = canExecuteMethodSymbol.Parameters.Any(),
                             IsAwaitable = canExecuteMethodSymbol.IsAsync && canExecuteMethodSymbol.ReturnType.Name == "Task"

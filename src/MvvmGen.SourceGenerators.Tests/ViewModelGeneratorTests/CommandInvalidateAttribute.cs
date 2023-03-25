@@ -33,7 +33,7 @@ namespace MvvmGen.SourceGenerators
 
             if (isCallInFirstNamePropExpected && isCallInLastNamePropExpected)
             {
-                expectedIfElseBlock = 
+                expectedIfElseBlock =
                 $@"if (propertyName == ""FirstName"")
             {{
                 SaveCommand.RaiseCanExecuteChanged();

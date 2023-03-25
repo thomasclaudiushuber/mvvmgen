@@ -12,9 +12,9 @@ namespace MvvmGen.Inspectors
 {
     internal static class ViewModelGenerateFactoryAttributeInspector
     {
-        internal static ViewModelFactoryToGenerate? Inspect(INamedTypeSymbol viewModelClassSymbol)
+        internal static FactoryToGenerate? Inspect(INamedTypeSymbol viewModelClassSymbol)
         {
-            ViewModelFactoryToGenerate? viewModelFactoryToGenerate = null;
+            FactoryToGenerate? viewModelFactoryToGenerate = null;
             var viewModelFactoryAttribute = viewModelClassSymbol.GetAttributes()
                 .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateFactoryAttribute");
 
@@ -40,7 +40,7 @@ namespace MvvmGen.Inspectors
                     }
                 }
 
-                viewModelFactoryToGenerate = new ViewModelFactoryToGenerate(className, interfaceName, customReturnType);
+                viewModelFactoryToGenerate = new FactoryToGenerate(className, interfaceName, customReturnType);
             }
 
             return viewModelFactoryToGenerate;

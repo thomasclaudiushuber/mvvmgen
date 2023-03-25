@@ -26,32 +26,41 @@ namespace MvvmGen.Generators
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
 
-            foreach (var property in interfaceToGenerate.Properties)
+            if (interfaceToGenerate.Properties is not null)
             {
-                vmBuilder.AppendLine($"{property.PropertyType} {property.PropertyName} {{ get; {(property.IsReadOnly ? "" : "set; ")}}}");
+                foreach (var property in interfaceToGenerate.Properties)
+                {
+                    vmBuilder.AppendLine($"{property.PropertyType} {property.PropertyName} {{ get; {(property.IsReadOnly ? "" : "set; ")}}}");
+                }
             }
 
-            foreach (var method in interfaceToGenerate.Methods)
+            if (interfaceToGenerate.Methods is not null)
             {
-                vmBuilder.Append($"{method.ReturnType} {method.MethodName}(");
-
-                bool isFirst = true;
-
-                foreach (var parameter in method.Parameters)
+                foreach (var method in interfaceToGenerate.Methods)
                 {
-                    if (isFirst)
+                    vmBuilder.Append($"{method.ReturnType} {method.MethodName}(");
+
+                    if (method.Parameters is not null)
                     {
-                        isFirst = false;
-                    }
-                    else
-                    {
-                        vmBuilder.Append(", ");
+                        var isFirst = true;
+
+                        foreach (var parameter in method.Parameters)
+                        {
+                            if (isFirst)
+                            {
+                                isFirst = false;
+                            }
+                            else
+                            {
+                                vmBuilder.Append(", ");
+                            }
+
+                            vmBuilder.Append($"{parameter.ParameterName} {parameter.ParameterType}");
+                        }
                     }
 
-                    vmBuilder.Append($"{parameter.ParameterName} {parameter.ParameterType}");
+                    vmBuilder.AppendLine(");");
                 }
-
-                vmBuilder.AppendLine(");");
             }
 
             vmBuilder.DecreaseIndent();

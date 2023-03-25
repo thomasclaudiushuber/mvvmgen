@@ -56,8 +56,10 @@ namespace MvvmGen.Inspectors
                             : typeNameWithoutNamespace;
                     }
 
-                    injectionsToGenerate.Add(new InjectionToGenerate(injectedType, propertyName) {
-                        PropertyAccessModifier = propertyAccessModifier switch {
+                    injectionsToGenerate.Add(new InjectionToGenerate(injectedType, propertyName)
+                    {
+                        PropertyAccessModifier = propertyAccessModifier switch
+                        {
                             1 => "private",
                             2 => "protected internal",
                             3 => "protected",

@@ -21,7 +21,7 @@ namespace MvvmGen.SourceGenerators
             var attributeNamedArgument = ", EventConstructorArgs=";
             if (!string.IsNullOrEmpty(attributeConstructorParameters))
             {
-                attributeNamedArgument += $"\"{ attributeConstructorParameters}\"";
+                attributeNamedArgument += $"\"{attributeConstructorParameters}\"";
             }
             else
             {
