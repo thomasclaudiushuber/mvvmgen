@@ -23,18 +23,20 @@ namespace MvvmGen.Generators
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
                     vmBuilder.Append($"{commandToGenerate.PropertyName} = new DelegateCommand({GetMethodCall(commandToGenerate.ExecuteMethod)}");
-                    if (commandToGenerate.CanExecuteMethod.HasValue)
+                    if (commandToGenerate.CanExecuteMethod is not null)
                     {
-                        vmBuilder.Append($", {GetMethodCall(commandToGenerate.CanExecuteMethod.Value)}");
+                        vmBuilder.Append($", {GetMethodCall(commandToGenerate.CanExecuteMethod)}");
                     }
+
                     vmBuilder.AppendLine(");");
                 }
+
                 vmBuilder.DecreaseIndent();
                 vmBuilder.AppendLine("}");
             }
         }
 
-        private static object GetMethodCall(MethodInfo methodInfo)
+        private static object GetMethodCall(CommandMethod methodInfo)
         {
             return methodInfo switch
             {

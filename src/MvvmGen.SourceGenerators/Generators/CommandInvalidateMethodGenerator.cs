@@ -6,15 +6,16 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using MvvmGen.Model;
 
 namespace MvvmGen.Generators
 {
     internal static class CommandInvalidateMethodGenerator
     {
         internal static void GenerateInvalidateCommandsMethod(this ViewModelBuilder vmBuilder,
-            IDictionary<string, List<string>>? commandsByPropertyNames)
+            IEnumerable<CommandInvalidationToGenerate>? commandInvalidationsToGenerate)
         {
-            if (commandsByPropertyNames is not null && commandsByPropertyNames.Any())
+            if (commandInvalidationsToGenerate is not null && commandInvalidationsToGenerate.Any())
             {
                 vmBuilder.AppendLineBeforeMember();
                 vmBuilder.AppendLine("protected override void InvalidateCommands(string? propertyName)");
@@ -25,17 +26,20 @@ namespace MvvmGen.Generators
                 var first = true;
                 var ifStatement = "if";
 
-                foreach (var commandsByPropertyName in commandsByPropertyNames)
+                foreach (var commandInvalidationToGenerate in commandInvalidationsToGenerate)
                 {
-                    vmBuilder.AppendLine(@$"{ifStatement} (propertyName == ""{commandsByPropertyName.Key}"")");
+                    vmBuilder.AppendLine(@$"{ifStatement} (propertyName == ""{commandInvalidationToGenerate.PropertyName}"")");
+
                     if (first)
                     {
                         first = false;
                         ifStatement = "else if";
                     }
+
                     vmBuilder.AppendLine("{");
                     vmBuilder.IncreaseIndent();
-                    foreach (var commandName in commandsByPropertyName.Value)
+
+                    foreach (var commandName in commandInvalidationToGenerate.CommandNames)
                     {
                         vmBuilder.AppendLine($"{commandName}.RaiseCanExecuteChanged();");
                     }

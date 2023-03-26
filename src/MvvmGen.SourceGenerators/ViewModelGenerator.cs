@@ -64,7 +64,7 @@ namespace MvvmGen
             }
 
             var (commandsToGenerate,
-                commandsToInvalidateByPropertyName,
+                commandInvalidationsToGenerate,
                 propertiesToGenerate,
                 propertyInvalidationsByGeneratedPropertyName) = ViewModelMemberInspector.Inspect(viewModelClassSymbol);
 
@@ -86,7 +86,7 @@ namespace MvvmGen
                 InheritFromViewModelBase = ViewModelBaseClassInspector.Inspect(viewModelClassSymbol, viewModelBaseClassSymbol),
                 CommandsToGenerate = commandsToGenerate,
                 PropertiesToGenerate = propertiesToGenerate,
-                CommandsToInvalidateByPropertyName = commandsToInvalidateByPropertyName
+                CommandInvalidationsToGenerate = commandInvalidationsToGenerate
             };
 
             viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
@@ -121,6 +121,8 @@ namespace MvvmGen
                 return;
             }
 
+            var fileName = $"{viewModelToGenerate.NamespaceName}.{viewModelToGenerate.ClassName}.g.cs";
+
             var vmBuilder = new ViewModelBuilder();
 
             vmBuilder.GenerateCommentHeader(_versionString);
@@ -145,7 +147,7 @@ namespace MvvmGen
 
             vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
 
-            vmBuilder.GenerateInvalidateCommandsMethod(viewModelToGenerate.CommandsToInvalidateByPropertyName);
+            vmBuilder.GenerateInvalidateCommandsMethod(viewModelToGenerate.CommandInvalidationsToGenerate);
 
             while (vmBuilder.IndentLevel > 1) // Keep the namespace open for a ViewModel interface and/or a factory class
             {
@@ -163,7 +165,8 @@ namespace MvvmGen
             }
 
             var sourceText = SourceText.From(vmBuilder.ToString(), Encoding.UTF8);
-            context.AddSource($"{viewModelToGenerate.NamespaceName}.{viewModelToGenerate.ClassName}.g.cs", sourceText);
+
+            context.AddSource(fileName, sourceText);
         }
     }
 }

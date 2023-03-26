@@ -13,10 +13,10 @@ namespace MvvmGen.Inspectors
 {
     internal static class ViewModelGenerateInterfaceAttributeInspector
     {
-        internal static ViewModelInterfaceToGenerate? Inspect(
+        internal static InterfaceToGenerate? Inspect(
             INamedTypeSymbol viewModelClassSymbol, IEnumerable<PropertyToGenerate> propertiesToGenerate)
         {
-            ViewModelInterfaceToGenerate? viewModelInterfaceToGenerate = null;
+            InterfaceToGenerate? viewModelInterfaceToGenerate = null;
             var viewModelInterfaceAttribute = viewModelClassSymbol.GetAttributes()
                 .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateInterfaceAttribute");
 
@@ -32,12 +32,13 @@ namespace MvvmGen.Inspectors
                     }
                 }
 
-                var properties = new List<ViewModelInterfaceProperty>();
-                var methods = new List<ViewModelInterfaceMethod>();
+                List<InterfaceProperty>? properties = null;
+                List<InterfaceMethod>? methods = null;
 
                 foreach (var propertyToGenerate in propertiesToGenerate)
                 {
-                    properties.Add(new ViewModelInterfaceProperty(propertyToGenerate.PropertyName,
+                    properties ??= new();
+                    properties.Add(new InterfaceProperty(propertyToGenerate.PropertyName,
                         propertyToGenerate.PropertyType, propertyToGenerate.IsReadOnly));
                 }
 
@@ -47,26 +48,29 @@ namespace MvvmGen.Inspectors
                     {
                         if (memberSymbol is IPropertySymbol propertySymbol)
                         {
-                            properties.Add(new ViewModelInterfaceProperty(propertySymbol.Name,
+                            properties ??= new();
+                            properties.Add(new InterfaceProperty(propertySymbol.Name,
                                 propertySymbol.Type.ToDisplayString(), propertySymbol.IsReadOnly));
                         }
 
                         if (memberSymbol is IMethodSymbol methodSymbol
                             && methodSymbol.MethodKind == MethodKind.Ordinary)
                         {
-                            var parameters = new List<ViewModelInterfaceMethodParameter>();
+                            List<InterfaceMethodParameter>? parameters = null;
 
                             foreach (var parameterSymbol in methodSymbol.Parameters)
                             {
-                                parameters.Add(new ViewModelInterfaceMethodParameter(parameterSymbol.Type.ToDisplayString(), parameterSymbol.Name));
+                                parameters ??= new();
+                                parameters.Add(new InterfaceMethodParameter(parameterSymbol.Type.ToDisplayString(), parameterSymbol.Name));
                             }
 
-                            methods.Add(new ViewModelInterfaceMethod(methodSymbol.Name, methodSymbol.ReturnType.ToDisplayString(), parameters));
+                            methods ??= new();
+                            methods.Add(new InterfaceMethod(methodSymbol.Name, methodSymbol.ReturnType.ToDisplayString()) { Parameters = parameters });
                         }
                     }
                 }
 
-                viewModelInterfaceToGenerate = new ViewModelInterfaceToGenerate(interfaceName, properties, methods);
+                viewModelInterfaceToGenerate = new InterfaceToGenerate(interfaceName) { Properties = properties, Methods = methods };
             }
 
             return viewModelInterfaceToGenerate;
