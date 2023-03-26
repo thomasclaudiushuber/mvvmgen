@@ -22,7 +22,7 @@ public partial class App : Application
     serviceCollection.AddTransient<MainWindow>();
     serviceCollection.AddTransient<MainViewModel>();
     serviceCollection.AddTransient<IEmployeeDataProvider, EmployeeFileDataProvider>();
-    serviceCollection.AddTransient<NavigationViewModel>();
+    serviceCollection.AddTransient<INavigationViewModel, NavigationViewModel>();
     serviceCollection.AddTransient<IEmployeeViewModelFactory, EmployeeViewModelFactory>();
 
     ServiceProvider = serviceCollection.BuildServiceProvider(true);

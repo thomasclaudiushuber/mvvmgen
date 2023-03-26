@@ -29,7 +29,7 @@ the following code snippet, the generic `IViewModelFactory<T>` interface
 has a parameterless `Create` method to create a ViewModel of type `T`.
 
 ```csharp
-public interface IViewModelFactory<out T> where T : ViewModelBase
+public interface IViewModelFactory<out T>
 {
   T Create();
 }
@@ -118,7 +118,7 @@ and it also updates the generated `EmployeeViewModelFactory` to create the
 everything just works with your factory when you inject other services, 
 as everything gets generated on-the-fly in the compilation process.
 
-A ViewModel factory like you saw it here in this article is actually used 
+A ViewModel factory similar as you saw it here in this article is actually used 
 in the EmployeeManager application that you find in the [MvvmGen Samples repository](https://github.com/thomasclaudiushuber/mvvmgen-samples).
 
-Next, let's look at how to [set up dependency injection](07_set_up_dependency_injection.md).
+Next, let's look at how to [generate a viewModel interface](07_generate_a_viewModel_interface.md).
