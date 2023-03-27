@@ -86,7 +86,7 @@ build a full ViewModel like this:
 using MvvmGen;
 using MvvmGen.Events;
 
-namespace MyWpfApp
+namespace MyWpfApp.ViewModel
 {
   public record EmployeeSavedEvent(string FirstName, string LastName);
 
@@ -117,7 +117,7 @@ using MvvmGen.Commands;
 using MvvmGen.Events;
 using MvvmGen.ViewModels;
 
-namespace MyWpfApp
+namespace MyWpfApp.ViewModel
 {
   partial class EmployeeViewModel : ViewModelBase
   {

@@ -10,7 +10,7 @@
     <Title>MvvmGen</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui uno xaml generator</PackageTags>
+    <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui uno avalonia xaml csharp generator</PackageTags>
     <Product>MvvmGen</Product>
     <PackageProjectUrl>https://github.com/thomasclaudiushuber/mvvmgen</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -18,12 +18,13 @@
     <RepositoryType>git</RepositoryType>
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
     <PackageId>MvvmGen</PackageId>
     <IncludeBuildOutput>true</IncludeBuildOutput>
-    <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Uno, Xamarin.Forms and .NET MAUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
+    <Description>MvvmGen is a lightweight, modern MVVM library for XAML applications. It is built with a strong focus on C# source generators to help you to efficiently apply the Model-View-ViewModel pattern in your WPF, WinUI, Xamarin.Forms, .NET MAUI, Uno Platform, and AvaloniaUI apps. MvvmGen is your friend who writes all the boilerplate for you.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
@@ -40,7 +41,7 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\MvvmGen.PureCodeGeneration.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-      <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0"/>
+    <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +50,10 @@
       <PackagePath></PackagePath>
     </None>
     <None Include="packageIcon.png" >
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="readme.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
