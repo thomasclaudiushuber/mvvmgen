@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using Microsoft.CodeAnalysis;
 using MvvmGen.Model;
 
@@ -14,7 +15,7 @@ namespace MvvmGen.Inspectors
     internal static class ViewModelGenerateInterfaceAttributeInspector
     {
         internal static InterfaceToGenerate? Inspect(
-            INamedTypeSymbol viewModelClassSymbol, IEnumerable<PropertyToGenerate> propertiesToGenerate)
+            INamedTypeSymbol viewModelClassSymbol, IEnumerable<PropertyToGenerate> propertiesToGenerate, IEnumerable<CommandToGenerate> commandsToGenerate)
         {
             InterfaceToGenerate? viewModelInterfaceToGenerate = null;
             var viewModelInterfaceAttribute = viewModelClassSymbol.GetAttributes()
@@ -68,6 +69,12 @@ namespace MvvmGen.Inspectors
                             methods.Add(new InterfaceMethod(methodSymbol.Name, methodSymbol.ReturnType.ToDisplayString()) { Parameters = parameters });
                         }
                     }
+                }
+
+                foreach (var commandToGenerate in commandsToGenerate)
+                {
+                    properties ??= new();
+                    properties.Add(new InterfaceProperty(commandToGenerate.PropertyName, "DelegateCommand", true));
                 }
 
                 viewModelInterfaceToGenerate = new InterfaceToGenerate(interfaceName) { Properties = properties, Methods = methods };
