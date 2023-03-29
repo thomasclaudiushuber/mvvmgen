@@ -20,11 +20,12 @@
     <PackageIcon>packageIcon.png</PackageIcon>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageReleaseNotes>MvvmGen 1.2.0:
-- New [ViewModelGenerateInterface] attribute to generate in interface for a ViewModel. This supports more unit testing scenarios. If [ViewModelGenerateFactory] is set as well, the factory will return the interface type instead of the ViewModel type.
-- More performant source generator 
-  - By implementing IIncrementalGenerator
-  - The model used by the source generator has now a proper Equals implementation to support caching between generation steps. This makes the generator more performant in larger solutions.
-- Bug fix for [ViewModelGenerateFactory]. When injecting an IEventAggregator into the ViewModel, the factory now also has the correct constructor parameters.
+- New [ViewModelGenerateInterface] attribute to generate an interface for a ViewModel. This supports more unit testing scenarios
+- If [ViewModelGenerateInterface] is set, [ViewModelGenerateFactory] will return the interface type instead of the ViewModel type.
+- New ReturnType property on [ViewModelGenerateFactory] attribute allows you to explicitly define a return type of the factory.
+- Source generator implements now the newer IIncrementalGenerator interface
+- The model used by the source generator implements Equals to support caching between generation steps. This makes the generator more performant, which is especially noticable in larger solutions.
+- Bug fix for [ViewModelGenerateFactory] attribute. When injecting an IEventAggregator into the ViewModel, the factory now also has the correct constructor parameters.
 - Minor code optimizations
 </PackageReleaseNotes>
   </PropertyGroup>
