@@ -19,6 +19,14 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageReleaseNotes>MvvmGen 1.2.0:
+- New [ViewModelGenerateInterface] attribute to generate in interface for a ViewModel. This supports more unit testing scenarios. If [ViewModelGenerateFactory] is set as well, the factory will return the interface type instead of the ViewModel type.
+- More performant source generator 
+  - By implementing IIncrementalGenerator
+  - The model used by the source generator has now a proper Equals implementation to support caching between generation steps. This makes the generator more performant in larger solutions.
+- Bug fix for [ViewModelGenerateFactory]. When injecting an IEventAggregator into the ViewModel, the factory now also has the correct constructor parameters.
+- Minor code optimizations
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
@@ -41,7 +49,7 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'MvvmGen_PureCodeGeneration'">
     <None Include="..\MvvmGen.SourceGenerators\bin\$(Configuration)\netstandard2.0\MvvmGen.PureCodeGeneration.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0"/>
+    <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +57,7 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="packageIcon.png" >
+    <None Include="packageIcon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
