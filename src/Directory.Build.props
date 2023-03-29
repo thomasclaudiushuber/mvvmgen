@@ -1,11 +1,11 @@
 <Project>
   <PropertyGroup>
-    <Version>1.1.5</Version>
+    <Version>1.2.0</Version>
     <AssemblyVersion>$(Version).0</AssemblyVersion>
     <AssemblyFileVersion>$(Version).0</AssemblyFileVersion>
     <Authors>Thomas Claudius Huber</Authors>
     <AssemblyCompany>Thomas Claudius Huber</AssemblyCompany>
-    <Copyright>Copyright © Thomas Claudius Huber 2021</Copyright>
+    <Copyright>Copyright © Thomas Claudius Huber 2021-2023</Copyright>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
