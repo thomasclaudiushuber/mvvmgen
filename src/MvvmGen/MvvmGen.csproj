@@ -19,7 +19,10 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <PackageReleaseNotes>MvvmGen 1.2.0:
+    <PackageReleaseNotes>Version 1.2.1:
+- Ensure that [ViewModelGenerateInterface] also generates command properties
+
+Version 1.2.0:
 - New [ViewModelGenerateInterface] attribute to generate an interface for a ViewModel. This supports more unit testing scenarios
 - If [ViewModelGenerateInterface] is set, [ViewModelGenerateFactory] will return the interface type instead of the ViewModel type.
 - New ReturnType property on [ViewModelGenerateFactory] attribute allows you to explicitly define a return type of the factory.
