@@ -8,7 +8,7 @@ Model-View-ViewModel-pattern (MVVM):
 - An `ICommand` implementation
 - An EventAggregator to communicate between ViewModels
 - Attributes like `ViewModel`, `Property`, `Command`
-and `Inject` that you use to hook up MvvmGen’s C# Source Generator, the 
+and `Inject` that you use to hook up MvvmGenâ€™s C# Source Generator, the 
 so-called `ViewModelGenerator`
 
 Here in the docs you'll learn about the features of **MvvmGen**. Beside the docs,
@@ -25,5 +25,6 @@ Here the separate articles to walk through:
 4. [Inject Services](04_inject_services.md)
 5. [Communicate between ViewModels (EventAggregator)](05_communicate_between_viewModels.md)
 6. [Generate a ViewModel Factory](06_generate_a_viewModel_factory.md)
-7. [Set up Dependency Injection](07_set_up_dependency_injection.md)
+7. [Generate a ViewModel Interface](07_generate_a_viewModel_interface.md)
+8. [Set up Dependency Injection](08_set_up_dependency_injection.md)
 
