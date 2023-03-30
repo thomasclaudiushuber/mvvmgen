@@ -1,4 +1,4 @@
-# Generate a ViewModel Factory
+# Generate a ViewModel Interface
 
 To support some unit testing scenarios, it can be necessary to generate an interface for your viewModel. 
 You can do this manually, or you can use MvvmGen's `ViewModelGenerateInterface` attribute.
