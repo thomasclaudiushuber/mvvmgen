@@ -4,11 +4,13 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
+using Microsoft.CodeAnalysis;
+
 namespace MvvmGen.Inspectors
 {
     internal static class ViewModelAttributeInspector
     {
-        internal static bool Inspect(Microsoft.CodeAnalysis.AttributeData viewModelAttributeData)
+        internal static bool InspectGenerateConstructor(AttributeData viewModelAttributeData)
         {
             var generateConstructor = true;
 
@@ -21,6 +23,21 @@ namespace MvvmGen.Inspectors
             }
 
             return generateConstructor;
+        }
+
+        internal static string? InspectModelPropertyName(AttributeData viewModelAttributeData)
+        {
+            string? modelPropertyName = null;
+
+            foreach (var arg in viewModelAttributeData.NamedArguments)
+            {
+                if (arg.Key == "ModelPropertyName")
+                {
+                    modelPropertyName = arg.Value.Value?.ToString();
+                }
+            }
+
+            return modelPropertyName;
         }
     }
 }

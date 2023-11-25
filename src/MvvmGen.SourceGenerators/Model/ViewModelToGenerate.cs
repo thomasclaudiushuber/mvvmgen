@@ -29,6 +29,8 @@ namespace MvvmGen.Model
 
         public string? WrappedModelType { get; set; }
 
+        public string? WrappedModelPropertyName { get; set; }
+
         public bool IsEventSubscriber { get; set; }
 
         public bool GenerateConstructor { get; set; }

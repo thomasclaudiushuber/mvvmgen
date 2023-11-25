@@ -36,6 +36,11 @@ namespace MvvmGen
         public Type? ModelType { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of generated property that contains the wrapped ModelType. If not set, the property has the name Model
+        /// </summary>
+        public string? ModelPropertyName { get; set; }
+
+        /// <summary>
         /// Gets or sets if a constructor is generated. Default value is true.
         /// </summary>
         public bool GenerateConstructor { get; set; } = true;
