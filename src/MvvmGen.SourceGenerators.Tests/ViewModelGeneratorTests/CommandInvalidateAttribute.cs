@@ -153,8 +153,8 @@ namespace MyCode
     [Command(nameof(CanSave))]
     public void Save() {{ }}
 
-    [CommandInvalidate(nameof(FirstName);
-    [CommandInvalidate(nameof(LastName);
+    [CommandInvalidate(nameof(FirstName))]
+    [CommandInvalidate(nameof(LastName))]
     public bool CanSave() => true;
 
     [Command(nameof(CanDelete))]
