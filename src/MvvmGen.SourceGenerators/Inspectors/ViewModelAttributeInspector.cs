@@ -4,12 +4,28 @@
 // Licensed under the MIT license => See LICENSE file in repository root
 // ***********************************************************************
 
+using System;
 using Microsoft.CodeAnalysis;
 
 namespace MvvmGen.Inspectors
 {
     internal static class ViewModelAttributeInspector
     {
+        internal static string? InspectCommandFactoryType(AttributeData viewModelAttributeData)
+        {
+            string? commandFactoryType = null;
+
+            foreach (var arg in viewModelAttributeData.NamedArguments)
+            {
+                if (arg.Key == "CommandFactoryType")
+                {
+                    commandFactoryType = arg.Value.Value?.ToString();
+                }
+            }
+
+            return commandFactoryType;
+        }
+
         internal static bool InspectGenerateConstructor(AttributeData viewModelAttributeData)
         {
             var generateConstructor = true;

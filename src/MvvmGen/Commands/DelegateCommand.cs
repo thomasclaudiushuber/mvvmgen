@@ -14,7 +14,7 @@ namespace MvvmGen.Commands
     /// <summary>
     /// An <see cref="ICommand"/> implementation that works with delegates for the execute and can-execute logic
     /// </summary>
-    public class DelegateCommand : ICommand
+    public class DelegateCommand : IDelegateCommand
     {
         private readonly Action<object?> _execute;
         private readonly Func<object?, bool>? _canExecute;

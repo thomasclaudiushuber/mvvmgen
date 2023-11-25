@@ -35,6 +35,8 @@ namespace MvvmGen.Model
 
         public bool GenerateConstructor { get; set; }
 
+        public string? CommandFactoryType { get; set; }
+
         public bool InheritFromViewModelBase { get; set; }
 
         public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
@@ -64,6 +66,7 @@ namespace MvvmGen.Model
                    WrappedModelPropertyName == other.WrappedModelPropertyName &&
                    IsEventSubscriber == other.IsEventSubscriber &&
                    GenerateConstructor == other.GenerateConstructor &&
+                   CommandFactoryType == other.CommandFactoryType &&
                    InheritFromViewModelBase == other.InheritFromViewModelBase &&
                    EqualityComparer<FactoryToGenerate?>.Default.Equals(ViewModelFactoryToGenerate, other.ViewModelFactoryToGenerate) &&
                    EqualityComparer<InterfaceToGenerate?>.Default.Equals(ViewModelInterfaceToGenerate, other.ViewModelInterfaceToGenerate) &&
@@ -81,6 +84,7 @@ namespace MvvmGen.Model
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(NamespaceName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(WrappedModelType);
             hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(WrappedModelPropertyName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(CommandFactoryType);
             hashCode = hashCode * -1521134295 + IsEventSubscriber.GetHashCode();
             hashCode = hashCode * -1521134295 + GenerateConstructor.GetHashCode();
             hashCode = hashCode * -1521134295 + InheritFromViewModelBase.GetHashCode();
