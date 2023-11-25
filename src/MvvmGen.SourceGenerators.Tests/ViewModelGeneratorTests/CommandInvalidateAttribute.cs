@@ -95,10 +95,11 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
+            var commandFactory = new DelegateCommandFactory();
+            SaveCommand = commandFactory.CreateCommand(_ => Save(), _ => CanSave());
         }}
 
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand {{ get; private set; }}
 
         public string FirstName
         {{
@@ -180,13 +181,14 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
-            DeleteCommand = new DelegateCommand(_ => Delete(), _ => CanDelete());
+            var commandFactory = new DelegateCommandFactory();
+            SaveCommand = commandFactory.CreateCommand(_ => Save(), _ => CanSave());
+            DeleteCommand = commandFactory.CreateCommand(_ => Delete(), _ => CanDelete());
         }}
 
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand {{ get; private set; }}
 
-        public DelegateCommand DeleteCommand {{ get; private set; }}
+        public IDelegateCommand DeleteCommand {{ get; private set; }}
 
         public string FirstName
         {{
@@ -272,10 +274,11 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
+            var commandFactory = new DelegateCommandFactory();
+            SaveCommand = commandFactory.CreateCommand(_ => Save(), _ => CanSave());
         }}
 
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand {{ get; private set; }}
 
         protected override void InvalidateCommands(string? propertyName)
         {{

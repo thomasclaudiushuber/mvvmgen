@@ -24,6 +24,9 @@
     <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateFactoryAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateFactoryAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Attributes\ViewModelGenerateInterfaceAttribute.cs" Link="MvvmGenLib\Attributes\ViewModelGenerateInterfaceAttribute.cs" />
     <EmbeddedResource Include="..\MvvmGen\Commands\DelegateCommand.cs" Link="MvvmGenLib\Commands\DelegateCommand.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Commands\DelegateCommandFactory.cs" Link="MvvmGenLib\Commands\DelegateCommandFactory.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Commands\IDelegateCommand.cs" Link="MvvmGenLib\Commands\IDelegateCommand.cs" />
+    <EmbeddedResource Include="..\MvvmGen\Commands\IDelegateCommandFactory.cs" Link="MvvmGenLib\Commands\IDelegateCommandFactory.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\EventAggregator.cs" Link="MvvmGenLib\Events\EventAggregator.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\IEventAggregator.cs" Link="MvvmGenLib\Events\IEventAggregator.cs" />
     <EmbeddedResource Include="..\MvvmGen\Events\IEventSubscriber.cs" Link="MvvmGenLib\Events\IEventSubscriber.cs" />

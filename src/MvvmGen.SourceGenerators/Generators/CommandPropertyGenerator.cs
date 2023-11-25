@@ -18,7 +18,7 @@ namespace MvvmGen.Generators
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
                     vmBuilder.AppendLineBeforeMember();
-                    vmBuilder.AppendLine($"public DelegateCommand {commandToGenerate.PropertyName} {{ get; private set; }}");
+                    vmBuilder.AppendLine($"public IDelegateCommand {commandToGenerate.PropertyName} {{ get; private set; }}");
                 }
             }
         }

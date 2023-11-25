@@ -119,6 +119,22 @@ namespace MvvmGen.Model
         }
 
         [Fact]
+        public void ShouldNotBeEqualDifferentCommandFactoryType1()
+        {
+            _viewModelToGenerate2.CommandFactoryType = "typeof(MyNewCommandFactory)";
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentCommandFactoryType2()
+        {
+            _viewModelToGenerate2.CommandFactoryType = null;
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
         public void ShouldNotBeEqualDifferentPropertiesToGenerate1()
         {
             _viewModelToGenerate2.PropertiesToGenerate = new List<PropertyToGenerate>();
@@ -342,6 +358,7 @@ namespace MvvmGen.Model
             viewModelToGenerate.IsEventSubscriber = true;
             viewModelToGenerate.WrappedModelType = "Employee";
             viewModelToGenerate.WrappedModelPropertyName = "EmployeeModel";
+            viewModelToGenerate.CommandFactoryType = "typeof(MyCommandFactory)";
 
             viewModelToGenerate.PropertiesToGenerate = new List<PropertyToGenerate>
             {
