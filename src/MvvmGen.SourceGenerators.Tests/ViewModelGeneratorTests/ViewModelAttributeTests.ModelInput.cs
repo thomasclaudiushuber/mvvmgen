@@ -218,7 +218,12 @@ namespace MyCode
 {{
     public class Employee
     {{
-        
+        public Employee (int id)
+        {{
+            Id = id;
+        }}
+        public int Id {{ get; }}
+        public bool IsDeveloper {{ get; set; }}
     }}
 
     [ViewModel({attributeArgument})]
@@ -238,6 +243,21 @@ namespace MyCode
         }}
 
         partial void OnInitialize();
+
+        public int Id => {expectedModelPropertyName}.Id;
+
+        public bool IsDeveloper
+        {{
+            get => {expectedModelPropertyName}.IsDeveloper;
+            set
+            {{
+                if ({expectedModelPropertyName}.IsDeveloper != value)
+                {{
+                    {expectedModelPropertyName}.IsDeveloper = value;
+                    OnPropertyChanged(""IsDeveloper"");
+                }}
+            }}
+        }}
 
         protected MyCode.Employee { expectedModelPropertyName } {{ get; set; }}
     }}

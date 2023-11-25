@@ -61,6 +61,7 @@ namespace MvvmGen.Model
                    ClassAccessModifier == other.ClassAccessModifier &&
                    NamespaceName == other.NamespaceName &&
                    WrappedModelType == other.WrappedModelType &&
+                   WrappedModelPropertyName == other.WrappedModelPropertyName &&
                    IsEventSubscriber == other.IsEventSubscriber &&
                    GenerateConstructor == other.GenerateConstructor &&
                    InheritFromViewModelBase == other.InheritFromViewModelBase &&
@@ -79,6 +80,7 @@ namespace MvvmGen.Model
             hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(ClassAccessModifier);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(NamespaceName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(WrappedModelType);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(WrappedModelPropertyName);
             hashCode = hashCode * -1521134295 + IsEventSubscriber.GetHashCode();
             hashCode = hashCode * -1521134295 + GenerateConstructor.GetHashCode();
             hashCode = hashCode * -1521134295 + InheritFromViewModelBase.GetHashCode();

@@ -103,6 +103,22 @@ namespace MvvmGen.Model
         }
 
         [Fact]
+        public void ShouldNotBeEqualDifferentWrappedModelPropertyName1()
+        {
+            _viewModelToGenerate2.WrappedModelPropertyName = "CustomModelProperty";
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentWrappedModelPropertyName2()
+        {
+            _viewModelToGenerate2.WrappedModelPropertyName = null;
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
         public void ShouldNotBeEqualDifferentPropertiesToGenerate1()
         {
             _viewModelToGenerate2.PropertiesToGenerate = new List<PropertyToGenerate>();
@@ -325,6 +341,7 @@ namespace MvvmGen.Model
             viewModelToGenerate.InheritFromViewModelBase = true;
             viewModelToGenerate.IsEventSubscriber = true;
             viewModelToGenerate.WrappedModelType = "Employee";
+            viewModelToGenerate.WrappedModelPropertyName = "EmployeeModel";
 
             viewModelToGenerate.PropertiesToGenerate = new List<PropertyToGenerate>
             {
