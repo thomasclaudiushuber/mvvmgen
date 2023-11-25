@@ -13,7 +13,7 @@ namespace MvvmGen.Inspectors
 {
     internal static class ModelMemberInspector
     {
-        internal static string? Inspect(AttributeData viewModelAttributeData, IList<PropertyToGenerate> propertiesToGenerate)
+        internal static string? Inspect(AttributeData viewModelAttributeData, IList<PropertyToGenerate> propertiesToGenerate, string? wrappedModelPropertyName)
         {
             string? wrappedModelType = null;
 
@@ -32,6 +32,7 @@ namespace MvvmGen.Inspectors
                 if (modelTypedConstant.Value.Value is INamedTypeSymbol model)
                 {
                     wrappedModelType = $"{model}";
+                    wrappedModelPropertyName = wrappedModelPropertyName ?? "Model";
                     var members = GetAllMembers(model);
                     foreach (var member in members)
                     {
@@ -41,7 +42,7 @@ namespace MvvmGen.Inspectors
                             if (propertySymbol is not null)
                             {
                                 propertiesToGenerate.Add(new PropertyToGenerate(
-                                  propertySymbol.Name, propertySymbol.Type.ToString(), $"Model.{propertySymbol.Name}", propertySymbol.IsReadOnly));
+                                  propertySymbol.Name, propertySymbol.Type.ToString(), $"{wrappedModelPropertyName}.{propertySymbol.Name}", propertySymbol.IsReadOnly));
                             }
                         }
                     }

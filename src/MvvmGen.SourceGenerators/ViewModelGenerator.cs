@@ -89,11 +89,8 @@ namespace MvvmGen
                 CommandInvalidationsToGenerate = commandInvalidationsToGenerate
             };
 
-            viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
-            if(viewModelToGenerate.WrappedModelType is not null)
-            {
-                viewModelToGenerate.WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData);
-            }
+            viewModelToGenerate.WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData);
+            viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate,viewModelToGenerate.WrappedModelPropertyName);
 
             viewModelToGenerate.ViewModelInterfaceToGenerate = ViewModelGenerateInterfaceAttributeInspector.Inspect(viewModelClassSymbol,
                 viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
