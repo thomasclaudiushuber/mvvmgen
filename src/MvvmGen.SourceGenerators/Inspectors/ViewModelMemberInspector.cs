@@ -224,7 +224,7 @@ namespace MvvmGen.Inspectors
                     }
                     else if (arg.Key == "PropertyName")
                     {
-                        commandPropertyName = arg.Value.Value?.ToString();
+                        commandPropertyName = arg.Value.Value?.ToString() ?? commandPropertyName;
                     }
                 }
 

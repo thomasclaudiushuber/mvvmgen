@@ -89,7 +89,7 @@ namespace MyCode
         [InlineData("")]
         [InlineData(null)]
         [Theory]
-        public void GeneratePublishEventInPropertyWithCondition(string publishCondition)
+        public void GeneratePublishEventInPropertyWithCondition(string? publishCondition)
         {
             var publishStatement = "EventAggregator.Publish(new MyCode.SelectedEmployeeChangedEvent());";
             var publishConditionArgument = "";
