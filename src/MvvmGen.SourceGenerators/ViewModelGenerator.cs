@@ -81,7 +81,7 @@ namespace MvvmGen
             {
                 ClassAccessModifier = accessModifier,
                 InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol),
-                GenerateConstructor = ViewModelAttributeInspector.Inspect(viewModelAttributeData),
+                GenerateConstructor = ViewModelAttributeInspector.InspectGenerateConstructor(viewModelAttributeData),
                 ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
                 InheritFromViewModelBase = ViewModelBaseClassInspector.Inspect(viewModelClassSymbol, viewModelBaseClassSymbol),
                 CommandsToGenerate = commandsToGenerate,
@@ -90,6 +90,10 @@ namespace MvvmGen
             };
 
             viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate);
+            if(viewModelToGenerate.WrappedModelType is not null)
+            {
+                viewModelToGenerate.WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData);
+            }
 
             viewModelToGenerate.ViewModelInterfaceToGenerate = ViewModelGenerateInterfaceAttributeInspector.Inspect(viewModelClassSymbol,
                 viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
@@ -144,7 +148,7 @@ namespace MvvmGen
 
             vmBuilder.GenerateProperties(viewModelToGenerate.PropertiesToGenerate);
 
-            vmBuilder.GenerateModelProperty(viewModelToGenerate.WrappedModelType);
+            vmBuilder.GenerateModelProperty(viewModelToGenerate.WrappedModelType,viewModelToGenerate.WrappedModelPropertyName);
 
             vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
 

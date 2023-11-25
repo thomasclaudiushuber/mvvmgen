@@ -8,12 +8,13 @@ namespace MvvmGen.Generators
 {
     internal static class ModelPropertyGenerator
     {
-        internal static void GenerateModelProperty(this ViewModelBuilder vmBuilder, string? wrappedModelType)
+        internal static void GenerateModelProperty(this ViewModelBuilder vmBuilder, string? wrappedModelType, string? wrappedModelPropertyName)
         {
             if (wrappedModelType is { Length: > 0 })
             {
+                var modelPropertyName = wrappedModelPropertyName ?? "Model";
                 vmBuilder.AppendLineBeforeMember();
-                vmBuilder.AppendLine($"protected {wrappedModelType} Model {{ get; set; }}");
+                vmBuilder.AppendLine($"protected {wrappedModelType} {modelPropertyName} {{ get; set; }}");
             }
         }
     }
