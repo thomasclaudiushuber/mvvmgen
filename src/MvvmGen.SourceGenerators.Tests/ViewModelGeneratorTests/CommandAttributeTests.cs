@@ -40,11 +40,10 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            var commandFactory = new DelegateCommandFactory();
-            SaveAllCommand = commandFactory.CreateCommand(_ => SaveAll(), null);
+            SaveAllCommand = new DelegateCommand(_ => SaveAll());
         }}
 
-        public IDelegateCommand SaveAllCommand {{ get; private set; }}
+        public DelegateCommand SaveAllCommand {{ get; private set; }}
     }}
 }}
 ");
@@ -87,11 +86,10 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            var commandFactory = new DelegateCommandFactory();
-            SaveAllCommand = commandFactory.CreateCommand(_ => SaveAll(), _ => CanSaveAll());
+            SaveAllCommand = new DelegateCommand(_ => SaveAll(), _ => CanSaveAll());
         }}
 
-        public IDelegateCommand SaveAllCommand {{ get; private set; }}
+        public DelegateCommand SaveAllCommand {{ get; private set; }}
     }}
 }}
 ");
@@ -134,11 +132,10 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            var commandFactory = new DelegateCommandFactory();
-            SuperCommand = commandFactory.CreateCommand(_ => SaveAll(), _ => CanSaveAll());
+            SuperCommand = new DelegateCommand(_ => SaveAll(), _ => CanSaveAll());
         }}
 
-        public IDelegateCommand SuperCommand {{ get; private set; }}
+        public DelegateCommand SuperCommand {{ get; private set; }}
     }}
 }}
 ");
@@ -185,11 +182,10 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            var commandFactory = new DelegateCommandFactory();
-            SaveCommand = commandFactory.CreateCommand({expectedConstructorArguments});
+            SaveCommand = new DelegateCommand({expectedConstructorArguments});
         }}
 
-        public IDelegateCommand SaveCommand {{ get; private set; }}
+        public DelegateCommand SaveCommand {{ get; private set; }}
     }}
 }}
 ");

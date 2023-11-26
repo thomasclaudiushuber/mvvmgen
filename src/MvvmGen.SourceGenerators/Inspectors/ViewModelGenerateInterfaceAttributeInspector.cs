@@ -82,7 +82,7 @@ namespace MvvmGen.Inspectors
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
                     properties ??= new();
-                    properties.Add(new InterfaceProperty(commandToGenerate.PropertyName, "IDelegateCommand", true));
+                    properties.Add(new InterfaceProperty(commandToGenerate.PropertyName, "DelegateCommand", true));
                 }
             }
 

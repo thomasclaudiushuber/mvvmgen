@@ -12,10 +12,7 @@ namespace MvvmGen.Generators
 {
     internal static class CommandInitializeMethodGenerator
     {
-        internal static void GenerateCommandInitializeMethod(
-            this ViewModelBuilder vmBuilder, 
-            IEnumerable<CommandToGenerate>? commandsToGenerate,
-            string? commandFactoryType)
+        internal static void GenerateCommandInitializeMethod(this ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
         {
             if (commandsToGenerate is not null && commandsToGenerate.Any())
             {
@@ -23,20 +20,12 @@ namespace MvvmGen.Generators
                 vmBuilder.AppendLine("private void InitializeCommands()");
                 vmBuilder.AppendLine("{");
                 vmBuilder.IncreaseIndent();
-                
-                commandFactoryType ??= "DelegateCommandFactory";
-                vmBuilder.AppendLine($"var commandFactory = new {commandFactoryType}();");
-
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
-                    vmBuilder.Append($"{commandToGenerate.PropertyName} = commandFactory.CreateCommand({GetMethodCall(commandToGenerate.ExecuteMethod)}");
+                    vmBuilder.Append($"{commandToGenerate.PropertyName} = new DelegateCommand({GetMethodCall(commandToGenerate.ExecuteMethod)}");
                     if (commandToGenerate.CanExecuteMethod is not null)
                     {
                         vmBuilder.Append($", {GetMethodCall(commandToGenerate.CanExecuteMethod)}");
-                    }
-                    else
-                    {
-                        vmBuilder.Append(", null");
                     }
 
                     vmBuilder.AppendLine(");");

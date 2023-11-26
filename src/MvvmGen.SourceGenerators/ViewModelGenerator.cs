@@ -82,7 +82,6 @@ namespace MvvmGen
                 ClassAccessModifier = accessModifier,
                 InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol),
                 GenerateConstructor = ViewModelAttributeInspector.InspectGenerateConstructor(viewModelAttributeData),
-                CommandFactoryType = ViewModelAttributeInspector.InspectCommandFactoryType(viewModelAttributeData),
                 ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
                 InheritFromViewModelBase = ViewModelBaseClassInspector.Inspect(viewModelClassSymbol, viewModelBaseClassSymbol),
                 CommandsToGenerate = commandsToGenerate,
@@ -91,7 +90,7 @@ namespace MvvmGen
             };
 
             viewModelToGenerate.WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData);
-            viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.WrappedModelPropertyName);
+            viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate,viewModelToGenerate.WrappedModelPropertyName);
 
             viewModelToGenerate.ViewModelInterfaceToGenerate = ViewModelGenerateInterfaceAttributeInspector.Inspect(viewModelClassSymbol,
                 viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
@@ -140,13 +139,13 @@ namespace MvvmGen
 
             vmBuilder.GenerateConstructor(viewModelToGenerate);
 
-            vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate, viewModelToGenerate.CommandFactoryType);
+            vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate);
 
             vmBuilder.GenerateCommandProperties(viewModelToGenerate.CommandsToGenerate);
 
             vmBuilder.GenerateProperties(viewModelToGenerate.PropertiesToGenerate);
 
-            vmBuilder.GenerateModelProperty(viewModelToGenerate.WrappedModelType, viewModelToGenerate.WrappedModelPropertyName);
+            vmBuilder.GenerateModelProperty(viewModelToGenerate.WrappedModelType,viewModelToGenerate.WrappedModelPropertyName);
 
             vmBuilder.GenerateInjectionProperties(viewModelToGenerate.InjectionsToGenerate);
 
