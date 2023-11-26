@@ -38,7 +38,29 @@ namespace MvvmGen.Generators
             {
                 foreach (var method in interfaceToGenerate.Methods)
                 {
-                    vmBuilder.Append($"{method.ReturnType} {method.MethodName}(");
+                    vmBuilder.Append($"{method.ReturnType} {method.MethodName}");
+
+                    if (method.IsGeneric)
+                    {
+                        vmBuilder.Append("<");
+                        if (method.GenericTypeParameters is not null)
+                        {
+                            var first = true;
+                            foreach (var typeParam in method.GenericTypeParameters)
+                            {
+                                if (!first)
+                                {
+                                    vmBuilder.Append(", ");
+                                }
+
+                                vmBuilder.Append(typeParam);
+                                first = false;
+                            }
+                        }
+                        vmBuilder.Append(">");
+                    }
+
+                    vmBuilder.Append("(");
 
                     if (method.Parameters is not null)
                     {
@@ -59,7 +81,17 @@ namespace MvvmGen.Generators
                         }
                     }
 
-                    vmBuilder.AppendLine(");");
+                    vmBuilder.Append(")");
+
+                    if (method.IsGeneric && method.GenericTypeConstraints is { Length: > 0 })
+                    {
+                        foreach (var genericTypeConstraint in method.GenericTypeConstraints)
+                        {
+                            vmBuilder.Append($" {genericTypeConstraint}");
+                        }
+                    }
+
+                    vmBuilder.AppendLine(";");
                 }
             }
 

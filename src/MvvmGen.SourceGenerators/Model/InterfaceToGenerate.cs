@@ -82,15 +82,20 @@ namespace MvvmGen.Model
 
     internal class InterfaceMethod : IEquatable<InterfaceMethod?>
     {
-        public InterfaceMethod(string methodName, string returnType)
+        public InterfaceMethod(string methodName, string returnType, bool isGeneric = false)
         {
             MethodName = methodName;
             ReturnType = returnType;
+            IsGeneric = isGeneric;
         }
 
         public string MethodName { get; }
         public string ReturnType { get; }
         public IEnumerable<InterfaceMethodParameter>? Parameters { get; set; }
+        
+        public bool IsGeneric { get; }
+        public IEnumerable<string>? GenericTypeParameters { get; set; }
+        public string[]? GenericTypeConstraints { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -102,7 +107,10 @@ namespace MvvmGen.Model
             return other is not null &&
                    MethodName == other.MethodName &&
                    ReturnType == other.ReturnType &&
-                   Parameters.SequenceEqualWithNullCheck(other.Parameters);
+                   IsGeneric == other.IsGeneric &&
+                   Parameters.SequenceEqualWithNullCheck(other.Parameters) &&
+                   GenericTypeParameters.SequenceEqualWithNullCheck(other.GenericTypeParameters) &&
+                   GenericTypeConstraints.SequenceEqualWithNullCheck(other.GenericTypeConstraints);
         }
 
         public override int GetHashCode()

@@ -6,7 +6,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MvvmGen.Model;
 
 namespace MvvmGen.Inspectors
@@ -16,7 +19,8 @@ namespace MvvmGen.Inspectors
         internal static InterfaceToGenerate? Inspect(
             INamedTypeSymbol viewModelClassSymbol,
             IEnumerable<PropertyToGenerate>? propertiesToGenerate,
-            IEnumerable<CommandToGenerate>? commandsToGenerate)
+            IEnumerable<CommandToGenerate>? commandsToGenerate,
+            SyntaxTree syntaxTree)
         {
             var viewModelInterfaceAttribute = viewModelClassSymbol.GetAttributes()
                 .FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.ViewModelGenerateInterfaceAttribute");
@@ -71,8 +75,45 @@ namespace MvvmGen.Inspectors
                             parameters.Add(new InterfaceMethodParameter(parameterSymbol.Type.ToDisplayString(), parameterSymbol.Name));
                         }
 
+                        string[]? genericTypeParamters = null;
+                        string[]? genericTypeConstraints = null;
+
+                        if (methodSymbol.IsGenericMethod)
+                        {
+                            genericTypeParamters = new string[methodSymbol.TypeParameters.Length];
+                            for (int i = 0; i < methodSymbol.TypeParameters.Length; i++)
+                            {
+                                var typeParam = methodSymbol.TypeParameters[i];
+
+                                genericTypeParamters[i] = typeParam.Name;
+                            }
+
+                            var methodLocation = methodSymbol.Locations.FirstOrDefault();
+                            if (methodLocation is not null)
+                            {
+                                var methodDeclarationSyntax = syntaxTree.GetRoot().FindNode(methodLocation.SourceSpan) as MethodDeclarationSyntax;
+                                if (methodDeclarationSyntax is { ConstraintClauses: { Count: > 0 } })
+                                {
+                                    genericTypeConstraints =new string[methodDeclarationSyntax.ConstraintClauses.Count];
+                                    for (int i = 0; i < methodDeclarationSyntax.ConstraintClauses.Count; i++)
+                                    {
+                                        var constraintClause = methodDeclarationSyntax.ConstraintClauses[i].ToString();
+                                        genericTypeConstraints[i] = constraintClause;
+                                    }
+                                }
+                            }
+                        }
+
                         methods ??= new();
-                        methods.Add(new InterfaceMethod(methodSymbol.Name, methodSymbol.ReturnType.ToDisplayString()) { Parameters = parameters });
+                        methods.Add(
+                            new InterfaceMethod(methodSymbol.Name,
+                            methodSymbol.ReturnType.ToDisplayString(),
+                            methodSymbol.IsGenericMethod)
+                            {
+                                Parameters = parameters,
+                                GenericTypeParameters = genericTypeParamters,
+                                GenericTypeConstraints = genericTypeConstraints
+                            });
                     }
                 }
             }
