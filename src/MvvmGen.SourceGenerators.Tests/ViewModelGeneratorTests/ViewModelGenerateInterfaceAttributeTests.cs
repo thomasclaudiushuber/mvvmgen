@@ -175,16 +175,15 @@ namespace MyCode
 
         private void InitializeCommands()
         {{
-            var commandFactory = new DelegateCommandFactory();
-            SaveCommand = commandFactory.CreateCommand(_ => Save(), null);
+            SaveCommand = new DelegateCommand(_ => Save());
         }}
 
-        public IDelegateCommand SaveCommand {{ get; private set; }}
+        public DelegateCommand SaveCommand {{ get; private set; }}
     }}
 
     public interface IEmployeeViewModel
     {{
-        IDelegateCommand SaveCommand {{ get; }}
+        DelegateCommand SaveCommand {{ get; }}
         void Save();
     }}
 }}
