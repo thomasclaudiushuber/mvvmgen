@@ -93,7 +93,7 @@ namespace MvvmGen
             viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate,viewModelToGenerate.WrappedModelPropertyName);
 
             viewModelToGenerate.ViewModelInterfaceToGenerate = ViewModelGenerateInterfaceAttributeInspector.Inspect(viewModelClassSymbol,
-                viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
+                viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate, context.Node.SyntaxTree);
 
             SetPropertiesToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, propertyInvalidationsByGeneratedPropertyName);
 

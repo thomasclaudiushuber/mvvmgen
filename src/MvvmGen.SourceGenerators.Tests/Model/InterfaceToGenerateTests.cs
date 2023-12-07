@@ -193,6 +193,86 @@ namespace MvvmGen.Model
 
             Assert.NotEqual(method1, method2);
         }
+
+        [Fact]
+        public void ShouldBeEqual3()
+        {
+            var method1 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            var method2 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            Assert.Equal(method1, method2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentIsGenericFlag()
+        {
+            var method1 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            var method2 = new InterfaceMethod("Save", "void", false)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            Assert.NotEqual(method1, method2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentGenericTypeParameter()
+        {
+            var method1 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            var method2 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "TCHANGED" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            Assert.NotEqual(method1, method2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentGenericTypeConstraint()
+        {
+            var method1 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "T : new()" }
+            };
+
+            var method2 = new InterfaceMethod("Save", "void", true)
+            {
+                Parameters = new List<InterfaceMethodParameter> { new InterfaceMethodParameter("item", "T") },
+                GenericTypeParameters = new[] { "T" },
+                GenericTypeConstraints = new[] { "TCHANGED : new()" }
+            };
+
+            Assert.NotEqual(method1, method2);
+        }
     }
 
     public class InterfaceMethodParameterTests

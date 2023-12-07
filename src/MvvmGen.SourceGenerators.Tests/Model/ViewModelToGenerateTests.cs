@@ -224,8 +224,6 @@ namespace MvvmGen.Model
         {
             var list = (List<CommandInvalidationToGenerate>)_viewModelToGenerate2.CommandInvalidationsToGenerate!;
 
-            var originalCommandInvalidationToGenerate = list[0];
-
             list.Clear();
             list.Add(new CommandInvalidationToGenerate("LastName", new[] { "SaveCommand" }));
 
@@ -368,7 +366,7 @@ namespace MvvmGen.Model
                 Properties = new List<InterfaceProperty> { new InterfaceProperty("FirstName", "string", false) },
                 Methods = new List<InterfaceMethod>
                 {
-                    new InterfaceMethod("OnSave","void")
+                    new InterfaceMethod("OnSave","void", false)
                     {
                         Parameters = new List<InterfaceMethodParameter>{new InterfaceMethodParameter("parameter","object")}
                     }
