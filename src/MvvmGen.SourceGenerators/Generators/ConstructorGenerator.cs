@@ -19,14 +19,12 @@ namespace MvvmGen.Generators
             {
                 Generate(vmBuilder, viewModelToGenerate.ClassName,
                             viewModelToGenerate.InjectionsToGenerate,
-                            viewModelToGenerate.CommandsToGenerate?.Any() == true,
                             viewModelToGenerate.IsEventSubscriber);
             }
         }
 
         private static void Generate(ViewModelBuilder vmBuilder, string viewModelClassName,
-            IEnumerable<InjectionToGenerate>? injectionsToGenerate,
-            bool hasCommands, bool isEventSubscriber)
+            IEnumerable<InjectionToGenerate>? injectionsToGenerate, bool isEventSubscriber)
         {
             vmBuilder.AppendLineBeforeMember();
             vmBuilder.Append($"public {viewModelClassName}(");
@@ -72,18 +70,11 @@ namespace MvvmGen.Generators
                 vmBuilder.AppendLine($"{eventAggregatorAccessForSubscription}.RegisterSubscriber(this);");
             }
 
-            if (hasCommands)
-            {
-                vmBuilder.AppendLine($"this.InitializeCommands();");
-            }
-
             vmBuilder.AppendLine($"this.OnInitialize();");
             vmBuilder.DecreaseIndent();
             vmBuilder.AppendLine("}");
             vmBuilder.AppendLine();
             vmBuilder.AppendLine($"partial void OnInitialize();");
-
-
         }
     }
 }

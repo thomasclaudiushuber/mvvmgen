@@ -85,20 +85,16 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _saveCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
-        }}
-
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save(), _ => CanSave());
 
         public string FirstName
         {{
@@ -170,23 +166,19 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _saveCommand;
+        private IDelegateCommand? _deleteCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
-            DeleteCommand = new DelegateCommand(_ => Delete(), _ => CanDelete());
-        }}
+        public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save(), _ => CanSave());
 
-        public DelegateCommand SaveCommand {{ get; private set; }}
-
-        public DelegateCommand DeleteCommand {{ get; private set; }}
+        public IDelegateCommand DeleteCommand => _deleteCommand ??= new DelegateCommand(_ => Delete(), _ => CanDelete());
 
         public string FirstName
         {{
@@ -252,7 +244,7 @@ namespace MyCode
     [Command(nameof(CanSave))]
     public void Save() {{ }}
 
-    [CommandInvalidate(nameof(FirstName);
+    [CommandInvalidate(nameof(FirstName))]
     public bool CanSave() => true;
   }}
 }}",
@@ -262,20 +254,16 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _saveCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
-        }}
-
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save(), _ => CanSave());
 
         protected override void InvalidateCommands(string? propertyName)
         {{

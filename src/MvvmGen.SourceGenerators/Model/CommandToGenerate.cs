@@ -15,11 +15,14 @@ namespace MvvmGen.Model
         {
             ExecuteMethod = executeMethod;
             PropertyName = propertyName;
+            FieldName = $"_{PropertyName.Substring(0,1).ToLower()}{PropertyName.Substring(1)}";
         }
 
         public CommandMethod ExecuteMethod { get; }
 
         public string PropertyName { get; }
+
+        public string FieldName { get; }
 
         public CommandMethod? CanExecuteMethod { get; set; }
 
