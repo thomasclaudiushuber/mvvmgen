@@ -137,9 +137,9 @@ namespace MvvmGen
 
             vmBuilder.GenerateClass(viewModelToGenerate);
 
-            vmBuilder.GenerateConstructor(viewModelToGenerate);
+            vmBuilder.GenerateCommandFields(viewModelToGenerate.CommandsToGenerate);
 
-            vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate);
+            vmBuilder.GenerateConstructor(viewModelToGenerate);
 
             vmBuilder.GenerateCommandProperties(viewModelToGenerate.CommandsToGenerate);
 

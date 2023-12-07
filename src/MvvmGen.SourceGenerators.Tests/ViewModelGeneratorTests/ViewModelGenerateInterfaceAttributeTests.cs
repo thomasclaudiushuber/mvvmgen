@@ -165,25 +165,21 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase, IEmployeeViewModel
     {{
+        private IDelegateCommand? _saveCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveCommand = new DelegateCommand(_ => Save());
-        }}
-
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save());
     }}
 
     public interface IEmployeeViewModel
     {{
-        DelegateCommand SaveCommand {{ get; }}
+        IDelegateCommand SaveCommand {{ get; }}
         void Save();
     }}
 }}

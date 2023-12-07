@@ -30,20 +30,16 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _saveAllCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveAllCommand = new DelegateCommand(_ => SaveAll());
-        }}
-
-        public DelegateCommand SaveAllCommand {{ get; private set; }}
+        public IDelegateCommand SaveAllCommand => _saveAllCommand ??= new DelegateCommand(_ => SaveAll());
     }}
 }}
 ");
@@ -76,20 +72,16 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _saveAllCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveAllCommand = new DelegateCommand(_ => SaveAll(), _ => CanSaveAll());
-        }}
-
-        public DelegateCommand SaveAllCommand {{ get; private set; }}
+        public IDelegateCommand SaveAllCommand => _saveAllCommand ??= new DelegateCommand(_ => SaveAll(), _ => CanSaveAll());
     }}
 }}
 ");
@@ -122,20 +114,16 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _superCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SuperCommand = new DelegateCommand(_ => SaveAll(), _ => CanSaveAll());
-        }}
-
-        public DelegateCommand SuperCommand {{ get; private set; }}
+        public IDelegateCommand SuperCommand => _superCommand ??= new DelegateCommand(_ => SaveAll(), _ => CanSaveAll());
     }}
 }}
 ");
@@ -172,20 +160,16 @@ namespace MyCode
 {{
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {{
+        private IDelegateCommand? _saveCommand;
+
         public EmployeeViewModel()
         {{
-            this.InitializeCommands();
             this.OnInitialize();
         }}
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
-        {{
-            SaveCommand = new DelegateCommand({expectedConstructorArguments});
-        }}
-
-        public DelegateCommand SaveCommand {{ get; private set; }}
+        public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand({expectedConstructorArguments});
     }}
 }}
 ");
