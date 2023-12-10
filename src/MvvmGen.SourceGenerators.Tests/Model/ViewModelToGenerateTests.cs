@@ -391,6 +391,31 @@ namespace MvvmGen.Model
             Assert.Equal(_viewModelToGenerate1, _viewModelToGenerate2);
         }
 
+        [Fact]
+        public void ShouldNotBeEqualDifferentModelPropertiesToIgnore1()
+        {
+            _viewModelToGenerate2.WrappedModelPropertiesToIgnore = null;
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentModelPropertiesToIgnore2()
+        {
+            _viewModelToGenerate2.WrappedModelPropertiesToIgnore = "FirstName";
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldBeEqual10()
+        {
+            _viewModelToGenerate1.WrappedModelPropertiesToIgnore = null;
+            _viewModelToGenerate2.WrappedModelPropertiesToIgnore = null;
+
+            Assert.Equal(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
         private static void FillAllProperties(ViewModelToGenerate viewModelToGenerate)
         {
             viewModelToGenerate.ClassAccessModifier = "public";
@@ -399,6 +424,7 @@ namespace MvvmGen.Model
             viewModelToGenerate.IsEventSubscriber = true;
             viewModelToGenerate.WrappedModelType = "Employee";
             viewModelToGenerate.WrappedModelPropertyName = "EmployeeModel";
+            viewModelToGenerate.WrappedModelPropertiesToIgnore = "Address";
 
             viewModelToGenerate.PropertiesToGenerate = new List<PropertyToGenerate>
             {

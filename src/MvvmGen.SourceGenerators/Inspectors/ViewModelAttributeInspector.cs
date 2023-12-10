@@ -40,6 +40,21 @@ namespace MvvmGen.Inspectors
             return modelPropertyName;
         }
 
+        internal static string? InspectModelPropertiesToIgnore(AttributeData viewModelAttributeData)
+        {
+            string? propertiesToIgnore = null;
+
+            foreach (var arg in viewModelAttributeData.NamedArguments)
+            {
+                if (arg.Key == "ModelPropertiesToIgnore")
+                {
+                    propertiesToIgnore = arg.Value.Value?.ToString();
+                }
+            }
+
+            return propertiesToIgnore;
+        }
+
         internal static string InspectCommandType(AttributeData viewModelAttributeData)
         {
             string commandType = "DelegateCommand";

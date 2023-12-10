@@ -31,6 +31,8 @@ namespace MvvmGen.Model
 
         public string? WrappedModelPropertyName { get; set; }
 
+        public string? WrappedModelPropertiesToIgnore { get; set; }
+
         public bool IsEventSubscriber { get; set; }
 
         public bool GenerateConstructor { get; set; }
@@ -66,6 +68,7 @@ namespace MvvmGen.Model
                    NamespaceName == other.NamespaceName &&
                    WrappedModelType == other.WrappedModelType &&
                    WrappedModelPropertyName == other.WrappedModelPropertyName &&
+                   WrappedModelPropertiesToIgnore == other.WrappedModelPropertiesToIgnore &&
                    IsEventSubscriber == other.IsEventSubscriber &&
                    GenerateConstructor == other.GenerateConstructor &&
                    CommandType== other.CommandType &&

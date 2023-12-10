@@ -41,6 +41,12 @@ namespace MvvmGen
         public string? ModelPropertyName { get; set; }
 
         /// <summary>
+        /// Gets or sets a comma separated list of model properties that should not be generated
+        /// in the ViewModel for the model that you specified with the <see cref="ModelType"/> property.
+        /// </summary>
+        public string? ModelPropertiesToIgnore { get; set; }
+
+        /// <summary>
         /// Gets or sets if a constructor is generated. Default value is true.
         /// </summary>
         public bool GenerateConstructor { get; set; } = true;

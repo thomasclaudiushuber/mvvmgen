@@ -13,9 +13,14 @@ namespace MvvmGen.Inspectors
 {
     internal static class ModelMemberInspector
     {
-        internal static string? Inspect(AttributeData viewModelAttributeData, IList<PropertyToGenerate> propertiesToGenerate, string? wrappedModelPropertyName)
+        internal static string? Inspect(AttributeData viewModelAttributeData,
+            IList<PropertyToGenerate> propertiesToGenerate,
+            string? wrappedModelPropertyName,
+            string? wrappedModelPropertiesToIgnore)
         {
             string? wrappedModelType = null;
+            var wrappedModelPropsToIgnore = wrappedModelPropertiesToIgnore?
+                                               .Split(',').Select(x => x.Trim()).ToList();
 
             var modelTypedConstant = (TypedConstant?)viewModelAttributeData.ConstructorArguments.FirstOrDefault();
 
@@ -41,6 +46,12 @@ namespace MvvmGen.Inspectors
                             var propertySymbol = (IPropertySymbol?)methodSymbol.AssociatedSymbol;
                             if (propertySymbol is not null)
                             {
+                                if (wrappedModelPropsToIgnore is not null
+                                 && wrappedModelPropsToIgnore.Contains(propertySymbol.Name))
+                                {
+                                    continue;
+                                }
+
                                 propertiesToGenerate.Add(new PropertyToGenerate(
                                   propertySymbol.Name, propertySymbol.Type.ToString(), $"{wrappedModelPropertyName}.{propertySymbol.Name}", propertySymbol.IsReadOnly));
                             }

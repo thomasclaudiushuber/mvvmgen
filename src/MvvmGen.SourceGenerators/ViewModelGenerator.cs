@@ -92,7 +92,12 @@ namespace MvvmGen
             };
 
             viewModelToGenerate.WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData);
-            viewModelToGenerate.WrappedModelType = ModelMemberInspector.Inspect(viewModelAttributeData, viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.WrappedModelPropertyName);
+            viewModelToGenerate.WrappedModelPropertiesToIgnore = ViewModelAttributeInspector.InspectModelPropertiesToIgnore(viewModelAttributeData);
+            viewModelToGenerate.WrappedModelType =
+                ModelMemberInspector.Inspect(viewModelAttributeData,
+                viewModelToGenerate.PropertiesToGenerate,
+                viewModelToGenerate.WrappedModelPropertyName,
+                viewModelToGenerate.WrappedModelPropertiesToIgnore);
 
             viewModelToGenerate.ViewModelInterfaceToGenerate = ViewModelGenerateInterfaceAttributeInspector.Inspect(viewModelClassSymbol,
                 viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate, context.Node.SyntaxTree);
