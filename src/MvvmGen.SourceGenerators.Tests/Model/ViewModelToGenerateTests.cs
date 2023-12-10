@@ -375,6 +375,22 @@ namespace MvvmGen.Model
             Assert.Equal(_viewModelToGenerate1, _viewModelToGenerate2);
         }
 
+        [Fact]
+        public void ShouldNotBeEqualDifferentCommandType()
+        {
+            _viewModelToGenerate2.CommandType = "MyCommand";
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldBeEqual9()
+        {
+            _viewModelToGenerate1.CommandType = "DelegateCommand";
+
+            Assert.Equal(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
         private static void FillAllProperties(ViewModelToGenerate viewModelToGenerate)
         {
             viewModelToGenerate.ClassAccessModifier = "public";

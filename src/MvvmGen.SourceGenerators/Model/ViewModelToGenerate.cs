@@ -68,6 +68,7 @@ namespace MvvmGen.Model
                    WrappedModelPropertyName == other.WrappedModelPropertyName &&
                    IsEventSubscriber == other.IsEventSubscriber &&
                    GenerateConstructor == other.GenerateConstructor &&
+                   CommandType== other.CommandType &&
                    InheritFromViewModelBase == other.InheritFromViewModelBase &&
                    EqualityComparer<FactoryToGenerate?>.Default.Equals(ViewModelFactoryToGenerate, other.ViewModelFactoryToGenerate) &&
                    EqualityComparer<InterfaceToGenerate?>.Default.Equals(ViewModelInterfaceToGenerate, other.ViewModelInterfaceToGenerate) &&
