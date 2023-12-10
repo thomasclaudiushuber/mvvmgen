@@ -13,8 +13,13 @@ namespace MvvmGen.Inspectors
 {
     internal static class ViewModelInjectAttributeInspector
     {
-        internal static IEnumerable<InjectionToGenerate> Inspect(INamedTypeSymbol viewModelClassSymbol)
+        internal static IEnumerable<InjectionToGenerate> Inspect(INamedTypeSymbol? viewModelClassSymbol)
         {
+            if(viewModelClassSymbol is null)
+            {
+                return Enumerable.Empty<InjectionToGenerate>();
+            }
+
             List<InjectionToGenerate> injectionsToGenerate = new();
             var injectAttributeDatas = viewModelClassSymbol.GetAttributes()
                 .Where(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.InjectAttribute")

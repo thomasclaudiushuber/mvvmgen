@@ -19,22 +19,26 @@ namespace MvvmGen.Generators
             {
                 Generate(vmBuilder, viewModelToGenerate.ClassName,
                             viewModelToGenerate.InjectionsToGenerate,
+                            viewModelToGenerate.BaseClassInjectionsToGenerate,
                             viewModelToGenerate.IsEventSubscriber);
             }
         }
 
         private static void Generate(ViewModelBuilder vmBuilder, string viewModelClassName,
-            IEnumerable<InjectionToGenerate>? injectionsToGenerate, bool isEventSubscriber)
+            IEnumerable<InjectionToGenerate>? directInjectionsToGenerate,
+            IEnumerable<InjectionToGenerate>? baseClassInjectionsToGenerate,
+            bool isEventSubscriber)
         {
             vmBuilder.AppendLineBeforeMember();
             vmBuilder.Append($"public {viewModelClassName}(");
-            injectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
+            directInjectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
+            baseClassInjectionsToGenerate ??= Enumerable.Empty<InjectionToGenerate>();
 
             var first = true;
             string? eventAggregatorAccessForSubscription = null;
             if (isEventSubscriber)
             {
-                var eventAggregatorInjection = injectionsToGenerate.FirstOrDefault(x => x.Type == "MvvmGen.Events.IEventAggregator");
+                var eventAggregatorInjection = directInjectionsToGenerate.FirstOrDefault(x => x.Type == "MvvmGen.Events.IEventAggregator");
                 if (eventAggregatorInjection is not null)
                 {
                     eventAggregatorAccessForSubscription = $"this.{eventAggregatorInjection.PropertyName}";
@@ -47,7 +51,7 @@ namespace MvvmGen.Generators
                 }
             }
 
-            foreach (var injectionToGenerate in injectionsToGenerate)
+            foreach (var injectionToGenerate in directInjectionsToGenerate)
             {
                 if (!first)
                 {
@@ -57,10 +61,42 @@ namespace MvvmGen.Generators
                 vmBuilder.Append($"{injectionToGenerate.Type} {injectionToGenerate.PropertyName.ToCamelCase()}");
             }
 
-            vmBuilder.AppendLine(")");
+            var hasBaseClassInjections = false;
+            foreach (var injectionToGenerate in baseClassInjectionsToGenerate)
+            {
+                hasBaseClassInjections = true;
+                if (!first)
+                {
+                    vmBuilder.Append(", ");
+                }
+                first = false;
+                vmBuilder.Append($"{injectionToGenerate.Type} {injectionToGenerate.PropertyName.ToCamelCase()}");
+            }
+
+            vmBuilder.Append(")");
+
+            if (hasBaseClassInjections)
+            {
+                vmBuilder.Append(" : base(");
+
+                first = true;
+                foreach (var injectionToGenerate in baseClassInjectionsToGenerate)
+                {
+                    if (!first)
+                    {
+                        vmBuilder.Append(", ");
+                    }
+                    first = false;
+                    vmBuilder.Append(injectionToGenerate.PropertyName.ToCamelCase());
+                }
+
+                vmBuilder.Append(")");
+            }
+
+            vmBuilder.AppendLine();
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
-            foreach (var injectionToGenerate in injectionsToGenerate)
+            foreach (var injectionToGenerate in directInjectionsToGenerate)
             {
                 vmBuilder.AppendLine($"this.{injectionToGenerate.PropertyName} = {injectionToGenerate.PropertyName.ToCamelCase()};");
             }
