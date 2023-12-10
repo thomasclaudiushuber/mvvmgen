@@ -81,6 +81,7 @@ namespace MvvmGen
             {
                 ClassAccessModifier = accessModifier,
                 InjectionsToGenerate = ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol),
+                BaseClassInjectionsToGenerate=ViewModelInjectAttributeInspector.Inspect(viewModelClassSymbol.BaseType),
                 GenerateConstructor = ViewModelAttributeInspector.InspectGenerateConstructor(viewModelAttributeData),
                 ViewModelFactoryToGenerate = ViewModelGenerateFactoryAttributeInspector.Inspect(viewModelClassSymbol),
                 InheritFromViewModelBase = ViewModelBaseClassInspector.Inspect(viewModelClassSymbol, viewModelBaseClassSymbol),

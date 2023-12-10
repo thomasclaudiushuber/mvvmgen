@@ -283,6 +283,49 @@ namespace MvvmGen.Model
         }
 
         [Fact]
+        public void ShouldNotBeEqualDifferentBaseClassInjectionsToGenerate1()
+        {
+            _viewModelToGenerate2.BaseClassInjectionsToGenerate = new List<InjectionToGenerate>();
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentBaseClassInjectionsToGenerate2()
+        {
+            var list = (List<InjectionToGenerate>)_viewModelToGenerate2.BaseClassInjectionsToGenerate!;
+
+            list.Add(new InjectionToGenerate("IDataProvider", "DataProvider") { PropertyAccessModifier = "private" });
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualDifferentBaseClassInjectionsToGenerate3()
+        {
+            var list = (List<InjectionToGenerate>)_viewModelToGenerate2.BaseClassInjectionsToGenerate!;
+
+            var originalInjectionToGenerate = list[0];
+
+            list.Clear();
+            list.Add(new InjectionToGenerate("IChangedDataProvider", originalInjectionToGenerate.PropertyName)
+            {
+                PropertyAccessModifier = originalInjectionToGenerate.PropertyAccessModifier
+            });
+
+            Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
+        public void ShouldBeEqual6()
+        {
+            _viewModelToGenerate1.BaseClassInjectionsToGenerate = null;
+            _viewModelToGenerate2.BaseClassInjectionsToGenerate = null;
+
+            Assert.Equal(_viewModelToGenerate1, _viewModelToGenerate2);
+        }
+
+        [Fact]
         public void ShouldNotBeEqualDifferentViewModelFactoryToGenerate1()
         {
             _viewModelToGenerate2.ViewModelFactoryToGenerate = null;
@@ -299,7 +342,7 @@ namespace MvvmGen.Model
         }
 
         [Fact]
-        public void ShouldBeEqual6()
+        public void ShouldBeEqual7()
         {
             _viewModelToGenerate1.ViewModelFactoryToGenerate = null;
             _viewModelToGenerate2.ViewModelFactoryToGenerate = null;
@@ -324,7 +367,7 @@ namespace MvvmGen.Model
         }
 
         [Fact]
-        public void ShouldBeEqual7()
+        public void ShouldBeEqual8()
         {
             _viewModelToGenerate1.ViewModelInterfaceToGenerate = null;
             _viewModelToGenerate2.ViewModelInterfaceToGenerate = null;
@@ -357,6 +400,10 @@ namespace MvvmGen.Model
             };
 
             viewModelToGenerate.InjectionsToGenerate = new List<InjectionToGenerate> {
+                new InjectionToGenerate("IEventAggregator","EventAggregator"){  PropertyAccessModifier ="public"}
+            };
+
+            viewModelToGenerate.BaseClassInjectionsToGenerate = new List<InjectionToGenerate> {
                 new InjectionToGenerate("IEventAggregator","EventAggregator"){  PropertyAccessModifier ="public"}
             };
 

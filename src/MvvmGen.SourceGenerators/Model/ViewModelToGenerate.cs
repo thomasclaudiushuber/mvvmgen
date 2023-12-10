@@ -45,6 +45,8 @@ namespace MvvmGen.Model
 
         public IEnumerable<InjectionToGenerate>? InjectionsToGenerate { get; set; }
 
+        public IEnumerable<InjectionToGenerate>? BaseClassInjectionsToGenerate { get; set; }
+
         public FactoryToGenerate? ViewModelFactoryToGenerate { get; set; }
 
         public InterfaceToGenerate? ViewModelInterfaceToGenerate { get; set; }
@@ -70,7 +72,8 @@ namespace MvvmGen.Model
                    CommandsToGenerate.SequenceEqualWithNullCheck(other.CommandsToGenerate) &&
                    CommandInvalidationsToGenerate.SequenceEqualWithNullCheck(other.CommandInvalidationsToGenerate) &&
                    PropertiesToGenerate.SequenceEqualWithNullCheck(other.PropertiesToGenerate) &&
-                   InjectionsToGenerate.SequenceEqualWithNullCheck(other.InjectionsToGenerate);
+                   InjectionsToGenerate.SequenceEqualWithNullCheck(other.InjectionsToGenerate) &&
+                   BaseClassInjectionsToGenerate.SequenceEqualWithNullCheck(other.BaseClassInjectionsToGenerate);
         }
 
         public override int GetHashCode()
