@@ -37,7 +37,7 @@ namespace MvvmGen.Inspectors
                 if (modelTypedConstant.Value.Value is INamedTypeSymbol model)
                 {
                     wrappedModelType = $"{model}";
-                    wrappedModelPropertyName = wrappedModelPropertyName ?? "Model";
+                    wrappedModelPropertyName ??= "Model";
                     var members = GetAllMembers(model);
                     foreach (var member in members)
                     {
