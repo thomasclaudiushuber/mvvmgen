@@ -44,5 +44,19 @@ namespace MvvmGen
         /// Gets or sets if a constructor is generated. Default value is true.
         /// </summary>
         public bool GenerateConstructor { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the <see cref="MvvmGen.Commands.IDelegateCommand"/> implementation to use.
+        /// That your <see cref="MvvmGen.Commands.IDelegateCommand"/> implementation works seemlessly 
+        /// with MvvmGen, it must have a constructor with the following signature:
+        /// <code>
+        /// public YourCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
+        /// {
+        /// }  
+        /// </code>
+        /// If this property is not set, the <see cref="MvvmGen.Commands.DelegateCommand"/> class is used
+        /// as an <see cref="MvvmGen.Commands.IDelegateCommand"/> implementation.
+        /// </summary>
+        public Type? CommandType { get; set; }
     }
 }

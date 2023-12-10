@@ -39,5 +39,20 @@ namespace MvvmGen.Inspectors
 
             return modelPropertyName;
         }
+
+        internal static string InspectCommandType(AttributeData viewModelAttributeData)
+        {
+            string commandType = "DelegateCommand";
+
+            foreach (var arg in viewModelAttributeData.NamedArguments)
+            {
+                if (arg.Key == "CommandType")
+                {
+                    commandType = arg.Value.Value?.ToString();
+                }
+            }
+
+            return commandType;
+        }
     }
 }

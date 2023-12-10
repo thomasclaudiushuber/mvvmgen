@@ -37,6 +37,8 @@ namespace MvvmGen.Model
 
         public bool InheritFromViewModelBase { get; set; }
 
+        public string CommandType { get; set; } = "DelegateCommand";
+
         public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
 
         public IEnumerable<CommandInvalidationToGenerate>? CommandInvalidationsToGenerate { get; set; }
@@ -66,6 +68,7 @@ namespace MvvmGen.Model
                    WrappedModelPropertyName == other.WrappedModelPropertyName &&
                    IsEventSubscriber == other.IsEventSubscriber &&
                    GenerateConstructor == other.GenerateConstructor &&
+                   CommandType== other.CommandType &&
                    InheritFromViewModelBase == other.InheritFromViewModelBase &&
                    EqualityComparer<FactoryToGenerate?>.Default.Equals(ViewModelFactoryToGenerate, other.ViewModelFactoryToGenerate) &&
                    EqualityComparer<InterfaceToGenerate?>.Default.Equals(ViewModelInterfaceToGenerate, other.ViewModelInterfaceToGenerate) &&
