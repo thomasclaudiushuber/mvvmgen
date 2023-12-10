@@ -11,8 +11,9 @@ namespace MvvmGen.Model
 {
     public class ViewModelToGenerateTests
     {
-        private ViewModelToGenerate _viewModelToGenerate1;
-        private ViewModelToGenerate _viewModelToGenerate2;
+        private readonly ViewModelToGenerate _viewModelToGenerate1;
+        private readonly ViewModelToGenerate _viewModelToGenerate2;
+        private static readonly string[] commandNames = new[] { "SaveCommand" };
 
         public ViewModelToGenerateTests()
         {
@@ -214,7 +215,7 @@ namespace MvvmGen.Model
         {
             var list = (List<CommandInvalidationToGenerate>)_viewModelToGenerate2.CommandInvalidationsToGenerate!;
 
-            list.Add(new CommandInvalidationToGenerate("LastName", new[] { "SaveCommand" }));
+            list.Add(new CommandInvalidationToGenerate("LastName", commandNames));
 
             Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
         }
@@ -225,7 +226,7 @@ namespace MvvmGen.Model
             var list = (List<CommandInvalidationToGenerate>)_viewModelToGenerate2.CommandInvalidationsToGenerate!;
 
             list.Clear();
-            list.Add(new CommandInvalidationToGenerate("LastName", new[] { "SaveCommand" }));
+            list.Add(new CommandInvalidationToGenerate("LastName", commandNames));
 
             Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
         }
@@ -428,36 +429,36 @@ namespace MvvmGen.Model
 
             viewModelToGenerate.PropertiesToGenerate = new List<PropertyToGenerate>
             {
-                new PropertyToGenerate("FirstName","string","_firstName",false)
+                new("FirstName","string","_firstName",false)
             };
 
             viewModelToGenerate.CommandsToGenerate = new List<CommandToGenerate>
             {
-                new CommandToGenerate(new CommandMethod("OnSave"),"SaveCommand")
+                new(new CommandMethod("OnSave"),"SaveCommand")
             };
 
             viewModelToGenerate.CommandInvalidationsToGenerate = new List<CommandInvalidationToGenerate>
             {
-                new CommandInvalidationToGenerate("FirstName",new []{"SaveCommand"})
+                new("FirstName", commandNames)
             };
 
             viewModelToGenerate.InjectionsToGenerate = new List<InjectionToGenerate> {
-                new InjectionToGenerate("IEventAggregator","EventAggregator"){  PropertyAccessModifier ="public"}
+                new("IEventAggregator","EventAggregator"){  PropertyAccessModifier ="public"}
             };
 
             viewModelToGenerate.BaseClassInjectionsToGenerate = new List<InjectionToGenerate> {
-                new InjectionToGenerate("IEventAggregator","EventAggregator"){  PropertyAccessModifier ="public"}
+                new("IEventAggregator","EventAggregator"){  PropertyAccessModifier ="public"}
             };
 
             viewModelToGenerate.ViewModelFactoryToGenerate = new FactoryToGenerate("FactoryClassName", "FactoryInterfaceName", "CustomReturnType");
             viewModelToGenerate.ViewModelInterfaceToGenerate = new InterfaceToGenerate("InterfaceName")
             {
-                Properties = new List<InterfaceProperty> { new InterfaceProperty("FirstName", "string", false) },
+                Properties = new List<InterfaceProperty> { new("FirstName", "string", false) },
                 Methods = new List<InterfaceMethod>
                 {
-                    new InterfaceMethod("OnSave","void", false)
+                    new("OnSave","void", false)
                     {
-                        Parameters = new List<InterfaceMethodParameter>{new InterfaceMethodParameter("parameter","object")}
+                        Parameters = new List<InterfaceMethodParameter>{new("parameter","object")}
                     }
                 }
             };

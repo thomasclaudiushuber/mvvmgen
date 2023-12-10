@@ -88,11 +88,11 @@ namespace MvvmGen
                 InheritFromViewModelBase = ViewModelBaseClassInspector.Inspect(viewModelClassSymbol, viewModelBaseClassSymbol),
                 CommandsToGenerate = commandsToGenerate,
                 PropertiesToGenerate = propertiesToGenerate,
-                CommandInvalidationsToGenerate = commandInvalidationsToGenerate
+                CommandInvalidationsToGenerate = commandInvalidationsToGenerate,
+                WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData),
+                WrappedModelPropertiesToIgnore = ViewModelAttributeInspector.InspectModelPropertiesToIgnore(viewModelAttributeData)
             };
 
-            viewModelToGenerate.WrappedModelPropertyName = ViewModelAttributeInspector.InspectModelPropertyName(viewModelAttributeData);
-            viewModelToGenerate.WrappedModelPropertiesToIgnore = ViewModelAttributeInspector.InspectModelPropertiesToIgnore(viewModelAttributeData);
             viewModelToGenerate.WrappedModelType =
                 ModelMemberInspector.Inspect(viewModelAttributeData,
                 viewModelToGenerate.PropertiesToGenerate,

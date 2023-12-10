@@ -84,7 +84,7 @@ namespace MvvmGen.Inspectors
                 var count = 1;
                 foreach (var injectionToGenerate in duplicatePropertyGroup)
                 {
-                    injectionToGenerate.PropertyName = injectionToGenerate.PropertyName + count++;
+                    injectionToGenerate.PropertyName += count++;
                 }
             }
 
