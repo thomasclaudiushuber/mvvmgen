@@ -19,7 +19,15 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <PackageReleaseNotes>Version 1.2.1:
+    <PackageReleaseNotes>Version 1.3.0:
+- New CommandType property on [ViewModel] attribute to specify a custom IDelegateCommand implementation.
+- New ModelPropertyName property on [ViewModel] attribute to set the name of the property that contains the wrapped model specified via the ModelType property.
+- New ModelPropertiesToIgnore property on [ViewModel] attribute to set a comma-separated list of model properties that should not be generated for the model specified via the ModelType property.
+- Fix nullable warnings when generating command properties.
+- Fix interface generation when ViewModel has generic methods.
+- Fix constructor generation when base ViewModel has [Inject] attributes.
+
+Version 1.2.1:
 - Ensure that [ViewModelGenerateInterface] also generates command properties
 
 Version 1.2.0:
