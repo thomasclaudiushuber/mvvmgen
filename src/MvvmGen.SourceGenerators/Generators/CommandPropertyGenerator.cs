@@ -11,14 +11,16 @@ namespace MvvmGen.Generators
 {
     internal static class CommandPropertyGenerator
     {
-        internal static void GenerateCommandProperties(this ViewModelBuilder vmBuilder, IEnumerable<CommandToGenerate>? commandsToGenerate)
+        internal static void GenerateCommandProperties(this ViewModelBuilder vmBuilder,
+            IEnumerable<CommandToGenerate>? commandsToGenerate,
+            string commandType)
         {
             if (commandsToGenerate is not null)
             {
                 foreach (var commandToGenerate in commandsToGenerate)
                 {
                     vmBuilder.AppendLineBeforeMember();
-                    vmBuilder.Append($"public IDelegateCommand {commandToGenerate.PropertyName} => {commandToGenerate.FieldName} ??= new DelegateCommand({GetMethodCall(commandToGenerate.ExecuteMethod)}");
+                    vmBuilder.Append($"public IDelegateCommand {commandToGenerate.PropertyName} => {commandToGenerate.FieldName} ??= new {commandType}({GetMethodCall(commandToGenerate.ExecuteMethod)}");
                     if (commandToGenerate.CanExecuteMethod is not null)
                     {
                         vmBuilder.Append($", {GetMethodCall(commandToGenerate.CanExecuteMethod)}");

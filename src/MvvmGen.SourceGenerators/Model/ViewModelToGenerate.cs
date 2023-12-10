@@ -37,6 +37,8 @@ namespace MvvmGen.Model
 
         public bool InheritFromViewModelBase { get; set; }
 
+        public string CommandType { get; set; } = "DelegateCommand";
+
         public IEnumerable<CommandToGenerate>? CommandsToGenerate { get; set; }
 
         public IEnumerable<CommandInvalidationToGenerate>? CommandInvalidationsToGenerate { get; set; }
