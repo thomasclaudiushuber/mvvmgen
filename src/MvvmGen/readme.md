@@ -195,24 +195,42 @@ namespace MyWpfApp.ViewModel
 {
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {
+        private IDelegateCommand? _saveCommand;
+
         public EmployeeViewModel()
         {
-            this.InitializeCommands();
             this.OnInitialize();
         }
 
         partial void OnInitialize();
 
-        private void InitializeCommands()
+        public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save(), _ => CanSave());
+
+        public string FirstName
         {
-            SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
+            get => _firstName;
+            set
+            {
+                if (_firstName != value)
+                {
+                    _firstName = value;
+                    OnPropertyChanged("FirstName");
+                }
+            }
         }
 
-        public DelegateCommand SaveCommand { get; private set; }
-
-        public string FirstName { ... }
-
-        public string LastName { ... }
+        public string LastName
+        {
+            get => _lastName;
+            set
+            {
+                if (_lastName != value)
+                {
+                    _lastName = value;
+                    OnPropertyChanged("LastName");
+                }
+            }
+        }
 
         protected override void InvalidateCommands(string? propertyName)
         {
@@ -276,10 +294,11 @@ namespace MyWpfApp.ViewModel
 {
     partial class EmployeeViewModel : global::MvvmGen.ViewModels.ViewModelBase
     {
+        private IDelegateCommand? _saveCommand;
+
         public EmployeeViewModel(MvvmGen.Events.IEventAggregator eventAggregator)
         {
             this.EventAggregator = eventAggregator;
-            this.InitializeCommands();
             this.OnInitialize();
         }
 
