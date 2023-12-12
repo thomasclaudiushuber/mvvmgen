@@ -121,21 +121,17 @@ namespace MyWpfApp.ViewModel
 {
   partial class EmployeeViewModel : ViewModelBase
   {
+    private IDelegateCommand? _saveCommand;
+
     public EmployeeViewModel(MvvmGen.Events.IEventAggregator eventAggregator)
     {
       this.EventAggregator = eventAggregator;
-      this.InitializeCommands();
       this.OnInitialize();
     }
 
     partial void OnInitialize();
 
-    private void InitializeCommands()
-    {
-      SaveCommand = new DelegateCommand(_ => Save(), _ => CanSave());
-    }
-
-    public DelegateCommand SaveCommand { get; private set; }
+    public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save(), _ => CanSave());
 
     public string FirstName
     {
