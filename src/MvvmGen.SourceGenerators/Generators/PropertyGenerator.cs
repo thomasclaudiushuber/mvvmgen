@@ -25,7 +25,14 @@ namespace MvvmGen.Generators
         private static void GenerateProperty(ViewModelBuilder vmBuilder, PropertyToGenerate p)
         {
             vmBuilder.AppendLineBeforeMember();
-            vmBuilder.Append($"public {p.PropertyType} {p.PropertyName}");
+
+            if (p.IsPartial)
+            {
+                vmBuilder.AppendLine($"private {p.PropertyType} {p.BackingField};");
+                vmBuilder.AppendLine();
+            }
+
+            vmBuilder.Append($"{p.AccessModifier} {(p.IsPartial ? "partial " : "")}{p.PropertyType} {p.PropertyName}");
 
             if (p.IsReadOnly)
             {

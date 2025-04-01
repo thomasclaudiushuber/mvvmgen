@@ -41,7 +41,14 @@ namespace MvvmGen.Inspectors
                 }
                 else if (memberSymbol is IPropertySymbol propertySymbol)
                 {
-                    FindPropertyInvalidations(propertyInvalidationsByGeneratedPropertyName, propertySymbol);
+                    if (propertySymbol.IsPartialDefinition)
+                    {
+                        FindPropertiesToGenerate(propertySymbol, propertiesToGenerate);
+                    }
+                    else // Probably a readonly property with a PropertyInvalidate attribute
+                    {
+                        FindPropertyInvalidations(propertyInvalidationsByGeneratedPropertyName, propertySymbol);
+                    }
                 }
             }
 
@@ -90,28 +97,50 @@ namespace MvvmGen.Inspectors
             }
         }
 
-        private static void FindPropertiesToGenerate(IFieldSymbol fieldSymbol, List<PropertyToGenerate> propertiesToGenerate)
+        private static void FindPropertiesToGenerate(ISymbol symbol, List<PropertyToGenerate> propertiesToGenerate)
         {
-            var attributeDatas = fieldSymbol.GetAttributes();
+            var attributeDatas = symbol.GetAttributes();
             var propertyAttributeData = attributeDatas.FirstOrDefault(x => x.AttributeClass?.ToDisplayString() == "MvvmGen.PropertyAttribute");
 
             if (propertyAttributeData is not null)
             {
-                var propertyType = fieldSymbol.Type.ToString();
+                IFieldSymbol? fieldSymbol = null;
+                IPropertySymbol? propertySymbol = null;
 
-                string? propertyName = null;
-                var fieldName = fieldSymbol.Name;
-
-                foreach (var arg in propertyAttributeData.ConstructorArguments)
+                if (symbol.Kind == SymbolKind.Field)
                 {
-                    propertyName = arg.Value?.ToString();
+                    fieldSymbol = (IFieldSymbol)symbol;
+                }
+                else
+                {
+                    propertySymbol = (IPropertySymbol)symbol;
                 }
 
-                foreach (var arg in propertyAttributeData.NamedArguments)
+                string propertyType = symbol.Kind == SymbolKind.Field
+                     ? fieldSymbol!.Type.ToString()
+                     : propertySymbol!.Type.ToString();
+
+                string? propertyName = propertySymbol?.Name;
+                var fieldName = fieldSymbol?.Name;
+
+                if (fieldName is null)
                 {
-                    if (arg.Key == "PropertyName")
+                    fieldName = $"_{propertyName!.Substring(0, 1).ToLower()}{propertyName.Substring(1)}";
+                }
+
+                if (propertyName is null)
+                {
+                    foreach (var arg in propertyAttributeData.ConstructorArguments)
                     {
-                        propertyName = arg.Value.Value?.ToString();
+                        propertyName = arg.Value?.ToString();
+                    }
+
+                    foreach (var arg in propertyAttributeData.NamedArguments)
+                    {
+                        if (arg.Key == "PropertyName")
+                        {
+                            propertyName = arg.Value.Value?.ToString();
+                        }
                     }
                 }
 
@@ -186,7 +215,10 @@ namespace MvvmGen.Inspectors
                     }
                 }
 
-                propertiesToGenerate.Add(new PropertyToGenerate(propertyName, propertyType, fieldName)
+                var generateBackingField = symbol.Kind == SymbolKind.Property;
+
+                propertiesToGenerate.Add(new PropertyToGenerate(propertyName, propertyType, fieldName,
+                    generateBackingField, isReadOnly: false, accessModifier: (symbol.Kind == SymbolKind.Field ? "public" : propertySymbol!.DeclaredAccessibility.ToString().ToLower()))
                 {
                     EventsToPublish = eventsToPublish,
                     MethodsToCall = methodsToCall

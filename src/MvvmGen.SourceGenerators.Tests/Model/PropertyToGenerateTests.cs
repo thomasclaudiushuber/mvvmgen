@@ -14,8 +14,8 @@ namespace MvvmGen.Model
         [Fact]
         public void ShouldBeEqual()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName",false, false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName",false, false);
 
             Assert.Equal(property1, property2);
         }
@@ -23,8 +23,8 @@ namespace MvvmGen.Model
         [Fact]
         public void ShouldNotBeEqual1()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("LastName", "string", "_firstName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName",false, false);
+            var property2 = new PropertyToGenerate("LastName", "string", "_firstName",false, false);
 
             Assert.NotEqual(property1, property2);
         }
@@ -32,8 +32,8 @@ namespace MvvmGen.Model
         [Fact]
         public void ShouldNotBeEqual2()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "int", "_firstName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName",false, false);
+            var property2 = new PropertyToGenerate("FirstName", "int", "_firstName",false, false);
 
             Assert.NotEqual(property1, property2);
         }
@@ -41,8 +41,8 @@ namespace MvvmGen.Model
         [Fact]
         public void ShouldNotBeEqual3()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "string", "_lastName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName",false, false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_lastName",false, false);
 
             Assert.NotEqual(property1, property2);
         }
@@ -50,8 +50,17 @@ namespace MvvmGen.Model
         [Fact]
         public void ShouldNotBeEqual4()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", true);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false, false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", true, false);
+
+            Assert.NotEqual(property1, property2);
+        }
+
+        [Fact]
+        public void ShouldNotBeEqual5()
+        {
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false, false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false, true);
 
             Assert.NotEqual(property1, property2);
         }
@@ -59,8 +68,8 @@ namespace MvvmGen.Model
         [Fact]
         public void ShouldBeEqual2()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false,false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false,false);
 
             FillAllProperties(property1);
             FillAllProperties(property2);
@@ -69,10 +78,10 @@ namespace MvvmGen.Model
         }
 
         [Fact]
-        public void ShouldNotBeEqual5()
+        public void ShouldNotBeEqual6()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false,false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false,false);
 
             FillAllProperties(property1);
             FillAllProperties(property2);
@@ -83,10 +92,10 @@ namespace MvvmGen.Model
         }
 
         [Fact]
-        public void ShouldNotBeEqual6()
+        public void ShouldNotBeEqual7()
         {
-            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
-            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false);
+            var property1 = new PropertyToGenerate("FirstName", "string", "_firstName",false, false);
+            var property2 = new PropertyToGenerate("FirstName", "string", "_firstName", false,false);
 
             FillAllProperties(property1);
             FillAllProperties(property2);

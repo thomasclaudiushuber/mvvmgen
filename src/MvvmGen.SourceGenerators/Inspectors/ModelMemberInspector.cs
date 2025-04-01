@@ -53,7 +53,7 @@ namespace MvvmGen.Inspectors
                                 }
 
                                 propertiesToGenerate.Add(new PropertyToGenerate(
-                                  propertySymbol.Name, propertySymbol.Type.ToString(), $"{wrappedModelPropertyName}.{propertySymbol.Name}", propertySymbol.IsReadOnly));
+                                  propertySymbol.Name, propertySymbol.Type.ToString(), $"{wrappedModelPropertyName}.{propertySymbol.Name}", isPartial: false, propertySymbol.IsReadOnly));
                             }
                         }
                     }
