@@ -12,12 +12,14 @@ namespace MvvmGen.Model
 {
     internal class PropertyToGenerate : IEquatable<PropertyToGenerate?>
     {
-        public PropertyToGenerate(string propertyName, string propertyType, string backingField, bool isReadOnly = false)
+        public PropertyToGenerate(string propertyName, string propertyType, string backingField, bool isPartial, bool isReadOnly, string accessModifier = "public")
         {
             PropertyName = propertyName;
             PropertyType = propertyType;
             BackingField = backingField;
+            IsPartial = isPartial;
             IsReadOnly = isReadOnly;
+            AccessModifier = accessModifier;
         }
 
         public string PropertyName { get; }
@@ -25,6 +27,10 @@ namespace MvvmGen.Model
         public string PropertyType { get; }
 
         public string BackingField { get; }
+
+        public bool IsPartial { get; }
+
+        public string AccessModifier { get; }
 
         public bool IsReadOnly { get; }
 
@@ -45,6 +51,7 @@ namespace MvvmGen.Model
                    PropertyName == other.PropertyName &&
                    PropertyType == other.PropertyType &&
                    BackingField == other.BackingField &&
+                   IsPartial == other.IsPartial &&
                    IsReadOnly == other.IsReadOnly &&
                    EventsToPublish.SequenceEqualWithNullCheck(other.EventsToPublish) &&
                    MethodsToCall.SequenceEqualWithNullCheck(other.MethodsToCall) &&
@@ -57,6 +64,7 @@ namespace MvvmGen.Model
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(PropertyName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(PropertyType);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(BackingField);
+            hashCode = hashCode * -1521134295 + IsPartial.GetHashCode();
             hashCode = hashCode * -1521134295 + IsReadOnly.GetHashCode();
             return hashCode;
         }

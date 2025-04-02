@@ -132,7 +132,7 @@ namespace MvvmGen.Model
         {
             var list = (List<PropertyToGenerate>)_viewModelToGenerate2.PropertiesToGenerate!;
 
-            list.Add(new PropertyToGenerate("LastName", "string", "_lastName"));
+            list.Add(new PropertyToGenerate("LastName", "string", "_lastName", false, false));
 
             Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
         }
@@ -148,6 +148,7 @@ namespace MvvmGen.Model
             list.Add(new PropertyToGenerate("FirstNameChanged",
                 originalPropertyToGenerate.PropertyType,
                 originalPropertyToGenerate.BackingField,
+                originalPropertyToGenerate.IsPartial,
                 originalPropertyToGenerate.IsReadOnly));
 
             Assert.NotEqual(_viewModelToGenerate1, _viewModelToGenerate2);
@@ -429,7 +430,7 @@ namespace MvvmGen.Model
 
             viewModelToGenerate.PropertiesToGenerate = new List<PropertyToGenerate>
             {
-                new("FirstName","string","_firstName",false)
+                new("FirstName","string","_firstName",false,false)
             };
 
             viewModelToGenerate.CommandsToGenerate = new List<CommandToGenerate>
