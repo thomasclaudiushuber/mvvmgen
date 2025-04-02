@@ -24,6 +24,8 @@ namespace MyCode
   {{
     [Property] string _firstName;
 
+    [Property] public partial string MiddleName {{ get; set; }}
+
     public string LastName {{ get; set; }}
 
     public string FullName => FirstName + "" "" + LastName;
@@ -58,11 +60,27 @@ namespace MyCode
                 }}
             }}
         }}
+
+        private string _middleName;
+
+        public partial string MiddleName
+        {{
+            get => _middleName;
+            set
+            {{
+                if (_middleName != value)
+                {{
+                    _middleName = value;
+                    OnPropertyChanged(""MiddleName"");
+                }}
+            }}
+        }}
     }}
 
     public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         string FirstName {{ get; set; }}
+        string MiddleName {{ get; set; }}
         string LastName {{ get; set; }}
         string FullName {{ get; }}
         void CustomMethod();

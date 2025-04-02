@@ -5,6 +5,7 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>MvvmGen</RootNamespace>
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
+	<LangVersion>13.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

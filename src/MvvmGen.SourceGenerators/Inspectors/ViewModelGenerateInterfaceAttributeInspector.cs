@@ -59,6 +59,11 @@ namespace MvvmGen.Inspectors
                 {
                     if (memberSymbol is IPropertySymbol propertySymbol)
                     {
+                        if (propertySymbol.IsPartialDefinition)
+                        {
+                            continue; // Partial properties are already part of propertiesToGenerate list and so added already to the properties list
+                        }
+
                         properties ??= new();
                         properties.Add(new InterfaceProperty(propertySymbol.Name,
                             propertySymbol.Type.ToDisplayString(), propertySymbol.IsReadOnly));
