@@ -21,7 +21,7 @@
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageReleaseNotes>Version 1.4.0:
 - Support partial properties in ViewModels (https://github.com/thomasclaudiushuber/mvvmgen/issues/105)
-- Generated ViewModel interface now extends INotifyPropertyChanged (https://github.com/thomasclaudiushuber/mvvmgen/issues/105)
+- Generated ViewModel interface now extends INotifyPropertyChanged (https://github.com/thomasclaudiushuber/mvvmgen/issues/106)
 
 Version 1.3.0:
 - New CommandType property on [ViewModel] attribute to specify a custom IDelegateCommand implementation.
