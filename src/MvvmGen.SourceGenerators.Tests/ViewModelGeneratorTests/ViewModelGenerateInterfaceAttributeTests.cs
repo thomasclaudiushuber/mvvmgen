@@ -24,6 +24,10 @@ namespace MyCode
   {{
     [Property] string _firstName;
 
+    [Property] public partial string MiddleName {{ get; set; }}
+
+    [Property] internal partial string InternalNotForInterface {{ get; set; }}
+
     public string LastName {{ get; set; }}
 
     public string FullName => FirstName + "" "" + LastName;
@@ -58,11 +62,42 @@ namespace MyCode
                 }}
             }}
         }}
+
+        private string _middleName;
+
+        public partial string MiddleName
+        {{
+            get => _middleName;
+            set
+            {{
+                if (_middleName != value)
+                {{
+                    _middleName = value;
+                    OnPropertyChanged(""MiddleName"");
+                }}
+            }}
+        }}
+
+        private string _internalNotForInterface;
+
+        internal partial string InternalNotForInterface
+        {{
+            get => _internalNotForInterface;
+            set
+            {{
+                if (_internalNotForInterface != value)
+                {{
+                    _internalNotForInterface = value;
+                    OnPropertyChanged(""InternalNotForInterface"");
+                }}
+            }}
+        }}
     }}
 
     public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         string FirstName {{ get; set; }}
+        string MiddleName {{ get; set; }}
         string LastName {{ get; set; }}
         string FullName {{ get; }}
         void CustomMethod();

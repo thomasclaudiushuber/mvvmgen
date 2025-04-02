@@ -216,9 +216,18 @@ namespace MvvmGen.Inspectors
                 }
 
                 var generateBackingField = symbol.Kind == SymbolKind.Property;
+                var accessModifier = "public";
+                if(symbol.Kind== SymbolKind.Property)
+                {
+                    accessModifier = propertySymbol!.DeclaredAccessibility switch
+                    {
+                        Accessibility.ProtectedOrInternal => "protected internal",
+                        _ => propertySymbol!.DeclaredAccessibility.ToString().ToLower()
+                    };
+                }
 
                 propertiesToGenerate.Add(new PropertyToGenerate(propertyName, propertyType, fieldName,
-                    generateBackingField, isReadOnly: false, accessModifier: (symbol.Kind == SymbolKind.Field ? "public" : propertySymbol!.DeclaredAccessibility.ToString().ToLower()))
+                    generateBackingField, isReadOnly: false, accessModifier)
                 {
                     EventsToPublish = eventsToPublish,
                     MethodsToCall = methodsToCall

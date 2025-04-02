@@ -64,7 +64,17 @@ namespace MvvmGen.SourceGenerators
                     }
                 }
 
-                Assert.True(found, "Expected code must be in generated sources");
+                var output = $"""
+                    Expected code must be in generated sources
+                    
+                    Generated code:
+                    {generatorResult.GeneratedSources.FirstOrDefault().SourceText.ToString()}
+
+                    Expected code:
+                    {expectedCode}
+                    """;
+
+                Assert.True(found, output);
             }
         }
 
