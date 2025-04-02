@@ -19,7 +19,11 @@
     <Language>en-US</Language>
     <PackageIcon>packageIcon.png</PackageIcon>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <PackageReleaseNotes>Version 1.3.0:
+    <PackageReleaseNotes>Version 1.4.0:
+- Support partial properties in ViewModels (https://github.com/thomasclaudiushuber/mvvmgen/issues/105)
+- Generated ViewModel interface now extends INotifyPropertyChanged (https://github.com/thomasclaudiushuber/mvvmgen/issues/105)
+
+Version 1.3.0:
 - New CommandType property on [ViewModel] attribute to specify a custom IDelegateCommand implementation.
 - New ModelPropertyName property on [ViewModel] attribute to set the name of the property that contains the wrapped model specified via the ModelType property.
 - New ModelPropertiesToIgnore property on [ViewModel] attribute to set a comma-separated list of model properties that should not be generated for the model specified via the ModelType property.
@@ -38,7 +42,7 @@ Version 1.2.0:
 - The model used by the source generator implements Equals to support caching between generation steps. This makes the generator more performant, which is especially noticable in larger solutions.
 - Bug fix for [ViewModelGenerateFactory] attribute. When injecting an IEventAggregator into the ViewModel, the factory now also has the correct constructor parameters.
 - Minor code optimizations
-</PackageReleaseNotes>
+	</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' != 'MvvmGen_PureCodeGeneration'">
