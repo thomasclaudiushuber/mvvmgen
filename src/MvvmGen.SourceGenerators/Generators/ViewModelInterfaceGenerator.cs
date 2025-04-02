@@ -22,7 +22,7 @@ namespace MvvmGen.Generators
             var accessModifier = viewModelToGenerate.ClassAccessModifier;
 
             vmBuilder.AppendLine();
-            vmBuilder.AppendLine($"{accessModifier} interface {interfaceToGenerate.InterfaceName}");
+            vmBuilder.AppendLine($"{accessModifier} interface {interfaceToGenerate.InterfaceName} : System.ComponentModel.INotifyPropertyChanged");
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
 

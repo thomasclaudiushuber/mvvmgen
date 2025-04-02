@@ -60,7 +60,7 @@ namespace MyCode
         }}
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         string FirstName {{ get; set; }}
         string LastName {{ get; set; }}
@@ -134,7 +134,7 @@ namespace MyCode
         protected MyCode.Employee Model {{ get; set; }}
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         string FirstName {{ get; set; }}
         bool IsDeveloper {{ get; set; }}
@@ -177,7 +177,7 @@ namespace MyCode
         public IDelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(_ => Save());
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         IDelegateCommand SaveCommand {{ get; }}
         void Save();
@@ -214,7 +214,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface ICustomInterfaceName
+    public interface ICustomInterfaceName : System.ComponentModel.INotifyPropertyChanged
     {{
     }}
 }}
@@ -251,7 +251,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
     }}
 }}
@@ -289,7 +289,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         void MyMethod<T>(T item);
     }}
@@ -328,7 +328,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         void MyMethod<T>(T item) where T : new();
     }}
@@ -368,7 +368,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
         void MyMethod<K, V>(K key, V value) where K : new() where V : class;
     }}

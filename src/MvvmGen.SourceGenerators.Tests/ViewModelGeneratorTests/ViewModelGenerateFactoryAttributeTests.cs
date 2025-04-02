@@ -200,7 +200,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
     }}
 
@@ -250,7 +250,7 @@ namespace MyCode
         partial void OnInitialize();
     }}
 
-    public interface IEmployeeViewModel
+    public interface IEmployeeViewModel : System.ComponentModel.INotifyPropertyChanged
     {{
     }}
 
