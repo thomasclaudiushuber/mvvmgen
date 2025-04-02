@@ -47,9 +47,12 @@ namespace MvvmGen.Inspectors
             {
                 foreach (var propertyToGenerate in propertiesToGenerate)
                 {
-                    properties ??= new();
-                    properties.Add(new InterfaceProperty(propertyToGenerate.PropertyName,
-                        propertyToGenerate.PropertyType, propertyToGenerate.IsReadOnly));
+                    if (propertyToGenerate.AccessModifier == "public") // partial properties can have other access modifiers than public, for example internal
+                    {
+                        properties ??= new();
+                        properties.Add(new InterfaceProperty(propertyToGenerate.PropertyName,
+                            propertyToGenerate.PropertyType, propertyToGenerate.IsReadOnly));
+                    }
                 }
             }
 

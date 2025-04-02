@@ -60,6 +60,8 @@ namespace MyCode
         [InlineData("public")]
         [InlineData("private")]
         [InlineData("protected")]
+        [InlineData("protected internal")]
+        [InlineData("internal")]
         [Theory]
         public void GeneratePartialProperty(string accessModifier)
         {
