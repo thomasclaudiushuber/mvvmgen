@@ -10,9 +10,9 @@ jobs:
         working-directory: src
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
     
@@ -32,7 +32,7 @@ jobs:
       run: dotnet pack -v normal -c Release --no-restore 
       working-directory: src/MvvmGen
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nupkg
         path: src/MvvmGen/bin/Release/*.nupkg 
@@ -44,9 +44,9 @@ jobs:
         working-directory: src
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
     
@@ -66,7 +66,7 @@ jobs:
       run: dotnet pack -v normal -c MvvmGen_PureCodeGeneration --no-restore 
       working-directory: src/MvvmGen
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nupkg
         path: src/MvvmGen/bin/MvvmGen_PureCodeGeneration/*.nupkg 
