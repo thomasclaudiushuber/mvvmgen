@@ -46,19 +46,40 @@ namespace MvvmGen
         /// </summary>
         public string? PropertyName { get; set; }
 
-
         /// <summary>
         /// Gets or sets the access modifier of the property that stores the injected type.
         /// </summary>
         public AccessModifier PropertyAccessModifier { get; set; }
     }
 
+    /// <summary>
+    /// Defines the access modifiers for a property.
+    /// </summary>
     public enum AccessModifier
     {
+        /// <summary>
+        /// The property is private.
+        /// </summary>
         Private = 1,
+
+        /// <summary>
+        /// The property is propected internal.
+        /// </summary>
         ProtectedInternal = 2,
+
+        /// <summary>
+        /// The property is protected.
+        /// </summary>
         Protected = 3,
+
+        /// <summary>
+        /// The property is internal.
+        /// </summary>
         Internal = 4,
+
+        /// <summary>
+        /// The property is public.
+        /// </summary>
         Public = 5
     }
 }
