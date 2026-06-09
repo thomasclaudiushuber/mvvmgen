@@ -9,6 +9,7 @@
   <PropertyGroup>
     <Title>MvvmGen</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>mvvm mvvmgen wpf uwp winui xamarin maui uno avalonia xaml csharp generator</PackageTags>
     <Product>MvvmGen</Product>
