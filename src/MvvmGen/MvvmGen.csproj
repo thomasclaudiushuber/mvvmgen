@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release;MvvmGen_PureCodeGeneration</Configurations>
     <RootNamespace>MvvmGen</RootNamespace>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
